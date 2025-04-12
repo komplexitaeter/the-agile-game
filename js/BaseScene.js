@@ -43,12 +43,8 @@ class BaseScene extends Phaser.Scene {
         this.monologManager = new MonologManager(this);
 
         // Wenn wir aus einer anderen Szene kommen und einblenden sollen
-        let fadeDuration = 2500;
-        if (data.doFadeIn) {
-            fadeDuration = 900;
-        }
-        // Starten mit weißem Bildschirm und dann einblenden
-        this.cameras.main.fadeIn(fadeDuration, 255, 255, 255); // Einblenden
+        this.fadeDuration = data.doFadeIn ? 900 : 2500;
+
     }
 
     // Delegiere Spielstandsmethoden an den Manager
@@ -218,6 +214,8 @@ class BaseScene extends Phaser.Scene {
         const bgKey = this.sceneConfig.background;
         this.bg = this.add.image(this.viewport.width / 2, this.viewport.height / 2, bgKey);
         this.bg.setOrigin(0.5, 0.5);
+
+        this.cameras.main.fadeIn(this.fadeDuration, 255, 255, 255);
     }
 
     setupSophie() {
