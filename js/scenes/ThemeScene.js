@@ -12,13 +12,57 @@ class ThemeScene extends BaseScene {
     }
 
     create() {
-        super.create();
+        // Loading-Anzeige erstellen, bevor super.create() aufgerufen wird
+        const width = this.viewport.width;
+        const height = this.viewport.height;
 
-        // Theme-spezifische Elemente hinzufügen
-        this.setupThemeElements();
+        // Loading-Text mit niedrigem Depth-Wert, damit er hinter dem Hintergrund liegt
+        this.loadingText = this.add.text(
+            width / 2,
+            height / 2,
+            "Loading...",
+            {
+                fontSize: '48px',
+                fontFamily: 'Courier New, monospace',
+                color: '#ffffff',
+                fontStyle: 'bold',
+                padding: { x: 20, y: 10 },
+                fixedWidth: width * 0.2,
+                stroke: '#201030',
+                strokeThickness: 6,
+                align: 'left'
+            }
+        ).setOrigin(0.5);
+        this.loadingText.setDepth(-1); // Unter dem Hintergrund
 
-        // Interaktive Buttons hinzufügen
-        this.setupButtons(this.hasSaveGame);
+        // Animierte Punkte
+        this.loadingDots = 0;
+        this.loadingTimer = this.time.addEvent({
+            delay: 400,
+            callback: () => {
+                this.loadingDots = (this.loadingDots + 1) % 4;
+                let dots = '.'.repeat(this.loadingDots);
+                this.loadingText.setText(`Loading${dots}`);
+            },
+            callbackScope: this,
+            loop: true
+        });
+
+        // Verzögerung vor dem Aufruf von super.create(), um den Ladehinweis anzuzeigen
+        this.time.delayedCall(1500, () => {
+            // BaseScene-Logik ausführen, die den Hintergrund lädt
+            super.create();
+
+            // Keine Notwendigkeit, den Ladehinweis zu entfernen, da er hinter dem
+            // Hintergrund liegt und automatisch verdeckt wird
+
+            // Theme-spezifische Elemente hinzufügen
+            this.setupThemeElements();
+
+            // Interaktive Buttons hinzufügen
+            this.setupButtons(this.hasSaveGame);
+
+        });
     }
 
     setupThemeElements() {
