@@ -9,12 +9,61 @@
         body {
             margin: 0;
             background-color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             height: 100vh;
             overflow: hidden;
             padding: 0;
+            position: relative;
+        }
+
+        /* Footer Styling */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #cbcbcb;
+            font-size: 11px;
+            font-family: Arial, sans-serif;
+            padding: 3px 0;
+            background-color: rgba(255, 255, 255, 0.7); /* Leicht transparenter Hintergrund */
+            z-index: 1000;
+        }
+
+        .footer a {
+            color: #cbcbcb;
+            text-decoration: none;
+            margin: 0 5px;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: #555;
+        }
+
+        /* Stelle sicher, dass das Game-Canvas immer richtig zentriert ist */
+        canvas {
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Media Query für kleine Bildschirme */
+        @media (max-height: 650px) {
+            .footer {
+                font-size: 9px;
+                padding: 2px 0;
+            }
+        }
+
+        /* Bei sehr kleinen Bildschirmen Footer ausblenden */
+        @media (max-height: 500px) {
+            .footer {
+                opacity: 0.3;
+            }
+
+            .footer:hover {
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -42,6 +91,44 @@
 <script src="js/scenes/TeamScene.js"></script>
 <script src="js/scenes/OutroScene.js"></script>
 <script src="js/game.js"></script>
+
+<!-- Footer -->
+<div class="footer">
+    <a href="https://www.komplexitaeter.de" target="_blank">©Komplexitäter</a> |
+    <a href="https://www.komplexitaeter.de/datenschutz#the-agile-game" target="_blank">Datenschutz</a> |
+    <a href="https://www.komplexitaeter.de/impressum" target="_blank">Impressum</a> |
+    <a href="https://feedback.komplexitaeter.de/?context=the-agile-game" target="_blank">Feedback</a>
+</div>
+
+<script>
+    // Script zur intelligenten Anpassung des Footers
+    document.addEventListener('DOMContentLoaded', function() {
+        const footer = document.querySelector('.footer');
+        const canvas = document.querySelector('canvas');
+
+        // Prüfen, ob der Footer mit dem Canvas kollidiert
+        function checkFooterPosition() {
+            if (canvas) {
+                const canvasRect = canvas.getBoundingClientRect();
+                const canvasBottom = canvasRect.bottom;
+                const viewportHeight = window.innerHeight;
+
+                // Wenn nicht genug Platz für den Footer ist
+                if (canvasBottom > viewportHeight - footer.offsetHeight - 10) {
+                    footer.style.opacity = "0.5";
+                } else {
+                    footer.style.opacity = "1";
+                }
+            }
+        }
+
+        // Initial prüfen und bei Größenänderung erneut prüfen
+        window.addEventListener('resize', checkFooterPosition);
+
+        // Mit etwas Verzögerung prüfen, um sicherzustellen, dass Canvas geladen ist
+        setTimeout(checkFooterPosition, 500);
+    });
+</script>
 
 </body>
 </html>
