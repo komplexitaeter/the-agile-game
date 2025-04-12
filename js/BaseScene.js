@@ -75,6 +75,17 @@ class BaseScene extends Phaser.Scene {
         this.loadSceneAssets();
     }
 
+
+    isTextureLoaded(key) {
+        try {
+            return this.textures && this.textures.exists && this.textures.exists(key);
+        } catch (e) {
+            console.warn(`Fehler beim Überprüfen der Textur ${key}:`, e);
+            // Im Zweifel annehmen, dass die Textur nicht geladen ist
+            return false;
+        }
+    }
+
     // Neue Methode zum Laden der Assets basierend auf der Konfiguration
     loadSceneAssets() {
         // Hole alle Assets für diese Szene aus GameData
@@ -82,7 +93,7 @@ class BaseScene extends Phaser.Scene {
 
         // Lade jedes Asset, wenn es noch nicht im Cache ist
         assets.forEach(asset => {
-            if (!this.textures.exists(asset.key)) {
+            if (!this.isTextureLoaded(asset.key)) {
                 switch (asset.type) {
                     case 'image':
                         this.load.image(asset.key, asset.path);
@@ -97,13 +108,65 @@ class BaseScene extends Phaser.Scene {
                     default:
                         console.warn(`Unbekannter Asset-Typ: ${asset.type} für ${asset.key}`);
                 }
+            } else {
+                console.log('Already loaded: '+asset.key);
             }
         });
     }
 
-    // Hilfsmethode, um den Schlüssel des Hintergrundbildes zu erhalten
-    getBackgroundKey() {
-        return this.sceneConfig.background || 'bg';
+    preloadAdjacentScenes() {
+        const adjacencyMap = {
+            'ThemeScene': ['IntroScene', 'OutroScene'],
+            'IntroScene': ['BuildingScene'],
+            'BuildingScene': ['LobbyScene'],
+            'LobbyScene': ['BuildingScene', 'ElevatorScene'],
+            'ElevatorScene': ['LobbyScene', 'BasementScene', 'CEOOfficeScene', 'LoungeScene'],
+            'BasementScene': ['ElevatorScene', 'TeamScene'],
+            'TeamScene': ['BasementScene', 'OutroScene'],
+            'LoungeScene': ['ElevatorScene', 'MeetingScene'],
+            'MeetingScene': ['LoungeScene'],
+            'CEOOfficeScene': ['ElevatorScene', 'BuildingScene'],
+            'OutroScene': []
+            // Passe diese Map entsprechend deines Spiels an
+        };
+
+        const adjacentScenes = adjacencyMap[this.scene.key] || [];
+
+        adjacentScenes.forEach(sceneKey => {
+            const tempSceneConfig = GameData.scenes[sceneKey] || {};
+
+            // Den Hintergrundschlüssel abrufen
+            const bgKey = tempSceneConfig.background;
+
+            // Verwende die sichere Überprüfungsmethode
+            if (!this.isTextureLoaded(bgKey)) {
+                const bgAsset = tempSceneConfig.assets?.find(asset => asset.key === bgKey);
+
+                if (bgAsset) {
+                    console.log(`Lade Hintergrundbild für nächste Szene ${sceneKey}: ${bgKey}`);
+                    this.load.image(bgKey, bgAsset.path);
+                }
+            }
+
+            // Lade die restlichen Assets
+            const sceneAssets = GameData.getAssetsForScene(sceneKey);
+            sceneAssets.forEach(asset => {
+                if (!this.isTextureLoaded(asset.key)) {
+                    console.log(`Lade Asset für nächste Szene ${sceneKey}: ${asset.key}`);
+
+                    if (asset.type === 'image') {
+                        this.load.image(asset.key, asset.path);
+                    } else if (asset.type === 'spritesheet') {
+                        this.load.spritesheet(asset.key, asset.path, asset.frameConfig);
+                    }
+                }
+            });
+        });
+
+        // Starte den Ladevorgang
+        if (this.load.list.size > 0) {
+            this.load.start();
+        }
     }
 
     create() {
@@ -131,6 +194,11 @@ class BaseScene extends Phaser.Scene {
 
         // Pointer-Events
         this.input.on('pointerdown', this.handlePointerDown, this);
+
+        // Nach kurzer Verzögerung die nächsten möglichen Szenen im Hintergrund laden
+        this.time.delayedCall(500, () => {
+            this.preloadAdjacentScenes();
+        });
     }
 
     // Erweiterte shutdown-Methode mit Ressourcenbereinigung
@@ -147,8 +215,7 @@ class BaseScene extends Phaser.Scene {
 
     setupBackground() {
         // Hintergrund in der Mitte des Viewports platzieren
-        // Verwendung des konfigurierten Hintergrundschlüssels
-        const bgKey = this.getBackgroundKey();
+        const bgKey = this.sceneConfig.background;
         this.bg = this.add.image(this.viewport.width / 2, this.viewport.height / 2, bgKey);
         this.bg.setOrigin(0.5, 0.5);
     }
