@@ -8,37 +8,34 @@ class ThemeScene extends BaseScene {
         this.stateManager = new GameStateManager(this.scene.key);
         this.hasSaveGame = this.stateManager.checkForExistingGameState();
 
-        super.init(data);
-    }
+        // Loading-Anzeige direkt in init() erstellen
+        const width = this.cameras.main.width;
+        const height = this.cameras.main.height;
 
-    create() {
-        // Loading-Anzeige erstellen, bevor super.create() aufgerufen wird
-        const width = this.viewport.width;
-        const height = this.viewport.height;
-
-        // Loading-Text mit niedrigem Depth-Wert, damit er hinter dem Hintergrund liegt
+        // Loading-Text mit niedrigem Depth-Wert
         this.loadingText = this.add.text(
             width / 2,
             height / 2,
-            "Loading...",
+            "Loading",
             {
                 fontSize: '48px',
                 fontFamily: 'Courier New, monospace',
                 color: '#ffffff',
                 fontStyle: 'bold',
                 padding: { x: 20, y: 10 },
-                fixedWidth: width * 0.2,
+                fixedWidth: width * 0.17, // Feste Breite für den Text
                 stroke: '#201030',
                 strokeThickness: 6,
-                align: 'left'
+                align: 'left' // Linksbündig
             }
-        ).setOrigin(0.5);
+        ).setOrigin(0, 0.5);
+        this.loadingText.x = width / 2 - this.loadingText.width / 2; // Manuelle Zentrierung
         this.loadingText.setDepth(-1); // Unter dem Hintergrund
 
-        // Animierte Punkte
+        // Animierte Punkte starten
         this.loadingDots = 0;
         this.loadingTimer = this.time.addEvent({
-            delay: 400,
+            delay: 500,
             callback: () => {
                 this.loadingDots = (this.loadingDots + 1) % 4;
                 let dots = '.'.repeat(this.loadingDots);
@@ -48,13 +45,15 @@ class ThemeScene extends BaseScene {
             loop: true
         });
 
-        // Verzögerung vor dem Aufruf von super.create(), um den Ladehinweis anzuzeigen
-        this.time.delayedCall(1500, () => {
+        // Dann erst super.init() aufrufen
+        super.init(data);
+    }
+
+    create() {
+        // Verzögerung vor dem Aufruf von super.create()
+        this.time.delayedCall(1000, () => {
             // BaseScene-Logik ausführen, die den Hintergrund lädt
             super.create();
-
-            // Keine Notwendigkeit, den Ladehinweis zu entfernen, da er hinter dem
-            // Hintergrund liegt und automatisch verdeckt wird
 
             // Theme-spezifische Elemente hinzufügen
             this.setupThemeElements();
@@ -62,6 +61,10 @@ class ThemeScene extends BaseScene {
             // Interaktive Buttons hinzufügen
             this.setupButtons(this.hasSaveGame);
 
+            // Timer stoppen, da er nicht mehr benötigt wird
+            if (this.loadingTimer) {
+                this.loadingTimer.remove();
+            }
         });
     }
 
