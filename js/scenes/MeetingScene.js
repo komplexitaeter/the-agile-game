@@ -369,7 +369,9 @@ class MeetingScene extends BaseScene {
         const gameState = this.gameState;
         if (this.stateManager.hasAsset(gameState,'invCokeClosed')
             || this.stateManager.hasAsset(gameState,'invCokeOpen')) {
-            this.showMonolog(["Ich habe schon genug Cola bei mir.", "Ich will an meinem ersten Tag nicht unangenehm auffallen."]);
+            this.showMonolog(["Ich habe schon genug Cola bei mir.", "Ich will an meinem ersten Tag nicht unangenehm auffallen."], ()=>{
+                this.backToDefault();
+            });
             return true;
         }
     }
@@ -894,6 +896,11 @@ class MeetingScene extends BaseScene {
                 businessCardsOnTable: 0
             }
         });
+
+        this.time.delayedCall(400, () => {
+            this.backToDefault();
+        });
+
         return true;
     }
 

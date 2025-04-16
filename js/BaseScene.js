@@ -749,6 +749,13 @@ class BaseScene extends Phaser.Scene {
 
             // Das oberste Objekt verwenden
             const topObject = clickedInteractives[0];
+            const defaultAction = this.interactiveObjects[topObject.key].data.defaultAction;
+
+            if (defaultAction
+                && !this.controls.isPromptUseAction
+                && this.controls.activeActionIndex === 0) {
+                this.controls.setActiveAction(defaultAction);
+            }
 
             // Aktion behandeln
             moveSophie = this.controls.handle(this, topObject.key, worldPoint, this.hoverTexts[topObject.key].text);
@@ -867,9 +874,8 @@ class BaseScene extends Phaser.Scene {
     }
 
     viewAnything(objectKey, worldPoint) {
-        this.hideAllHoverTexts();
-        this.controls.disable();
-        this.isMonologActive = true;
+        this.focusInteraction();
+
         const interactiveObject = this.interactiveObjects[objectKey];
         const text = interactiveObject.data.view;
         const exactPositioning = interactiveObject.data.exactPositioning || false;
@@ -886,7 +892,9 @@ class BaseScene extends Phaser.Scene {
                     duration: 2000,
                     depth: this.sophie.depth + 1,
                     onComplete: () => {
-                        this.showMonolog(text, null);
+                        this.showMonolog(text, ()=>{
+                            this.backToDefault();
+                        });
                     },
                     style: {
                         fontSize: '48px',
@@ -900,7 +908,9 @@ class BaseScene extends Phaser.Scene {
 
         } else {
             this.moveSophie(worldPoint, ()=>{
-                this.showMonolog(text, null);
+                this.showMonolog(text, ()=>{
+                    this.backToDefault();
+                });
             }, interactiveObject.data.sophieViewFrame, exactPositioning);
         }
 
@@ -920,7 +930,9 @@ class BaseScene extends Phaser.Scene {
 
 
         if (preTakeText && showPreTak) {
-            this.showMonolog(preTakeText, ()=>{this.takeAnything(objectKey, worldPoint, false)});
+            this.showMonolog(preTakeText, ()=>{
+                this.takeAnything(objectKey, worldPoint, false)
+            });
             return;
         }
 
@@ -979,6 +991,7 @@ class BaseScene extends Phaser.Scene {
     backToDefault() {
         this.isMonologActive = false;
         this.canMoveSophie = true;
+        this.controls.setActiveAction(0);
         this.controls.enable();
     }
 

@@ -511,6 +511,12 @@ class GameControls {
         const item = GameData.inventoryItems.find(item => item.show && item.slotIndex === slotIndex);
 
         if (item && item.key) {
+
+            if ( !this.isPromptUseAction
+                && this.activeActionIndex === 0) {
+                this.setActiveAction(4);
+            }
+
             console.log('Click on Inventory Item: '+item.key);
             let action = this.getActiveAction().name;
             let talkText;
@@ -543,6 +549,7 @@ class GameControls {
             }
 
             if (action==='use') {
+                this.closeBag();
                 this.handleUse(item.key, item.title);
             }
 
@@ -748,8 +755,6 @@ class GameControls {
         } else {
             console.log("Skip the generic action");
         }
-
-        this.setActiveAction(0);
 
         return moveSophie;
     }

@@ -90,6 +90,7 @@ const GameData = {
             interactiveObjects: [
                 {
                     id: 'advertisingPoster',
+                    defaultAction: 1,
                     type: 'rectangle',
                     relativeX: 0.29,
                     relativeY: 0.85,
@@ -103,6 +104,7 @@ const GameData = {
                 },
                 {
                     id: 'busStop',
+                    defaultAction: 1,
                     type: 'rectangle',
                     relativeX: 0.76,
                     relativeY: 0.88,
@@ -116,6 +118,7 @@ const GameData = {
                 },
                 {
                     id: 'lanternNotice',
+                    defaultAction: 2,
                     type: 'image',
                     texture: 'lanternNotice',
                     relativeX: 0.883,
@@ -132,21 +135,8 @@ const GameData = {
                     inventoryAssets: ['invCatNotice', 'invMagnet']
                 },
                 {
-                    id: 'trashBins1',
-                    type: 'rectangle',
-                    relativeX: 0.383,
-                    relativeY: 0.929,
-                    relativeWidth: 0.082,
-                    relativeHeight: 0.085,
-                    hoverText: "Mülleimer",
-                    debug: true,
-                    depth: 12,
-                    view: ["Ich bin mir nicht sicher ob ich ausreichend Commitment habe, hier im Müll zu kramen."],
-                    viewOnlyOnce: true,
-                    take: ["Die sind sehr groß und voller Müll und bleiben genau dort wo sie sind."],
-                },
-                {
-                    id: 'trashBins2',
+                    id: 'trashBins',
+                    defaultAction: 1,
                     type: 'rectangle',
                     relativeX: 0.383,
                     relativeY: 0.929,
@@ -158,12 +148,13 @@ const GameData = {
                     depth: 11,
                     sophieViewFrame: "back",
                     viewSound: "RUMPELRUMPEL",
-                    view: ["Einiges davon könnte nützlich sein."],
+                    view: ["Einiges davon könnte nützlich sein.", "Aber ich bin mir nicht sicher ob ich ausreichend Commitment habe, den Müll mitzunehmen."],
                     viewOnlyOnce: true,
                     take: ["Die sind sehr groß und voller Müll und bleiben genau dort wo sie sind."],
                 },
                 {
                     id: 'trash',
+                    defaultAction: 2,
                     type: 'image',
                     texture: 'trash',
                     relativeX: 0.41,
@@ -181,6 +172,7 @@ const GameData = {
                 },
                 {
                     id: 'strangeWindow',
+                    defaultAction: 1,
                     type: 'rectangle',
                     relativeX: 0.494,
                     relativeY: 0.27,
@@ -189,7 +181,7 @@ const GameData = {
                     hoverText: "Auffälliges Fenster",
                     debug: true,
                     depth: 10,
-                    view: ["Könnte ein Meetingraum sein.", "Ich kann von hier unten die Details nicht erkennen."],
+                    view: ["Könnte ein Meetingraum sein.", "Ich kann von hier unten die Details nicht erkennen.", "Ich bräuchte etwas, durch das ich hindurchsehen kann."],
                     sophieViewFrame: "back",
                     preTake: ["Agiler Wahnsinn oder was?"],
                     take: ["Ich kletter da jetzt auf keinen Fall rauf."],
@@ -197,6 +189,7 @@ const GameData = {
                 },
                 {
                     id: 'officeEntry',
+                    defaultAction: 4,
                     type: 'rectangle',
                     relativeX: 0.52,
                     relativeY: 0.82,
@@ -231,6 +224,7 @@ const GameData = {
             interactiveObjects: [
                 {
                     id: 'lobbyExit',
+                    defaultAction: 4,
                     type: 'rectangle',
                     relativeX: 0.525,
                     relativeY: 0.37,
@@ -247,6 +241,7 @@ const GameData = {
                 },
                 {
                     id: 'lobbyKen',
+                    defaultAction: 3,
                     type: 'rectangle',
                     relativeX: 0.558,
                     relativeY: 0.58,
@@ -265,6 +260,7 @@ const GameData = {
                 },
                 {
                     id: 'accessControl',
+                    defaultAction: 4,
                     type: 'rectangle',
                     relativeX: 0.915,
                     relativeY: 0.635,
@@ -280,6 +276,7 @@ const GameData = {
                 },
                 {
                     id: 'kenSign',
+                    defaultAction: 1,
                     type: 'image',
                     texture: 'kenSign',
                     relativeX: 0.453,
@@ -297,6 +294,7 @@ const GameData = {
                 },
                 {
                     id: 'elevator',
+                    defaultAction: 4,
                     type: 'rectangle',
                     relativeX: 0.86,
                     relativeY: 0.63,
@@ -331,6 +329,7 @@ const GameData = {
             interactiveObjects: [
                 {
                     id: 'controlPanel',
+                    defaultAction: 4,
                     type: 'rectangle',
                     relativeX: 0.265,
                     relativeY: 0.5,
@@ -346,6 +345,7 @@ const GameData = {
                 },
                 {
                     id: 'manifest',
+                    defaultAction: 2,
                     type: 'image',
                     texture: 'manifest',
                     relativeX: 0.765,
@@ -356,6 +356,7 @@ const GameData = {
                     debug: true,
                     depth: 10,
                     view: ["Ein Aufruf zur ARBEITERREVOLUTION!!!", "Es werden besserer Arbeitsbedingungen für Mitarbeiter gefordert.", "Man kann mitmachen eine Gewerkschaft zu gründen."],
+                    preTake: ["Ein Aufruf zur ARBEITERREVOLUTION!!!", "Es werden besserer Arbeitsbedingungen für Mitarbeiter gefordert.", "Man kann mitmachen eine Gewerkschaft zu gründen."],
                     take: ["Den Magneten nehme ich auch mit."],
                     removable: true,
                     removeSound: "FLUP",
@@ -363,6 +364,7 @@ const GameData = {
                 },
                 {
                     id: 'elevatorExit',
+                    defaultAction: 4,
                     type: 'rectangle',
                     relativeX: 0.5,
                     relativeY: 0.55,
@@ -403,6 +405,7 @@ const GameData = {
             interactiveObjects: [
                 {
                     id: 'meetingExit',
+                    defaultAction: 4,
                     type: 'rectangle',
                     relativeX: 0.8,
                     relativeY: 0.445,
@@ -418,6 +421,7 @@ const GameData = {
                 },
                 {
                     id: 'meetingCoke',
+                    defaultAction: 2,
                     type: 'image',
                     texture: 'meetingCoke',
                     relativeX: 0.44,
@@ -433,6 +437,7 @@ const GameData = {
                 },
                 {
                     id: 'meetingGummyBears',
+                    defaultAction: 2,
                     type: 'image',
                     texture: 'meetingGummyBears',
                     relativeX: 0.59,
@@ -448,6 +453,7 @@ const GameData = {
                 },
                 {
                     id: 'meetingBusinessCards',
+                    defaultAction: 2,
                     type: 'image',
                     texture: 'meetingBusinessCards',
                     relativeX: 0.52,
@@ -464,6 +470,7 @@ const GameData = {
                 },
                 {
                     id: 'managersA',
+                    defaultAction: 3,
                     combinedKey: 'managers',
                     type: 'rectangle',
                     relativeX: 0.335,
@@ -481,6 +488,7 @@ const GameData = {
                 },
                 {
                     id: 'managersB',
+                    defaultAction: 3,
                     combinedKey: 'managers',
                     type: 'rectangle',
                     relativeX: 0.45,
@@ -498,6 +506,7 @@ const GameData = {
                 },
                 {
                     id: 'managersC',
+                    defaultAction: 3,
                     combinedKey: 'managers',
                     type: 'rectangle',
                     relativeX: 0.6,
@@ -533,6 +542,7 @@ const GameData = {
             interactiveObjects: [
                 {
                     id: 'loungeExit',
+                    defaultAction: 4,
                     type: 'rectangle',
                     relativeX: 0.95,
                     relativeY: 0.6,
@@ -549,6 +559,7 @@ const GameData = {
                 },
                 {
                     id: 'meetingRoomEntry',
+                    defaultAction: 4,
                     type: 'rectangle',
                     relativeX: 0.451 ,
                     relativeY: 0.6,
@@ -564,6 +575,7 @@ const GameData = {
                 },
                 {
                     id: 'milkShaker',
+                    defaultAction: 1,
                     type: 'rectangle',
                     relativeX: 0.67,
                     relativeY: 0.7,
@@ -579,6 +591,7 @@ const GameData = {
                 },
                 {
                     id: 'loungeBottleOpener',
+                    defaultAction: 2,
                     type: 'image',
                     texture: 'loungeBottleOpener',
                     relativeX: 0.1615,
@@ -610,6 +623,7 @@ const GameData = {
             interactiveObjects: [
                 {
                     id: 'officeExit',
+                    defaultAction: 4,
                     type: 'rectangle',
                     relativeX: 0.21,
                     relativeY: 0.44,
@@ -624,6 +638,7 @@ const GameData = {
                 },
                 {
                     id: 'officeNoel',
+                    defaultAction: 3,
                     type: 'rectangle',
                     relativeX: 0.85,
                     relativeY: 0.497,
@@ -641,6 +656,7 @@ const GameData = {
                 },
                 {
                     id: 'officeMagnet',
+                    defaultAction: 2,
                     type: 'rectangle',
                     relativeX: 0.64,
                     relativeY: 0.58,
@@ -677,6 +693,7 @@ const GameData = {
             interactiveObjects: [
                 {
                     id: 'basementExit',
+                    defaultAction: 4,
                     type: 'rectangle',
                     relativeX: 0.95,
                     relativeY: 0.55,
@@ -693,6 +710,7 @@ const GameData = {
                 },
                 {
                     id: 'jeffSign',
+                    defaultAction: 1,
                     type: 'image',
                     texture: 'jeffSign',
                     relativeX: 0.525,
@@ -710,6 +728,7 @@ const GameData = {
                 },
                 {
                     id: 'basementPlate',
+                    defaultAction: 1,
                     type: 'rectangle',
                     relativeX: 0.534,
                     relativeY: 0.69,
@@ -725,6 +744,7 @@ const GameData = {
                 },
                 {
                     id: 'basementTeamRoom',
+                    defaultAction: 4,
                     type: 'rectangle',
                     relativeX: 0.532,
                     relativeY: 0.47,
@@ -740,6 +760,7 @@ const GameData = {
                 },
                 {
                     id: 'basementJeff',
+                    defaultAction: 3,
                     type: 'rectangle',
                     relativeX: 0.445,
                     relativeY: 0.71,
@@ -756,6 +777,7 @@ const GameData = {
                 },
                 {
                     id: 'basementCoin',
+                    defaultAction: 2,
                     type: 'image',
                     texture: 'basementCoin',
                     relativeX: 0.535,
@@ -773,6 +795,7 @@ const GameData = {
                 },
                 {
                     id: 'toiletDore',
+                    defaultAction: 4,
                     type: 'rectangle',
                     relativeX: 0.73,
                     relativeY: 0.53,
@@ -812,6 +835,7 @@ const GameData = {
             interactiveObjects: [
                 {
                     id: 'teamExit',
+                    defaultAction: 4,
                     type: 'rectangle',
                     relativeX: 0.97,
                     relativeY: 0.55,
@@ -828,6 +852,7 @@ const GameData = {
                 },
                 {
                     id: 'devA',
+                    defaultAction: 3,
                     combinedKey: 'devs',
                     type: 'rectangle',
                     relativeX: 0.14,
@@ -845,6 +870,7 @@ const GameData = {
                 },
                 {
                     id: 'devB',
+                    defaultAction: 3,
                     combinedKey: 'devs',
                     type: 'rectangle',
                     relativeX: 0.22,
@@ -862,6 +888,7 @@ const GameData = {
                 },
                 {
                     id: 'devC',
+                    defaultAction: 3,
                     combinedKey: 'devs',
                     type: 'rectangle',
                     relativeX: 0.467,
@@ -879,6 +906,7 @@ const GameData = {
                 },
                 {
                     id: 'devD',
+                    defaultAction: 3,
                     combinedKey: 'devs',
                     type: 'rectangle',
                     relativeX: 0.545,
@@ -896,6 +924,7 @@ const GameData = {
                 },
                 {
                     id: 'devE',
+                    defaultAction: 3,
                     combinedKey: 'devs',
                     type: 'rectangle',
                     relativeX: 0.61,
@@ -913,6 +942,7 @@ const GameData = {
                 },
                 {
                     id: 'devF',
+                    defaultAction: 3,
                     combinedKey: 'devs',
                     type: 'rectangle',
                     relativeX: 0.758,
@@ -930,6 +960,7 @@ const GameData = {
                 },
                 {
                     id: 'devG',
+                    defaultAction: 3,
                     combinedKey: 'devs',
                     type: 'rectangle',
                     relativeX: 0.88,
@@ -947,6 +978,7 @@ const GameData = {
                 },
                 {
                     id: 'teamBlackBoard',
+                    defaultAction: 1,
                     type: 'rectangle',
                     relativeX: 0.425,
                     relativeY: 0.315,
@@ -961,6 +993,7 @@ const GameData = {
                 },
                 {
                     id: 'teamWhiteBoard',
+                    defaultAction: 1,
                     type: 'rectangle',
                     relativeX: 0.425,
                     relativeY: 0.315,
@@ -975,6 +1008,7 @@ const GameData = {
                 },
                 {
                     id: 'teamTableLeg',
+                    defaultAction: 1,
                     type: 'rectangle',
                     relativeX: 0.06,
                     relativeY: 0.83,

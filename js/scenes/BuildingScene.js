@@ -15,13 +15,8 @@ class BuildingScene extends BaseScene {
         }
 
         if (this.gameState.progress.trashBinsViewedOnce) {
-            this.interactiveObjects['trashBins1'].gameObject.setVisible(false);
-            this.interactiveObjects['trashBins1'].gameObject.removeInteractive();
-        }
-
-        if (this.gameState.progress.trashBinsViewedTwice) {
-            this.interactiveObjects['trashBins2'].gameObject.setVisible(false);
-            this.interactiveObjects['trashBins2'].gameObject.removeInteractive();
+            this.interactiveObjects['trashBins'].gameObject.setVisible(false);
+            this.interactiveObjects['trashBins'].gameObject.removeInteractive();
         }
 
         if (this.gameState.progress.trashTaken) {
@@ -48,21 +43,13 @@ class BuildingScene extends BaseScene {
        });
     }
 
-    viewTrashBins1(objectKey, worldPoint) {
+    viewTrashBins(objectKey, worldPoint) {
         this.updateGameState({
             progress: {
                 trashBinsViewedOnce: true
             }
         });
 
-    }
-
-    viewTrashBins2(objectKey, worldPoint) {
-        this.updateGameState({
-            progress: {
-                trashBinsViewedTwice: true
-            }
-        });
     }
 
     takeTrash(objectKey, worldPoint) {

@@ -23,6 +23,7 @@ class GameStateManager {
                 floorDigit: 'EG',
                 hasSeenIntro: false,
                 busHasMoved: false,
+                trashBinsViewedOnce: false,
                 meetingRoomKnown: false,
                 accessControlUsedOnce: false,
                 everTalkedToKen: false,
