@@ -188,8 +188,10 @@ class LobbyScene extends BaseScene {
         if (this.gameState.progress.accessControlUsedOnce) {
 
             this.moveSophie({x: this.viewport.width* 0.8, y: 0}, ()=>{
-                this.showMonolog(["Das kenne ich schon.", "Ich brauche eine Zugangskarte, Mut, Ausdauer und Verstand."]);
-                this.backToDefault();
+                this.showMonolog(["Das kenne ich schon.", "Ich brauche eine Zugangskarte, Mut, Ausdauer und Verstand."], ()=>{
+                    this.backToDefault();
+                });
+
             });
         } else {
 
