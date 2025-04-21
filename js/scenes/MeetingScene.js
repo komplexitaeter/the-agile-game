@@ -37,7 +37,7 @@ class MeetingScene extends BaseScene {
             "Das ist mir viel zu unkonkret.",
             "Dafür müssten erstmal Rollen und Verantwortung klar sein.",
             "Das klingt ja fast wie Bäume umarmen.",
-            "Wenn das so ist, muss ich es an den Vorstand melden.",
+            "Wenn das so ist, muss ich es dem Vorstand melden.",
             "Das bringt uns keinen Schritt voran.",
             "Das ist gegen jeden Verstand und jede Regel.",
             "Das haben wir so noch nie gemacht.",
@@ -790,6 +790,7 @@ class MeetingScene extends BaseScene {
                                     });
 
                                     this.stateManager.removeAsset(this.gameState, 'invCokeBomb', 1);
+                                    this.stateManager.addAsset(this.gameState, 'invCokeEmpty', 1);
                                     this.controls.updateAssetsTaken();
 
                                     // Dritter Manager reagiert auf die Explosion

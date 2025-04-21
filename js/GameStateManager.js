@@ -24,6 +24,8 @@ class GameStateManager {
                 hasSeenIntro: false,
                 busHasMoved: false,
                 trashBinsViewedOnce: false,
+                trashTaken: false,
+                emptyBottleTaken: false,
                 meetingRoomKnown: false,
                 accessControlUsedOnce: false,
                 everTalkedToKen: false,

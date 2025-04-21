@@ -23,6 +23,10 @@ class BuildingScene extends BaseScene {
             this.interactiveObjects['trash'].gameObject.setVisible(false);
         }
 
+        if (this.gameState.progress.emptyBottleTaken) {
+            this.interactiveObjects['emptyBottle'].gameObject.setVisible(false);
+        }
+
         if (this.entryPoint === 'fired') {
             this.sophie.play('walk_left');
             this.showMonolog(["Ich hatte mir meinen ersten Arbeitstag anders vorgestellt."], ()=>{
@@ -43,6 +47,14 @@ class BuildingScene extends BaseScene {
        });
     }
 
+    takeEmptyBottle(objectKey, worldPoint) {
+        this.updateGameState({
+            progress: {
+                emptyBottleTaken: true
+            }
+        });
+    }
+
     viewTrashBins(objectKey, worldPoint) {
         this.updateGameState({
             progress: {
@@ -58,6 +70,14 @@ class BuildingScene extends BaseScene {
                 trashTaken: true
             }
         });
+    }
+
+    useInvCokeEmptyWithStrangeWindow() {
+        this.useInvEmptyToiletPaperRoleWithStrangeWindow();
+    }
+
+    useStrangeWindowWithInvCokeEmpty() {
+        this.useInvEmptyToiletPaperRoleWithStrangeWindow();
     }
 
     useStrangeWindowWithInvEmptyToiletPaperRole() {

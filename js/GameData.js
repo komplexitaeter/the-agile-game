@@ -48,6 +48,7 @@ const GameData = {
         { type: 'image', key: 'invCokeClosed', path: 'assets/images/inv_coke_closed.png' },
         { type: 'image', key: 'invCokeBomb', path: 'assets/images/inv_coke_closed.png' },
         { type: 'image', key: 'invCokeOpen', path: 'assets/images/inv_coke_open.png' },
+        { type: 'image', key: 'invCokeEmpty', path: 'assets/images/inv_coke_empty.png' },
         { type: 'image', key: 'invBottleOpener', path: 'assets/images/inv_bottle_opener.png' },
         { type: 'image', key: 'invBusinessCards', path: 'assets/images/inv_business_cards.png' },
         { type: 'image', key: 'invManifest', path: 'assets/images/inv_manifest.png' },
@@ -85,7 +86,8 @@ const GameData = {
             assets: [
                 { type: 'image', key: 'building', path: 'assets/images/building.webp' },
                 { type: 'image', key: 'lanternNotice', path: 'assets/images/building_lantern_notice.png' },
-                { type: 'image', key: 'trash', path: 'assets/images/building_trash.png' }
+                { type: 'image', key: 'trash', path: 'assets/images/building_trash.png' },
+                { type: 'image', key: 'emptyBottle', path: 'assets/images/inv_coke_empty.png' }
             ],
             interactiveObjects: [
                 {
@@ -169,6 +171,23 @@ const GameData = {
                     take: ["Na was haben wir denn hier:","Ein Spraydose Farbe RAL 9016 - Verkehrsweiß.", "Eine Münze.", "Und eine leere Rolle Klopapier.", "IGITTTT!!!" ],
                     removable: true,
                     inventoryAssets: ['invCoin', 'invSprayCan', 'invEmptyToiletPaperRole']
+                },
+                {
+                    id: 'emptyBottle',
+                    defaultAction: 2,
+                    type: 'image',
+                    texture: 'emptyBottle',
+                    relativeX: 0.375,
+                    relativeY: 0.945,
+                    scaleFactor: 0.052,
+                    relativeWidth: 0.012,
+                    relativeHeight: 0.04,
+                    hoverText: "Leere Flasche",
+                    debug: true,
+                    depth: 9,
+                    view: ["Es ist eine leere Coke Flasche."],
+                    removable: true,
+                    inventoryAssets: ['invCokeEmpty']
                 },
                 {
                     id: 'strangeWindow',
@@ -1061,6 +1080,7 @@ const GameData = {
         {key: 'invCatNotice', title: 'Mimi-Zettel', show: false, view: ["Katze Mimi ist entlaufen und wird gesucht.", "Der Zettel ist schon sehr alt." ,"Arme Katze Mimi"]},
         {key: 'invCoin', title: 'Münze', show: false, view: ["1 Bitcoin", "WOW", "Ich bin reich.", "Theoretisch."]},
         {key: 'invCokeOpen', title: 'Offene Cola', show: false, view: ["Die Flasche ist offen.", "Ich sollte sie sehr bald trinken."]},
+        {key: 'invCokeEmpty', title: 'Leere Coke', show: false, view: ["Eine leere Flasche Coke."]},
         {key: 'invBottleOpener', title: 'Öffner', show: false, view: ["Damit öffnet man Flaschen."]},
         {key: 'invScrumGuide', title: 'Scrum Guide', show: false, view: ["Eine von Jeff Sutherland signierte Ausgabe des Scrum Guide."]},
         {key: 'invSprayCan', title: 'Spraydose', show: false, view: ["Ein Spraydose Farbe RAL 9016 - Verkehrsweiß."]},

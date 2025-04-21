@@ -1053,6 +1053,8 @@ class BaseScene extends Phaser.Scene {
 
 
         this.stateManager.removeAsset(this.gameState, 'invCokeOpen', 1);
+        this.stateManager.addAsset(this.gameState, 'invCokeEmpty', 1);
+
 
         this.focusInteraction();
         this.sophie.play('give');
@@ -1097,12 +1099,39 @@ class BaseScene extends Phaser.Scene {
         this.showMonolog(["Die Flasche ist bereits offen."]);
     }
 
-    useInvCokeClosedWithSophie() {
-        this.showMonolog(["Vorher muss ich die Flasche öffnen."]);
-    }
-
     useSophieWithInvCokeClosed() {
-        this.showMonolog(["Vorher muss ich die Flasche öffnen."]);
+        this.useInvCokeClosedWithSophie();
+    }
+    useInvCokeClosedWithSophie() {
+        if (this.stateManager.hasAsset(this.gameState, 'invBottleOpener')) {
+            this.focusInteraction();
+
+            this.sophie.play('back');
+
+            this.soundEffects.play("FLIP FLUP",
+                this.sophie.x, this.sophie.y - (this.sophie.height * 0.7),
+                {
+                    duration: 1500,
+                    depth: this.sophie.depth + 10000,
+                    style: {
+                        fontSize: `40px`,
+                        fill: '#ff6f61',
+                        fontFamily: 'Courier New, monospace',
+                        stroke: '#000000',
+                        strokeThickness: 7
+                    },
+                    onComplete: ()=>{
+                        this.stateManager.removeAsset(this.gameState, 'invCokeClosed', 1);
+                        this.addInventoryAssets(['invCokeOpen']);
+                        this.controls.updateAssetsTaken();
+                        this.useInvCokeOpenWithSophie();
+                    }
+                }
+            );
+
+        } else {
+            this.showMonolog(["Ich habe nichts, um die Flasche zu öffnen."]);
+        }
     }
 
     useInvGummyBearsWithSophie() {
