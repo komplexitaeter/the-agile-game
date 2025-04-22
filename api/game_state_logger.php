@@ -124,17 +124,3 @@ try {
     // Den Fehler ins Fehlerlog schreiben, aber nicht dem Client zeigen
     error_log('Database Error: ' . $e->getMessage());
 }
-
-
-
-CREATE USER 'tag_user'@'localhost' IDENTIFIED BY '8jdj93kdu8D%hdn321$';
-
--- Gewähre alle Rechte auf die Datenbank
-GRANT ALL PRIVILEGES ON `the-agile-game`.* TO 'tag_user'@'localhost';
-
--- Gewähre spezifisch die Lock-Rechte
-GRANT EXECUTE ON FUNCTION mysql.GET_LOCK TO 'tag_user'@'localhost';
-GRANT EXECUTE ON FUNCTION mysql.RELEASE_LOCK TO 'tag_user'@'localhost';
-
--- Änderungen aktivieren
-FLUSH PRIVILEGES;
