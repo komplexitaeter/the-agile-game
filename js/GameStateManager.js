@@ -4,6 +4,11 @@ class GameStateManager {
         this.defaultSceneKey = defaultSceneKey;
     }
 
+    generateId() {
+        // Erzeugt eine zufällige 12-stellige Zahl als String
+        return Math.floor(Math.random() * 1000000000000).toString().padStart(12, '0');
+    }
+
     loadGameState() {
         try {
             const savedState = localStorage.getItem('sophieAdventureState');
@@ -16,6 +21,7 @@ class GameStateManager {
 
         // Standard-Spielstand, wenn noch keiner existiert
         return {
+            id: this.generateId(),
             currentScene: this.defaultSceneKey,
             entryPoint: 'default',
             sophieRelativeX: 0.52,
@@ -26,6 +32,7 @@ class GameStateManager {
                 trashBinsViewedOnce: false,
                 trashTaken: false,
                 emptyBottleTaken: false,
+                lanternNoticeTaken: false,
                 meetingRoomKnown: false,
                 accessControlUsedOnce: false,
                 everTalkedToKen: false,
@@ -57,8 +64,7 @@ class GameStateManager {
                 toiletEverUsed: 0,
                 inventory: [] // Das Inventar ist initial ein leeres Array
             },
-            interactions: [],
-            lastSaved: Date.now()
+            interactions: []
         };
     }
 
@@ -67,18 +73,180 @@ class GameStateManager {
         return this.loadGameState();
     }
 
+    // Eine sehr einfache Version der Diff-Logik
+    // Eine verbesserte Version mit Mengenänderungen im Inventar
     saveGameState(gameState) {
         try {
-            gameState.lastSaved = Date.now();
+            // Zuerst den alten Spielstand lesen, um das Diff zu erstellen
+            const oldStateJson = localStorage.getItem('sophieAdventureState');
+            let jsonDiff = null;
+
+            if (oldStateJson) {
+                const oldState = JSON.parse(oldStateJson);
+
+                // Diff manuell erstellen - nur die Eigenschaften, die uns interessieren
+                jsonDiff = {};
+
+                // Progress-Änderungen erfassen
+                if (oldState.progress && gameState.progress) {
+                    const progressDiff = {};
+
+                    // Inventory-Änderungen
+                    if (oldState.progress.inventory && gameState.progress.inventory) {
+                        // Prüfen, ob ein neues Element hinzugefügt wurde
+                        const newItems = gameState.progress.inventory.filter(newItem =>
+                            !oldState.progress.inventory.some(oldItem =>
+                                oldItem.objectKey === newItem.objectKey
+                            )
+                        );
+
+                        if (newItems.length > 0) {
+                            progressDiff.inventoryAdded = newItems;
+                        }
+
+                        // Prüfen, ob Elemente entfernt wurden
+                        const removedItems = oldState.progress.inventory.filter(oldItem =>
+                            !gameState.progress.inventory.some(newItem =>
+                                newItem.objectKey === oldItem.objectKey
+                            )
+                        );
+
+                        if (removedItems.length > 0) {
+                            progressDiff.inventoryRemoved = removedItems;
+                        }
+
+                        // Prüfen, ob sich Mengen geändert haben
+                        const quantityChanges = [];
+
+                        oldState.progress.inventory.forEach(oldItem => {
+                            const newItem = gameState.progress.inventory.find(item =>
+                                item.objectKey === oldItem.objectKey
+                            );
+
+                            if (newItem && newItem.quantity !== oldItem.quantity) {
+                                quantityChanges.push({
+                                    objectKey: oldItem.objectKey,
+                                    oldQuantity: oldItem.quantity,
+                                    newQuantity: newItem.quantity
+                                });
+                            }
+                        });
+
+                        if (quantityChanges.length > 0) {
+                            progressDiff.inventoryQuantityChanged = quantityChanges;
+                        }
+                    }
+
+                    // Andere Progress-Eigenschaften
+                    for (const key in gameState.progress) {
+                        if (key !== 'inventory' &&
+                            JSON.stringify(oldState.progress[key]) !== JSON.stringify(gameState.progress[key])) {
+
+                            progressDiff[key] = {
+                                old: oldState.progress[key],
+                                new: gameState.progress[key]
+                            };
+                        }
+                    }
+
+                    if (Object.keys(progressDiff).length > 0) {
+                        jsonDiff.progress = progressDiff;
+                    }
+                }
+
+                // Interactions-Änderungen erfassen
+                if (oldState.interactions && gameState.interactions) {
+                    if (gameState.interactions.length > oldState.interactions.length) {
+                        // Neue Interaktion
+                        jsonDiff.newInteraction = gameState.interactions[gameState.interactions.length - 1];
+                    } else if (gameState.interactions.length === oldState.interactions.length) {
+                        // Prüfen, ob sich Zähler geändert haben
+                        const countChanges = [];
+
+                        for (let i = 0; i < gameState.interactions.length; i++) {
+                            if (gameState.interactions[i].count !== oldState.interactions[i].count) {
+                                countChanges.push({
+                                    functionKey: gameState.interactions[i].functionKey,
+                                    oldCount: oldState.interactions[i].count,
+                                    newCount: gameState.interactions[i].count
+                                });
+                            }
+                        }
+
+                        if (countChanges.length > 0) {
+                            jsonDiff.interactionCountChanged = countChanges;
+                        }
+                    }
+                }
+
+                // Scene-Änderungen
+                if (oldState.currentScene !== gameState.currentScene) {
+                    jsonDiff.sceneChanged = {
+                        old: oldState.currentScene,
+                        new: gameState.currentScene
+                    };
+                }
+            }
+
+            // Neuen Spielstand in localStorage speichern
             localStorage.setItem('sophieAdventureState', JSON.stringify(gameState));
 
             if (GameData.debug) {
                 console.log(gameState);
             }
 
+            // Zum Loggen sowohl den neuen Spielstand als auch das Diff übergeben
+            this.logGameState(gameState, jsonDiff).then();
+
             return true;
         } catch (error) {
             console.error("Fehler beim Speichern des Spielstands:", error);
+            return false;
+        }
+    }
+
+    async logGameState(gameState, jsonDiff = null) {
+        try {
+            // Sicherstellen, dass ein gameState vorhanden ist
+            if (!gameState) {
+                gameState = this.loadGameState();
+            }
+
+            // Erstellen des JSON-Strings
+            const gameStateJson = JSON.stringify(gameState);
+
+            // Daten für die API vorbereiten
+            const data = {
+                json_id: gameState.id,
+                json: gameStateJson
+            };
+
+            // Diff hinzufügen, wenn vorhanden
+            if (jsonDiff && Object.keys(jsonDiff).length > 0) {
+                data.json_diff = JSON.stringify(jsonDiff);
+            }
+
+            // Asynchroner API-Aufruf
+            const response = await fetch('api/game_state_logger.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            // Optional: Antwort verarbeiten
+            if (response.ok) {
+                const result = await response.json();
+                console.log("Spielstand erfolgreich geloggt", result);
+                return true;
+            } else {
+                console.warn("Spielstand konnte nicht geloggt werden", response.status);
+                return false;
+            }
+        } catch (error) {
+            // Fehler abfangen, aber keinen Error auslösen, da der Spielfluss nicht unterbrochen werden soll
+            console.warn("Fehler beim Loggen des Spielstands:", error);
             return false;
         }
     }
@@ -113,6 +281,7 @@ class GameStateManager {
         // Aktualisiere den Rest des Spielstands mit neuen Daten
         const updatedState = { ...gameState, ...updates };
         this.saveGameState(updatedState);
+
         return updatedState;
     }
 
@@ -127,8 +296,7 @@ class GameStateManager {
                 return (
                     parsed &&
                     parsed.currentScene &&
-                    parsed.progress &&
-                    typeof parsed.lastSaved === 'number'
+                    parsed.progress
                 );
             }
         } catch (error) {

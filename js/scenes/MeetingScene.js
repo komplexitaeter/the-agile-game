@@ -801,7 +801,7 @@ class MeetingScene extends BaseScene {
                                         style: manager3Style,
                                         onComplete: () => {
                                             dummySpeaker3.destroy();
-                                            this.backToDefault();
+                                            this.talkToManagers();
                                         }
                                     });
                                 });
