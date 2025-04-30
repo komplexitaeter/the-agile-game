@@ -41,7 +41,7 @@ try {
 // Historie laden
 $historyEntries = [];
 try {
-    $stmt = $pdo->prepare("SELECT * FROM game_state_history WHERE game_state_id = :game_state_id ORDER BY creation_date ASC");
+    $stmt = $pdo->prepare("SELECT * FROM game_state_history WHERE game_state_id = :game_state_id ORDER BY creation_date");
     $stmt->execute(['game_state_id' => $stateId]);
     $historyEntries = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -407,7 +407,7 @@ function formatDateTime($dateTime) {
         codeBlocks.forEach(function(block) {
             const content = block.textContent;
             if (content.trim()) {  // Nur verarbeiten, wenn Inhalt vorhanden ist
-                const highlighted = content
+                highlighted = content
                     .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
                         let cls = 'json-number';
                         if (/^"/.test(match)) {

@@ -31,7 +31,10 @@ try {
         LEFT JOIN 
             game_state_history h ON m.id = h.game_state_id
         GROUP BY 
-            m.id
+            m.id,            
+            m.json_id, 
+            m.creation_date, 
+            m.last_updated
         ORDER BY 
             m.last_updated DESC
     ";
