@@ -1,6 +1,7 @@
 <?php
 // Zentrale Konfiguration einbinden
 require_once('../config.php');
+require_auth();
 
 // Datenbankverbindung herstellen
 try {
