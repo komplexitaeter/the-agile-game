@@ -3,6 +3,7 @@ header('Content-Type: application/json');
 
 // Zentrale Konfiguration einbinden
 require_once('../config.php');
+require_auth();
 
 // Daten aus dem POST-Request lesen
 $inputData = file_get_contents('php://input');

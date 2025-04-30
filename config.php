@@ -39,9 +39,3 @@ function require_auth() {
 
     return true;
 }
-
-// Prüfen, ob wir uns in einem API-Verzeichnis befinden und Authentifizierung erfordern
-$script_path = isset($_SERVER['SCRIPT_FILENAME']) ? $_SERVER['SCRIPT_FILENAME'] : '';
-if (strpos($script_path, '/api/') !== false) {
-    require_auth();
-}
