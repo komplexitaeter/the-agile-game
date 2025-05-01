@@ -73,7 +73,7 @@ const GameData = {
             background: 'building_intro',
             sophieBottomPosition: 0.975,
             assets: [
-                { type: 'image', key: 'building_intro', path: 'assets/images/building_intro.webp' },
+                { type: 'image', key: 'building_intro', path: 'assets/images/intro.webp' },
                 { type: 'image', key: 'bus', path: 'assets/images/intro_bus.png' }
             ],
             interactiveObjects: []
