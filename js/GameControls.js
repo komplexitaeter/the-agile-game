@@ -530,12 +530,14 @@ class GameControls {
             }
 
             if (action==='view') {
+                this.scene.focusInteraction();
                 talkText = item.view;
                 if (item.viewSound) {
-                    this.scene.soundEffects.play(item.viewSound, this.scene.sophie.x, this.scene.sophie.y-100, {
+                    this.scene.soundEffects.play(item.viewSound, this.scene.sophie.x, this.scene.sophie.y - this.scene.sophie.height * this.scene.sophie.scaleY * 0.6, {
                         duration: 3000,
-                        depth: this.scene.sophie.depth + 1,
+                        depth: this.scene.sophie.depth + 100,
                         onComplete: () => {
+                            this.scene.backToDefault();
                         },
                         style: {
                             fontSize: '48px',

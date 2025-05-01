@@ -887,7 +887,7 @@ class BaseScene extends Phaser.Scene {
         if (interactiveObject.data.viewSound) {
 
             this.moveSophie(worldPoint, ()=>{
-                /* todo: in zb Meeting szene werden klick-klack geräusche von magneten außerhalb des viewport angezeigt*/
+
                 this.soundEffects.play(interactiveObject.data.viewSound, interactiveObject.gameObject.x, interactiveObject.gameObject.y, {
                     duration: 2000,
                     depth: this.sophie.depth + 1,

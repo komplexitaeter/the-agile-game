@@ -79,6 +79,8 @@ class SoundEffect {
         effect.text.setOrigin(0.5); // Zentrieren des Textes an der angegebenen Position
         effect.text.setDepth(config.depth);
 
+        effect.text.setMask(this.scene.sophie.mask);
+
         // Animation ähnlich der in IntroScene
         const tween = this.scene.tweens.add({
             targets: effect.text,
