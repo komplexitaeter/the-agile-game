@@ -476,7 +476,7 @@ class BasementScene extends BaseScene {
                 if (this.gameState.progress.toiletUsesPayed > 0) {
                     this.goToToilet();
                 } else {
-                    this.showCharacterMonolog(this.jeff, ["Warte, du muss erste ein Zertifikat dafür erwerben."], ()=>{
+                    this.showCharacterMonolog(this.jeff, ["Warte, eine kostenlose Nutzung wäre für mich kein gutes Geschäftsmodell."], ()=>{
                        this.backToDefault();
                     });
                 }

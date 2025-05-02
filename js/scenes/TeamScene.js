@@ -716,7 +716,7 @@ class TeamScene extends BaseScene {
                     this.showCharacterMonolog(this.getDevByKey('devC'), ["Zur Belohnung möchten wir dir diesen Scrum Master Ring schenken."], ()=>{
                         this.moveSophie({x: this.viewport.width * 0.45, y: this.sophie.y}, ()=>{
                             this.controls.updateAssetsTaken();
-                            this.showCharacterMonolog(this.getRandomDev(), ["Und jetzt lass und in Ruhe, unser Sprint läuft bereits."], ()=>{
+                            this.showCharacterMonolog(this.getRandomDev(), ["Und jetzt lass uns in Ruhe, unser Sprint läuft bereits."], ()=>{
                                 this.changeScene('OutroScene');
                             });
                         });
