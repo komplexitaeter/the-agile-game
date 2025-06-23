@@ -107,6 +107,7 @@ class BuildingScene extends BaseScene {
                                         meetingRoomKnown: true
                                     }
                                 });
+                                this.interactiveObjects['strangeWindow'].gameObject.setVisible(false);
                                 this.backToDefault();
                             }
                         )

@@ -189,7 +189,7 @@ class GameControls {
         this.inventoryPanel.setDepth(11000);
 
         // Größe des Panels (35% der Breite, 100% Höhe)
-        const panelWidth = this.viewport.width * 0.35;
+        const panelWidth = this.viewport.width * 0.47;
         const panelHeight = this.viewport.height;
 
         // Interaktiver Blocker - unsichtbares Rectangle über die gesamte Fläche
@@ -217,7 +217,7 @@ class GameControls {
 
     createInventorySlots(panelWidth, panelHeight) {
         // Konfiguration für das Slot-Raster
-        const columns = 3;
+        const columns = 4;
         const rows = 5;
         const padding = 30; // Abstand vom Rand und zwischen den Slots
 
@@ -542,6 +542,9 @@ class GameControls {
         if (assetQuantity>10) {
             viewFactor = 0.345;
         }
+        if (assetQuantity>15) {
+            viewFactor = 0.455;
+        }
         const panelWidth = this.viewport.width * viewFactor;
 
         // Zielposition basierend auf dem Status der Tasche
@@ -732,6 +735,9 @@ class GameControls {
         }
         if (assetQuantity>10) {
             viewFactor = 0.345;
+        }
+        if (assetQuantity>15) {
+            viewFactor = 0.455;
         }
         const panelWidth = this.viewport.width * viewFactor;
 

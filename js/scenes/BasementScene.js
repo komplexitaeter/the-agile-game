@@ -159,9 +159,21 @@ class BasementScene extends BaseScene {
                     })
                 }
             } else {
-                this.showCharacterMonolog(this.jeff, ["Heute ist ein durchschnittlicher Tag. ", "Der Rekord an Toilettenbenutzungen liegt aktuell bei 1."],()=>{
-                    this.backToDefault();
-                });
+
+                if (this.gameState.progress.toiletEverUsed === 1) {
+
+                    this.showCharacterMonolog(this.jeff, ["Du hast den Tages-High-Score eingestellt.", "Noch eine Toilettenbenutzung und du erhältst Premium-Status."],()=>{
+                        this.backToDefault();
+                    });
+
+                } else {
+
+                    this.showCharacterMonolog(this.jeff, ["Heute ist ein durchschnittlicher Tag. ", "Der Rekord an Toilettenbenutzungen liegt aktuell bei 1."],()=>{
+                        this.backToDefault();
+                    });
+
+                }
+
             }
         })
     }
@@ -233,7 +245,7 @@ class BasementScene extends BaseScene {
 
                 this.backToDefault();
             } else {
-                this.showMonolog(["Jeff kann mich sehen und würde es nicht mögen."], ()=>{
+                this.showMonolog(["Jeff kann mich sehen und würde es nicht mögen, wenn ich es nehme."], ()=>{
                     this.backToDefault();
                 });
             }
@@ -629,7 +641,12 @@ class BasementScene extends BaseScene {
 
                         // Monolog nach dem Toilettengang
                         this.showMonolog(["Ahhh, das war nötig."], () => {
-                            this.backToDefault();
+
+                            this.focusInteraction();
+                            this.moveSophie({x:this.viewport.width*0.5, y:this.sophie.y},()=> {
+                                 this.subTalkJeffBusiness();
+                            });
+
                         });
                     }
                 });
