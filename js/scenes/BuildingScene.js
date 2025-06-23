@@ -27,6 +27,10 @@ class BuildingScene extends BaseScene {
             this.interactiveObjects['emptyBottle'].gameObject.setVisible(false);
         }
 
+        if (this.gameState.progress.meetingRoomKnown) {
+            this.interactiveObjects['strangeWindow'].gameObject.setVisible(false);
+        }
+
         if (this.entryPoint === 'fired') {
             this.sophie.play('walk_left');
             this.showMonolog(["Ich hatte mir meinen ersten Arbeitstag anders vorgestellt."], ()=>{

@@ -80,57 +80,6 @@ class GameControls {
         this.buttonContainer = this.scene.add.container(0, 0);
         this.buttonContainer.setDepth(11000); // Über allem anderen
 
-        // Erstelle jeden Button
-        this.config.actions.forEach((action, index) => {
-            const buttonX = this.config.startX + this.config.buttonWidth / 2;
-            const buttonY = this.config.startY + (this.config.buttonHeight + this.config.spacing) * index + this.config.buttonHeight / 2;
-
-            // Button erstellen mit normalem Stil
-            const button = this.scene.add.text(
-                buttonX,
-                buttonY,
-                action.displayName,
-                { ...this.styles.normal }
-            ).setOrigin(0.5);
-
-            // Speichere die Action-Daten im Button-Objekt für einfacheren Zugriff
-            button.actionData = action;
-
-            // Button interaktiv machen
-            button.setInteractive({ useHandCursor: true });
-
-            // Event-Listener für Hover-Effekte
-            button.on('pointerover', () => {
-                if (this.activeActionIndex === index) {
-                    button.setStyle(this.styles.activeHover);
-                } else {
-                    button.setStyle(this.styles.hover);
-                }
-            });
-
-            button.on('pointerout', () => {
-                if (this.activeActionIndex === index) {
-                    button.setStyle(this.styles.active);
-                } else {
-                    button.setStyle(this.styles.normal);
-                }
-            });
-
-            // Click-Listener mit Event-Propagation-Stopper
-            button.on('pointerdown', (pointer, localX, localY, event) => {
-                // Event-Propagation stoppen, damit handlePointerDown nicht ausgelöst wird
-                event.stopPropagation();
-
-                this.setActiveAction(index);
-            });
-
-            // Zum Container hinzufügen und in der Referenz speichern
-            this.buttonContainer.add(button);
-
-            // Speichere Button-Referenz für einfachen Zugriff
-            this.buttons[action.name] = button;
-        });
-
         // Hintergrundbox für die Buttons erstellen
         this.createBackground();
 
@@ -152,13 +101,9 @@ class GameControls {
     createBackground() {
         // Berechne die Dimensionen der Box basierend auf den Buttons
         const boxX = 0; // Linksbündig
-        const boxY = this.config.startY - this.config.boxPadding;
+        const boxY = 520;
         const boxWidth = this.config.startX + this.config.buttonWidth + this.config.boxExtraWidth;
-        const boxHeight =
-            (this.config.buttonHeight + this.config.spacing) * this.config.actions.length +
-            this.config.boxPadding * 2 +
-            120 - // Zusätzliche Höhe für die Inventartasche
-            this.config.spacing; // Höhe für alle Buttons plus Padding
+        const boxHeight = 170;
 
         // Erstelle die Box als Graphics-Objekt
         this.background = this.scene.add.graphics();

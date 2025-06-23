@@ -38,6 +38,7 @@ class GameStateManager {
                 everTalkedToKen: false,
                 hasAccessForm: false,
                 hasAccessCard: false,
+                isElevatorOpen: false,
                 manifestTaken: false,
                 gummyBearsTaken: false,
                 cokeBombBuildOnce: false,

@@ -316,6 +316,20 @@ class MeetingScene extends BaseScene {
 
     useMeetingExit() {
         this.focusInteraction();
+        if (this.gameState.progress.managerAttention) {
+            this.useMeetingExitSub();
+        } else {
+            this.showMonolog(["Ich werde hier scheinbar komplett ignoriert."
+                , "Ich muss mir etwas kluges überlegen, um ihre Aufmerksamkeit zu bekommen."]
+            ,()=>{
+                this.useMeetingExitSub();
+                }
+            );
+        }
+    }
+
+    useMeetingExitSub() {
+        this.focusInteraction();
         this.tweens.add({
             targets: this.sophie,
             y: this.viewport.height * this.sceneConfig.sophieBottomPosition,
@@ -365,17 +379,6 @@ class MeetingScene extends BaseScene {
         });
     }
 
-    takeMeetingCoke() {
-        const gameState = this.gameState;
-        if (this.stateManager.hasAsset(gameState,'invCokeClosed')
-            || this.stateManager.hasAsset(gameState,'invCokeOpen')) {
-            this.showMonolog(["Ich habe schon genug Cola bei mir.", "Ich will an meinem ersten Tag nicht unangenehm auffallen."], ()=>{
-                this.backToDefault();
-            });
-            return true;
-        }
-    }
-
     takeMeetingGummyBears() {
         this.updateGameState({
             progress: {
@@ -388,21 +391,27 @@ class MeetingScene extends BaseScene {
         this.focusInteraction();
         let switcherOptions = [];
 
-        // Option 1
-        switcherOptions.push({
-            text: "Ich bin Sophie Plaice und ich will die Company agil machen.",
-            callback: () => {
-                this.subTalkOptionReject("Ich bin Sophie Plaice und ich will die Company agil machen.");
-            }
-        });
 
-        // Option 2
-        switcherOptions.push({
-            text: "Lasst uns bitte klären, welches Problem wir hier lösen wollen?",
-            callback: () => {
-                this.subTalkOptionReject("Lasst uns erstmal klären, welches Problem wir hier lösen wollen?");
-            }
-        });
+        if (!this.gameState.progress.managerAttention) {
+
+
+            // Option 1
+            switcherOptions.push({
+                text: "Ich bin Sophie Plaice und ich will die Company agil machen.",
+                callback: () => {
+                    this.subTalkOptionReject("Ich bin Sophie Plaice und ich will die Company agil machen.");
+                }
+            });
+
+            // Option 2
+            switcherOptions.push({
+                text: "Lasst uns bitte klären, welches Problem wir hier lösen wollen?",
+                callback: () => {
+                    this.subTalkOptionReject("Lasst uns erstmal klären, welches Problem wir hier lösen wollen?");
+                }
+            });
+
+        }
 
         // Option 3
         switcherOptions.push({
@@ -418,15 +427,6 @@ class MeetingScene extends BaseScene {
                 text: "Ich habe eine disruptive Idee!",
                 callback: () => {
                     this.subExplodeCokeBomb();
-                }
-            });
-        } else {
-            const randomProsIndex = Phaser.Math.Between(0, this.pros.length - 1);
-            const randomProsText = this.pros[randomProsIndex];
-            switcherOptions.push({
-                text: randomProsText,
-                callback: () => {
-                    this.subTalkOptionReject(randomProsText);
                 }
             });
         }
@@ -889,6 +889,7 @@ class MeetingScene extends BaseScene {
     }
 
     takeMeetingBusinessCards() {
+        this.focusInteraction();
         this.stateManager.addAsset(this.gameState, 'invBusinessCards', this.gameState.progress.businessCardsOnTable);
         this.controls.updateAssetsTaken();
         this.interactiveObjects['meetingBusinessCards'].gameObject.setVisible(false);
@@ -898,11 +899,7 @@ class MeetingScene extends BaseScene {
             }
         });
 
-        this.time.delayedCall(400, () => {
-            this.backToDefault();
-        });
-
-        return true;
+        return false;
     }
 
     shutdown() {

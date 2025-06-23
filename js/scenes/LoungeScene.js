@@ -199,7 +199,10 @@ class LoungeScene extends BaseScene {
         this.useInvCokeOpenWithMilkShaker();
     }
     useInvCokeOpenWithMilkShaker() {
-        this.showMonolog(["Die Flasche ist schon offen.", "Das würde den Shaker zerstören."]);
+        this.focusInteraction();
+        this.showMonolog(["Die Flasche ist schon offen.", "Das würde den Shaker zerstören."], ()=>{
+            this.backToDefault();
+        });
     }
 
     useMilkShakerWithInvCokeBomb() {

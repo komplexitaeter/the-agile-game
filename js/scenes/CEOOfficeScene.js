@@ -259,7 +259,7 @@ class CEOOfficeScene extends BaseScene {
         this.focusInteraction();
 
         if (this.gameState.progress.lightHouseProjectGiven) {
-            this.showMonolog([ "Ich habe einen klaren Auftrag.", "Ich habe das Gefühlt, es wird nicht besser, wenn ich nochmal mit ihr rede."], ()=>{
+            this.showMonolog([ "Ich habe einen klaren Auftrag:", "Das Team ALOHA soll nach Scrum arbeiten." , "Ich habe das Gefühlt, es wird nicht besser, wenn ich nochmal mit ihr rede."], ()=>{
                 this.backToDefault();
             });
         }

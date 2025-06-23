@@ -389,8 +389,13 @@ class BaseScene extends Phaser.Scene {
                 }
             ).setOrigin(0.5, 0.5);
 
+            if (objData.hoverDepth) {
+                hoverText.setDepth(objData.hoverDepth);
+            } else {
+                hoverText.setDepth(1000);
+            }
+
             hoverText.setVisible(false);
-            hoverText.setDepth(1000);
             this.hoverTexts[objData.id] = hoverText;
         }
 

@@ -19,6 +19,7 @@ class LobbyScene extends BaseScene {
         this.elevator_bg.setOrigin(0.5, 0.5);
         this.elevator_bg.setDepth(this.bg.depth - 2);
 
+
         this.elevator_dore_left = this.add.image(this.viewport.width / 2, this.viewport.height / 2
             , 'lobby_elevator_dore_left')
         this.elevator_dore_left.setOrigin(0.5, 0.5);
@@ -29,7 +30,10 @@ class LobbyScene extends BaseScene {
         this.elevator_dore_right.setOrigin(0.5, 0.5);
         this.elevator_dore_right.setDepth(this.bg.depth - 1);
 
-        this.isElevatdorOpen = false;
+        if (this.gameState.progress.isElevatorOpen) {
+            this.elevator_dore_left.setVisible(false);
+            this.elevator_dore_right.setVisible(false);
+        }
 
         if (this.entryPoint === 'elevator') {
             this.sophie.x = this.viewport.width * 0.85;
@@ -496,7 +500,11 @@ class LobbyScene extends BaseScene {
                             ease: 'Sine.easeOut',
                             onComplete: () => {
                                 this.backToDefault();
-                                this.isElevatdorOpen = true;
+                                this.updateGameState({
+                                    progress: {
+                                        isElevatorOpen: true
+                                    }
+                                });
                             }
                         });
                         this.tweens.add({
@@ -520,7 +528,7 @@ class LobbyScene extends BaseScene {
             }
         });
 
-        if (this.isElevatdorOpen) {
+        if (this.gameState.progress.isElevatorOpen) {
             this.moveSophie(this.interactiveObjects['elevator'].gameObject, ()=>{
                 this.changeScene('ElevatorScene');
             });
