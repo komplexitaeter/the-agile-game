@@ -361,7 +361,7 @@ class TeamScene extends BaseScene {
                         if (this.gameState.progress.whiteBoardPainted) {
                             replyText = "Karteikarten fürs Whiteboard und das stabile Prozess-Buch?";
                         } else {
-                            replyText = "Eine weiß Magnettafel mit User-Story Karten darauf?";
+                            replyText = "Eine weiße Magnettafel mit User-Story Karten darauf?";
                         }
                     }
                     if (this.gameState.progress.pillarsFulfilled === 2) {
