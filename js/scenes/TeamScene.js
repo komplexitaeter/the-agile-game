@@ -350,22 +350,47 @@ class TeamScene extends BaseScene {
             if (this.gameState.progress.pillarsFulfilled >= 3) {
                 this.finalizeGame();
             } else {
-                let answerText = "Nein, wir müssen noch die drei Säulen von Scrum beachten.";
-                let askText = "Welche sind das?";
-                if (this.gameState.progress.pillarsFulfilled === 1) {
-                    answerText = "Nein, wir müssen noch zwei weitere Säulen von Scrum beachten.";
-                }
-                if (this.gameState.progress.pillarsFulfilled === 2) {
-                    answerText = "Nein, wir müssen noch die letzte Säulen von Scrum beachten.";
-                    askText = "Welche ist das?";
-                }
-                this.showCharacterMonolog(this.getRandomDev(), [answerText], ()=>{
-                    this.showMonolog([askText], ()=>{
-                        this.showCharacterMonolog(this.getRandomDev(), ["Das solltest du als unser Scrum Master doch wissen."], ()=>{
-                            this.backToDefault()
+
+                if (this.gameState.progress.youKnowTheThreePillars) {
+
+                    let answerText = "Nein, wir müssen noch die drei Säulen von Scrum beachten.";
+                    let replyText = "Karten auf einem Whiteboard und eine tragende Anleitung?";
+
+                    if (this.gameState.progress.pillarsFulfilled === 1) {
+                        answerText = "Nein, wir müssen noch zwei weitere Säulen von Scrum beachten.";
+                        if (this.gameState.progress.whiteBoardPainted) {
+                            replyText = "Karteikarten fürs Whiteboard und das stabile Prozess-Buch?";
+                        } else {
+                            replyText = "Eine weiß Magnettafel mit User-Story Karten darauf?";
+                        }
+                    }
+                    if (this.gameState.progress.pillarsFulfilled === 2) {
+                        if (this.gameState.progress.scrumGuideUsed) {
+                            replyText = "Kleine Zettel mit Magneten auf dem Whiteboard?";
+                        } else {
+                            replyText = "Der Prozess-Guide als tragende und stabilisierende Funktion?";
+                        }
+                        answerText = "Nein, wir müssen noch die letzte Säulen von Scrum beachten.";
+                    }
+                    this.showCharacterMonolog(this.getRandomDev(), [answerText], () => {
+                        this.showMonolog([replyText], () => {
+                            this.showCharacterMonolog(this.getRandomDev(), ["Ja genau! Worauf wartest du noch?"], () => {
+                                this.backToDefault()
+                            });
                         });
                     });
-                });
+
+                } else {
+
+                    this.showCharacterMonolog(this.getRandomDev(), ["Nein, wir müssen noch die drei Säulen von Scrum beachten."], () => {
+                        this.showMonolog(["Welche sind das?"], () => {
+                            this.showCharacterMonolog(this.getRandomDev(), ["Das solltest du als unser Scrum Master doch wissen."], () => {
+                                this.backToDefault()
+                            });
+                        });
+                    });
+
+                }
             }
         });
     }

@@ -115,7 +115,8 @@ class BasementScene extends BaseScene {
                 }
             });
 
-            if (this.gameState.progress.lightHouseProjectGiven) {
+            if (this.gameState.progress.lightHouseProjectGiven
+                && !this.gameState.progress.youKnowTheThreePillars) {
                 switcherOptions.push({
                     text: "Kannst du mir sagen, was ich bei einer Scrum Einführung beachten muss? ",
                     callback: () => {
