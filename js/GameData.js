@@ -34,6 +34,12 @@ const GameData = {
         { type: 'image', key: 'bag_open', path: 'assets/images/controls_bag_open.png' },
         { type: 'image', key: 'bag_closed', path: 'assets/images/controls_bag_closed.png' },
 
+        // sounds
+        { type: 'audio', key: 'monologPling', path: 'assets/sounds/monolog_pling.mp3' },
+        { type: 'audio', key: 'closeBag', path: 'assets/sounds/close_bag.mp3' },
+        { type: 'audio', key: 'openBag', path: 'assets/sounds/open_bag.mp3' },
+        { type: 'audio', key: 'walking', path: 'assets/sounds/walking.mp3' },
+
         // inventory assets
         { type: 'image', key: 'invMagnet', path: 'assets/images/inv_magnet.png' },
         { type: 'image', key: 'invCatNotice', path: 'assets/images/inv_cat_notice.png' },
@@ -74,6 +80,7 @@ const GameData = {
             sophieBottomPosition: 0.975,
             assets: [
                 { type: 'image', key: 'building_intro', path: 'assets/images/intro.webp' },
+                { type: 'audio', key: 'busDrivesAway', path: 'assets/sounds/bus_drives_away.mp3' },
                 { type: 'image', key: 'bus', path: 'assets/images/intro_bus.png' }
             ],
             interactiveObjects: []
@@ -87,7 +94,10 @@ const GameData = {
                 { type: 'image', key: 'building', path: 'assets/images/building.webp' },
                 { type: 'image', key: 'lanternNotice', path: 'assets/images/building_lantern_notice.png' },
                 { type: 'image', key: 'trash', path: 'assets/images/building_trash.png' },
-                { type: 'image', key: 'emptyBottle', path: 'assets/images/inv_coke_empty.png' }
+                { type: 'image', key: 'emptyBottle', path: 'assets/images/inv_coke_empty.png' },
+                { type: 'audio', key: 'removeSticker', path: 'assets/sounds/remove_sticker.mp3' },
+                { type: 'audio', key: 'trashSearch', path: 'assets/sounds/trash_search.mp3' },
+                { type: 'audio', key: 'magicSound', path: 'assets/sounds/magic_sound.mp3' },
             ],
             interactiveObjects: [
                 {
@@ -134,6 +144,9 @@ const GameData = {
                     take: ["Der Zettel ist schon ein paar Jahre alt.", "Katze Mimi ist entlaufen.","Arme Katze Mimi.","Am Zettel ist noch ein Magnet.", "Den nehme ich auch mit.", "Wie auch immer der auf dem Holzmast haften konnte ¯\\_(ツ)_/¯"],
                     removable: true,
                     removeSound: "FLUP",
+                    removeAudioCode: 'removeSticker',
+                    removeAudioVolume: 0.3,
+                    removeAudioRate: 0.8,
                     inventoryAssets: ['invCatNotice', 'invMagnet']
                 },
                 {
@@ -150,6 +163,9 @@ const GameData = {
                     depth: 11,
                     sophieViewFrame: "back",
                     viewSound: "RUMPELRUMPEL",
+                    viewAudioCode: 'trashSearch',
+                    viewAudioVolume: 0.4,
+                    viewAudioRate: 1.1,
                     view: ["Einiges davon könnte nützlich sein.", "Aber ich bin mir nicht sicher ob ich ausreichend Commitment habe, den Müll mitzunehmen."],
                     viewOnlyOnce: true,
                     take: ["Die sind sehr groß und voller Müll und bleiben genau dort wo sie sind."],
@@ -240,6 +256,7 @@ const GameData = {
                 { type: 'image', key: 'lobby_elevator_dore_right', path: 'assets/images/lobby_elevator_dore_right.png' },
                 { type: 'spritesheet', key: 'ken', path: 'assets/images/character_ken.png', frameConfig: { frameWidth: 360, frameHeight: 1024 } },
                 { type: 'image', key: 'kenSign', path: 'assets/images/lobby_ken_sign.png' },
+                { type: 'audio', key: 'typing', path: 'assets/sounds/typing.mp3' },
             ],
             interactiveObjects: [
                 {

@@ -98,6 +98,9 @@ class BuildingScene extends BaseScene {
 
                 this.moveSophie({x: this.viewport.width * 0.43, y: 0},
                     ()=>{
+                        const magicSound = this.sound.add('magicSound', {volume:0.2, rate: 1});
+                        magicSound.play();
+
                         this.showMonolog(
                             ["Da steht R9.012 Ernie & Bert", "Ein weiteres Milliardenunternehmen, das Meetingräume nach der Sesamstraße benennt."],
                             ()=>{
@@ -125,6 +128,7 @@ class BuildingScene extends BaseScene {
             () => {
                 // Nachdem Sophie am Eingang steht und sich umgedreht hat,
                 // starten wir einen weiteren Tween, der sie ins Gebäude gehen lässt
+
                 this.tweens.add({
                     targets: this.sophie,
                     y: this.sophie.y - this.viewport.height * 0.085,          // Nach oben bewegen (ins Gebäude hinein)
@@ -134,7 +138,7 @@ class BuildingScene extends BaseScene {
                     duration: 1500,  // Dauer der Animation
                     ease: 'Sine.easeOut',
                     onComplete: () => {
-
+                        this.walkingSound.play();
                         this.tweens.add({
                             targets: this.sophie,
                             alpha: 0,      // Leicht ausblenden während sie reingeht
@@ -142,6 +146,7 @@ class BuildingScene extends BaseScene {
                             ease: 'Sine.easeOut',
                             onComplete: () => {
                                 this.changeScene('LobbyScene');
+                                this.walkingSound.stop();
                             }
                         });
 
@@ -149,7 +154,8 @@ class BuildingScene extends BaseScene {
                 });
             },
             'back',
-            true
+            true,
+            false
         );
     }
 

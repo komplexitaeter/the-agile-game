@@ -12,6 +12,11 @@ class MonologManager {
         this.currentOffsetY = null;
         this.blockingOverlay = null;
 
+        this.monologPling = this.scene.sound.add('monologPling', {
+            volume: 0.1,
+            rate: 2
+        });
+
         // Standard-Styling (kann überschrieben werden)
         this.defaultStyle = {
             fontSize: '18px',
@@ -173,6 +178,8 @@ class MonologManager {
 
         // Text im Viewport anpassen
         this._adjustTextPosition();
+
+        this.monologPling.play({rate: 2});
 
         // Timer für automatisches Weiterschalten einrichten (falls aktiviert)
         if (this.useTimer) {
@@ -340,6 +347,8 @@ class MonologManager {
 
             // Position nach Textänderung anpassen
             this._adjustTextPosition();
+
+            this.monologPling.play({rate:4});
 
             // Neuen Timer einrichten (falls aktiviert)
             if (this.useTimer) {

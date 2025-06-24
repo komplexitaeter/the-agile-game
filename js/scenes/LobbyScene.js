@@ -50,6 +50,10 @@ class LobbyScene extends BaseScene {
 
         this.dialogSwitcher = new DialogSwitcher(this);
 
+        this.typingSound = this.sound.add('typing', {
+            volume: 0.175,
+            rate: 1.2
+        });
 
 
         // Direkt beim Laden der Szene Tastaturgeräusche starten
@@ -118,7 +122,7 @@ class LobbyScene extends BaseScene {
         if (!this.playKeybordSounds) return;
 
         // Zufälliger Delay zwischen 1800 und 2500 ms für natürlicheres Tippen
-        const randomDelay = Phaser.Math.Between(1700, 3000);
+        const randomDelay = Phaser.Math.Between(1700, 4000);
 
         this.keyboardSoundTimer = this.time.addEvent({
             delay: randomDelay,
@@ -132,6 +136,9 @@ class LobbyScene extends BaseScene {
 
     playKeyboardSound(onComplete = null) {
         if (!this.playKeybordSounds) return;
+
+        const randomRate = Phaser.Math.FloatBetween(1.15, 1.3);
+        this.typingSound.play({rate: randomRate});
 
         // Etwas Variation in der Position des Sounds
         const offsetX = Phaser.Math.Between(-20, 20);
@@ -170,6 +177,8 @@ class LobbyScene extends BaseScene {
 
     stopKeyboardSounds() {
         this.playKeybordSounds = false;
+
+        this.typingSound.pause();
 
         // Timer anhalten
         if (this.keyboardSoundTimer) {

@@ -71,6 +71,14 @@ class GameControls {
             }
         };
 
+        this.closeBagSound = this.scene.sound.add('closeBag', {
+            rate: 1.3
+        });
+        this.openBagSound = this.scene.sound.add('openBag', {
+            rate: 1.1
+        });
+
+
         // Buttons erstellen
         this.create();
     }
@@ -516,6 +524,12 @@ class GameControls {
         // Zustand umschalten
         this.isBagOpen = !this.isBagOpen;
 
+        if (this.isBagOpen) {
+            this.openBagSound.play({volume: 0.4, rate: 1.1});
+        } else {
+            this.closeBagSound.play({volume: 0.4, rate: 1.3});
+        }
+
         // Grafik aktualisieren
         this.inventoryBag.setTexture(this.isBagOpen ? 'bag_open' : 'bag_closed');
 
@@ -716,6 +730,8 @@ class GameControls {
         // Originalskalierung der Tasche speichern
         const originalScale = this.inventoryBag.scale;
 
+        this.openBagSound.play({volume: 0.4, rate: 2 });
+
         // Tasche animieren
         this.scene.tweens.add({
             targets: this.inventoryBag,
@@ -758,6 +774,8 @@ class GameControls {
             onComplete: () => {
                 // Panel zur Sicherheit wieder an die Ausgangsposition setzen
                 this.inventoryPanel.x = originalX;
+                this.closeBagSound.play({volume: 0.4, rate: 2});
+
             }
         });
     }

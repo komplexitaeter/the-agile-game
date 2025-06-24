@@ -189,6 +189,8 @@ class ThemeScene extends BaseScene {
     startGame() {
         let nextScene = 'IntroScene';
 
+        this.sound.unlock();
+
         // Wenn es einen gespeicherten Zustand gibt, nutze diesen
         if (this.gameState && this.gameState.currentScene && this.gameState.currentScene !== this.scene.key) {
             nextScene = this.gameState.currentScene;

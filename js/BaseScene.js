@@ -39,9 +39,6 @@ class BaseScene extends Phaser.Scene {
         this.interactiveObjects = {};
         this.hoverTexts = {};
 
-        // MonologManager initialisieren
-        this.monologManager = new MonologManager(this);
-
         // Wenn wir aus einer anderen Szene kommen und einblenden sollen
         this.fadeDuration = data.doFadeIn ? 900 : 2500;
 
@@ -169,6 +166,9 @@ class BaseScene extends Phaser.Scene {
         // Kamera einrichten
         this.cameras.main.centerOn(this.viewport.width / 2, this.viewport.height / 2);
 
+        // MonologManager initialisieren
+        this.monologManager = new MonologManager(this);
+
         // Hintergrund einrichten
         this.setupBackground();
 
@@ -187,6 +187,12 @@ class BaseScene extends Phaser.Scene {
         // Sound-Effekt-Manager initialisieren, damit er für alle Szenen verfügbar ist
         this.soundEffects = new SoundEffect(this);
 
+        this.walkingSound = this.sound.add('walking', {
+            volume: 0.3,
+            loop: true,
+            rate: 1.8
+        });
+        this.walkingSound.stop();
 
         // Pointer-Events
         this.input.on('pointerdown', this.handlePointerDown, this);
@@ -531,7 +537,7 @@ class BaseScene extends Phaser.Scene {
         this.controls.setMask(mask);
     }
 
-    moveSophie(worldPoint, onCompleteDo=null, endFrame = null, exactPositioning=false) {
+    moveSophie(worldPoint, onCompleteDo=null, endFrame = null, exactPositioning=false, stopSound= true) {
         // Bestehende Tweens abbrechen, um Überlappungen zu vermeiden
         if (this.sophieTween && this.sophieTween.isPlaying()) {
             this.sophieTween.stop();
@@ -635,6 +641,8 @@ class BaseScene extends Phaser.Scene {
             });
         }
 
+        this.walkingSound.play();
+
         // Bewegung für Sophie
         this.sophieTween = this.tweens.add({
             targets: this.sophie,
@@ -644,6 +652,10 @@ class BaseScene extends Phaser.Scene {
             onComplete: () => {
                 // Animation stoppen, wenn die Bewegung abgeschlossen ist
                 this.sophie.anims.stop();
+
+                if (stopSound) {
+                    this.walkingSound.stop();
+                }
 
                 // Standardframe je nach Richtung setzen
                 if (endFrame) {
@@ -893,6 +905,12 @@ class BaseScene extends Phaser.Scene {
 
             this.moveSophie(worldPoint, ()=>{
 
+                this.audio = this.sound.add(interactiveObject.data.viewAudioCode, {
+                    volume: interactiveObject.data.viewAudioVolume || 0.5,
+                    rate: interactiveObject.data.viewAudioRate || 1
+                });
+                this.audio.play();
+
                 this.soundEffects.play(interactiveObject.data.viewSound, interactiveObject.gameObject.x, interactiveObject.gameObject.y, {
                     duration: 2000,
                     depth: this.sophie.depth + 1,
@@ -952,6 +970,13 @@ class BaseScene extends Phaser.Scene {
             if (interactiveObject.data.removable) {
                 interactiveObject.gameObject.setVisible(false);
                 this.hideAllHoverTexts();
+            }
+            if (interactiveObject.data.removeAudioCode) {
+                this.audio = this.sound.add(interactiveObject.data.removeAudioCode, {
+                    volume: interactiveObject.data.removeAudioVolume || 0.5,
+                    rate: interactiveObject.data.removeAudioRate || 1
+                });
+                this.audio.play();
             }
             if (interactiveObject.data.removeSound) {
                 this.soundEffects.play(interactiveObject.data.removeSound, interactiveObject.gameObject.x, interactiveObject.gameObject.y, {

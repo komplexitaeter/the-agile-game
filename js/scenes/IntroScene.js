@@ -182,6 +182,9 @@ class IntroScene extends BaseScene {
             }
         });
 
+        const busSound = this.sound.add('busDrivesAway', { volume: 0.5 });
+        busSound.play();
+
         // Bus bewegen
         this.tweens.add({
             targets: this.bus,
