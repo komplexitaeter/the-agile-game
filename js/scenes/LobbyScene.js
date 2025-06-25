@@ -321,18 +321,22 @@ class LobbyScene extends BaseScene {
         this.showMonolog(["Ich bin Sophie Plaice und ich möchte diese Company agil machen."],()=>{
             this.showCharacterMonolog(this.ken, ["Externer oder interner Mitarbeiter?"],
                 ()=> {
-                    this.updateGameState({
-                        progress: {
-                            everTalkedToKen: true
-                        }
-                    });
 
                     let switcherOptions = [];
 
-                    switcherOptions.push({
-                        text: "Ich bin eine interne Mitarbeiterin.",
-                        callback: () => this.subTalkKenEmoInternal()
-                    });
+
+                    if (!this.gameState.progress.everTalkedToKen) {
+                        this.updateGameState({
+                            progress: {
+                                everTalkedToKen: true
+                            }
+                        });
+                    } else {
+                        switcherOptions.push({
+                            text: "Ich bin eine interne Mitarbeiterin.",
+                            callback: () => this.subTalkKenEmoInternal()
+                        });
+                    }
 
                     if (!this.gameState.progress.hasAccessForm) {
                         switcherOptions.push({
@@ -341,10 +345,12 @@ class LobbyScene extends BaseScene {
                         });
                     }
 
-                    switcherOptions.push({
-                        text: "Ich schaue mich nur etwas um.",
-                        callback: () => this.subTalkKenAbort()
-                    });
+                    if (switcherOptions.length === 0)  {
+                        switcherOptions.push({
+                            text: "Ich schaue mich nur etwas um.",
+                            callback: () => this.subTalkKenAbort()
+                        });
+                    }
 
 
                     this.dialogSwitcher.showOptions(switcherOptions);
