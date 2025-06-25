@@ -72,6 +72,11 @@ class MeetingScene extends BaseScene {
             this.interactiveObjects['meetingBusinessCards'].gameObject.setVisible(false);
         }
 
+        this.tick = this.sound.add('tick', {
+            volume: 0.3,
+            rate: 1.4
+        });
+
         // Sofort den Background-Talk starten, BEVOR Sophies Intro beginnt
         this.startBackgroundTalk();
 
@@ -211,6 +216,8 @@ class MeetingScene extends BaseScene {
 
         // Speichern des aktuellen Textes, damit er in stopBackgroundTalk() sofort entfernt werden kann
         this.currentBackgroundText = text;
+
+        this.tick.play();
 
         // Timer für nächsten Text setzen (genau nach displayDuration)
         this.backgroundTalkTimer = this.time.delayedCall(displayDuration, () => {

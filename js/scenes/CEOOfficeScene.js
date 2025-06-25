@@ -62,6 +62,17 @@ class CEOOfficeScene extends BaseScene {
         this.setupNoel();
         this.noel.play('noel_right');
 
+        this.tick = this.sound.add('tick', {
+            volume: 0.3,
+            rate: 1.4
+        });
+
+        this.noelWalkSound = this.sound.add('walking', {
+            volume: 0.5,
+            rate: 1.2,
+            loop: true
+        });
+
         if (this.gameState.progress.officeMagnetTaken) {
             this.interactiveObjects['officeMagnet'].gameObject.setVisible(false);
             this.interactiveObjects['officeMagnet'].gameObject.removeInteractive();
@@ -198,6 +209,7 @@ class CEOOfficeScene extends BaseScene {
         // Pausendauer anpassen
         const pauseDuration = Phaser.Math.Between(100, 400);
 
+        this.tick.play();
         this.backgroundTalkTimer = this.time.delayedCall(displayDuration, () => {
             this.tweens.add({
                 targets: text,
@@ -275,12 +287,14 @@ class CEOOfficeScene extends BaseScene {
                     this.showCharacterMonolog(this.noel, [text], () => {
                         this.noel.play('noel_left');
                         this.showCharacterMonolog(this.noel, ["Ja?"], () => {
+                            this.noelWalkSound.play();
                             this.tweens.add({
                                 targets: this.noel,
                                 x: this.viewport.width * 0.6,
                                 duration: 1500,
                                 ease: 'Power1',
                                 onComplete: () => {
+                                    this.noelWalkSound.stop();
                                     let text = "Wer bist du und was willst du?";
                                     if (this.gameState.progress.everTalkedToNoel) {
                                         text = "Wer warst du nochmal?";
@@ -384,12 +398,14 @@ class CEOOfficeScene extends BaseScene {
             this.moveSophie({x: this.viewport.width * 0.75, y:  this.viewport.height}, ()=>{
                 this.showMonolog(["Ich brauche eine Unterschrift auf diesem Antrag."], ()=>{
                     this.noel.play("noel_left");
+                    this.noelWalkSound.play();
                     this.tweens.add({
                         targets: this.noel,
                         x: this.viewport.width * 0.79,
                         duration: 1000,
                         ease: 'Power1',
                         onComplete: () => {
+                            this.noelWalkSound.stop();
                             this.showCharacterMonolog(this.noel, ["Ich habe keine Zeit für sowas.", "Hier, nimm diesen Stift und fülle es selbst aus!"], ()=>{
                                 this.addInventoryAssets(['invPen']);
                                 this.controls.updateAssetsTaken();
@@ -399,12 +415,14 @@ class CEOOfficeScene extends BaseScene {
                                     }
                                 });
                                 this.noel.play('noel_right');
+                                this.noelWalkSound.play();
                                 this.tweens.add({
                                     targets: this.noel,
                                     x: this.viewport.width * this.noelRelativeX,
                                     duration: 1000,
                                     ease: 'Power1',
                                     onComplete: () => {
+                                        this.noelWalkSound.stop();
                                         this.startBackgroundTalk();
                                         this.moveSophie({x: this.viewport.width * 0.4, y:  this.viewport.height},()=>{
                                             this.showMonolog(["Das ist wirklich das sinnloseste Formular der Welt."], ()=>{
@@ -436,12 +454,14 @@ class CEOOfficeScene extends BaseScene {
             this.moveSophie({x: this.viewport.width * 0.75, y:  this.viewport.height}, ()=>{
                 this.showMonolog(["Ich habe das hier gefunden."], ()=>{
                     this.noel.play("noel_left");
+                    this.noelWalkSound.play();
                     this.tweens.add({
                         targets: this.noel,
                         x: this.viewport.width * 0.79,
                         duration: 1000,
                         ease: 'Power1',
                         onComplete: () => {
+                            this.noelWalkSound.stop();
                             this.showCharacterMonolog(this.noel, ["Oh, meine Katze Mimi.", "***SCHLUCHZ***", "Sie ist mir vor Jahren genommen worden.", "Ich vermisse sie sehr."], ()=>{
                                this.showMonolog(["Das tut mir sehr leid.", "Wenn ich sie finde, werde ich sie dir zurückbringen."], ()=>{
                                    this.showCharacterMonolog(this.noel, ["Das ist sehr nett von dir.", "Warte, ich habe da gerade eine sehr gute Idee."], ()=>{
@@ -483,5 +503,12 @@ class CEOOfficeScene extends BaseScene {
             }
         });
         return false;
+    }
+
+    useInvManifestWithOfficeNoel() {
+        this.focusInteraction();
+        this.showMonolog(["Ich befürchte, dass ich meinen Job verlieren könnte, wenn ich ihr das zeige."], ()=>{
+            this.backToDefault();
+        });
     }
 }

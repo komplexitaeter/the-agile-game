@@ -43,6 +43,7 @@ const GameData = {
         { type: 'audio', key: 'inputError', path: 'assets/sounds/input_error.mp3' },
         { type: 'audio', key: 'elevatorPling', path: 'assets/sounds/elevator_pling.mp3' },
         { type: 'audio', key: 'elevatorDoreSound', path: 'assets/sounds/elevator_dore_open.mp3' },
+        { type: 'audio', key: 'tick', path: 'assets/sounds/tick.mp3' },
 
         // inventory assets
         { type: 'image', key: 'invMagnet', path: 'assets/images/inv_magnet.png' },
