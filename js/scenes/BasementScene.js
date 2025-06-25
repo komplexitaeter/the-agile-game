@@ -33,6 +33,34 @@ class BasementScene extends BaseScene {
         this.toiletDore.setDepth(this.frontRight + 1);
         this.toiletDore.setVisible(false);
 
+        this.coinDropping = this.sound.add('coinDropping', {
+            volume: 0.7,
+            rate: 1.2
+        });
+
+        this.searchStock = this.sound.add('searchStock', {
+            volume: 0.7,
+            rate: 1.3
+        });
+
+        this.toilet1 = this.sound.add('toilet1', {
+            volume: 0.7,
+            rate: 1.3
+        });
+
+        this.toilet2 = this.sound.add('toilet2', {
+            volume: 0.7,
+            rate: 2.5
+        });
+
+        this.jeffWalkSound = this.sound.add('walkingMan', {
+            volume: 0.4,
+            rate: 1.8,
+            loop: true
+        });
+
+        this.walkingSound.setRate(1.4);
+
         if (!this.gameState.progress.coinOnPlate) {
             this.interactiveObjects['basementCoin'].gameObject.setVisible(false);
         }
@@ -48,6 +76,8 @@ class BasementScene extends BaseScene {
             this.sophie.play('walk_right');
 
             // Animate Sophie returning from the team room (reverse of useBasementTeamRoom animation)
+            this.walkingSound.play();
+
             this.tweens.add({
                 targets: this.sophie,
                 scale: this.sceneConfig.sophieScale,
@@ -56,6 +86,7 @@ class BasementScene extends BaseScene {
                 duration: 1200,
                 ease: 'Sine.easeOut',
                 onComplete: () => {
+                    this.walkingSound.stop();
                     this.backToDefault();
                 }
             });
@@ -149,7 +180,7 @@ class BasementScene extends BaseScene {
         this.showMonolog(["Wie läuft das Geschäft?"], ()=>{
             if (this.gameState.progress.toiletEverUsed>1) {
                 if (this.gameState.progress.scrumGuideGiven) {
-                    this.showCharacterMonolog(this.jeff, ["Seit du im Unternehmen bist habe ich das Gefühlt, es geht vorn."],()=>{
+                    this.showCharacterMonolog(this.jeff, ["Seit du im Unternehmen bist habe ich das Gefühlt, es geht bergauf."],()=>{
                         this.backToDefault();
                     })
                 } else {
@@ -281,6 +312,9 @@ class BasementScene extends BaseScene {
                         coinOnPlate: true
                     }
                 });
+
+                this.coinDropping.play();
+
                 this.stateManager.removeAsset(this.gameState, 'invCoin', 1);
                 this.controls.updateAssetsTaken();
                 this.interactiveObjects['basementCoin'].gameObject.setVisible(true)
@@ -337,6 +371,7 @@ class BasementScene extends BaseScene {
 
 // Jeff bewegt sich zur Treppe
     moveJeffToStairs() {
+        this.jeffWalkSound.play();
         this.tweens.add({
             targets: this.jeff,
             x: this.viewport.width * 0.35,
@@ -373,6 +408,7 @@ class BasementScene extends BaseScene {
             duration: 1000,
             ease: 'Sine.easeOut',
             onComplete: () => {
+                this.jeffWalkSound.stop();
                 this.playJeffToiletSounds();
             }
         });
@@ -393,11 +429,15 @@ class BasementScene extends BaseScene {
             { sound: "FLUPP!", delay: 3300, duration: 500 }
         ];
 
+
+        this.searchStock.play();
+
         // Für jedes Geräusch einen verzögerten Aufruf einrichten
         jeffSounds.forEach(this.scheduleSoundEffect.bind(this, jeffX, jeffY));
 
         // Nach allen Geräuschen Jeff zurückkehren lassen
         this.time.delayedCall(4000, () => {
+            this.searchStock.stop();
             this.returnJeffFromToilet();
         });
     }
@@ -440,6 +480,7 @@ class BasementScene extends BaseScene {
     returnJeffFromToilet() {
         // Jeff geht zurück zur Treppe
         this.jeff.play('jeff_right');
+        this.jeffWalkSound.play();
         this.tweens.add({
             targets: this.jeff,
             x: this.viewport.width * 0.35,
@@ -482,6 +523,7 @@ class BasementScene extends BaseScene {
             duration: 600,
             ease: 'Sine.easeOut',
             onComplete: () => {
+                this.jeffWalkSound.stop();
                 // Wieder im Sitzen
                 this.jeff.play('jeff_sitting');
                 this.interactiveObjects['basementJeff'].gameObject.setVisible(true);
@@ -509,10 +551,10 @@ class BasementScene extends BaseScene {
         }, 'walk_right',true);
     }
 
-    // Korrigierte Sophie Toiletten-Funktionen mit richtigen z-index (depth) Werten
-// und vollständiger Animation
 
     goToToilet() {
+        this.playWalkingSound = false;
+        this.walkingSound.play();
         this.moveSophie(this.sophie, ()=>{
             // Sophie geht nach hinten und wird kleiner
             this.tweens.add({
@@ -539,12 +581,14 @@ class BasementScene extends BaseScene {
                             this.toiletDore.setDepth(this.frontRight.depth + 1);
                             this.toiletDore.setVisible(true);
 
+                            this.walkingSound.stop();
+
                             this.playSophieToiletSounds();
                         }
                     });
                 }
             });
-        }, 'back', true);
+        }, 'back', true, false);
     }
 
     playSophieToiletSounds() {
@@ -561,13 +605,15 @@ class BasementScene extends BaseScene {
 
         // Definiere die Geräusche mit zeitlichen Variationen
         const sophieSounds = [
-            { sound: "KLACK!", delay: 200 * delayFactor, duration: 800 },
-            { sound: "QUIETSCH!", delay: 600 * delayFactor, duration: 700 },
-            { sound: "PLÄTSCHER!", delay: 1200 * delayFactor, duration: 600 },
-            { sound: "FLUSH!", delay: 1800 * delayFactor, duration: 900 },
-            { sound: "ZISCH!", delay: 2500 * delayFactor, duration: 1000 },
+            { sound: "KLACK!", delay: 200 * delayFactor, duration: 700 },
+            { sound: "QUIETSCH!", delay: 600 * delayFactor, duration: 600 },
+            { sound: "PLÄTSCHER!", delay: 1200 * delayFactor, duration: 500 },
+            { sound: "FLUSH!", delay: 1800 * delayFactor, duration: 400 },
+            { sound: "ZISCH!", delay: 2500 * delayFactor, duration: 750 },
             { sound: "FLUPP!", delay: 3300 * delayFactor, duration: 500 }
         ];
+
+        this.toilet1.play();
 
         // Für jedes Geräusch einen verzögerten Aufruf mit spezieller Tiefe einrichten
         sophieSounds.forEach(soundInfo => {
@@ -591,6 +637,10 @@ class BasementScene extends BaseScene {
                         fill: true
                     }
                 };
+
+                if (soundInfo.duration === 750) {
+                    this.toilet2.play();
+                }
 
                 // SoundEffects-Klasse verwenden, um den Sound abzuspielen
                 // Hier überschreiben wir die Standard-Tiefe, um sicherzustellen, dass die Soundeffekte
@@ -628,6 +678,9 @@ class BasementScene extends BaseScene {
         // Sophie zurückbewegen und normale Tiefe wiederherstellen
         this.sophie.play('walk_left');
 
+        this.walkingSound.play();
+
+
         this.tweens.add({
             targets: this.sophie,
             x: this.viewport.width * 0.7,
@@ -648,6 +701,9 @@ class BasementScene extends BaseScene {
                         // Sophie wieder auf normale Tiefe setzen
                         this.sophie.setDepth(10); // Annahme: Standard-Tiefe ist 10
 
+                        this.walkingSound.stop();
+                        this.playWalkingSound = true;
+
                         // Monolog nach dem Toilettengang
                         this.showMonolog(["Ahhh, das war nötig."], () => {
 
@@ -665,6 +721,8 @@ class BasementScene extends BaseScene {
 
     useBasementTeamRoom() {
         this.focusInteraction();
+        this.playWalkingSound = false;
+        this.walkingSound.play();
         this.moveSophie({x: this.viewport.width * 0.7, y:  this.viewport.height}, ()=>{
 
             this.tweens.add({
@@ -675,11 +733,12 @@ class BasementScene extends BaseScene {
                 duration: 1200,
                 ease: 'Sine.easeOut',
                 onComplete: () => {
+                    this.walkingSound.stop();
                     this.changeScene('TeamScene');
                 }
             });
 
-        },'back', true);
+        },'back', true, false);
     }
 
 }

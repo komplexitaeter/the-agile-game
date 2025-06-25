@@ -7,6 +7,11 @@ class LoungeScene extends BaseScene {
         super.create();
         this.controls.show();
 
+        this.shakerSound = this.sound.add('shaker', {
+            volume: 0.7,
+            rate: 1.2
+        });
+
         this.shaker = this.add.image(this.viewport.width / 2, this.viewport.height / 2
             , 'loungeShaker')
         this.shaker.setOrigin(0.5, 0.5);
@@ -64,6 +69,8 @@ class LoungeScene extends BaseScene {
             { text: "KLACK", offsetX: -60, offsetY: 60 },
             { text: "KLONG", offsetX: 70, offsetY: 40 }
         ];
+
+        this.shakerSound.play();
 
         // Funktion für eine einzelne Shake-Bewegung
         const doSingleShake = () => {

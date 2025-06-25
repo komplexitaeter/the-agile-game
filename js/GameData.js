@@ -44,6 +44,8 @@ const GameData = {
         { type: 'audio', key: 'elevatorPling', path: 'assets/sounds/elevator_pling.mp3' },
         { type: 'audio', key: 'elevatorDoreSound', path: 'assets/sounds/elevator_dore_open.mp3' },
         { type: 'audio', key: 'tick', path: 'assets/sounds/tick.mp3' },
+        { type: 'audio', key: 'drinkingBottle', path: 'assets/sounds/drinking_bottle.mp3' },
+        { type: 'audio', key: 'openingBottle', path: 'assets/sounds/opening_bottle.mp3' },
 
         // inventory assets
         { type: 'image', key: 'invMagnet', path: 'assets/images/inv_magnet.png' },
@@ -447,6 +449,7 @@ const GameData = {
                 {type: 'image', key: 'meetingBusinessCardA', path: 'assets/images/meeting_business_card.png'},
                 {type: 'image', key: 'meetingBusinessCardB', path: 'assets/images/meeting_business_card.png'},
                 {type: 'image', key: 'meetingBusinessCardC', path: 'assets/images/meeting_business_card.png'},
+                {type: 'audio', key: 'cokeExplosion', path: 'assets/sounds/coke_explosion.mp3' },
 
             ],
             interactiveObjects: [
@@ -587,6 +590,7 @@ const GameData = {
                 {type: 'image', key: 'loungeShaker', path: 'assets/images/lounge_shaker.png'},
                 {type: 'image', key: 'loungeCoke', path: 'assets/images/inv_coke_closed.png' },
                 {type: 'image', key: 'loungeBottleOpener', path: 'assets/images/lounge_bottle_opener.png' },
+                {type: 'audio', key: 'shaker', path: 'assets/sounds/shaker.mp3' },
 
             ],
             interactiveObjects: [
@@ -739,9 +743,14 @@ const GameData = {
                 {type: 'image', key: 'basementFrontRight', path: 'assets/images/basement_front_right.png'},
                 {type: 'image', key: 'basementFrontLeft', path: 'assets/images/basement_front_left.png'},
                 {type: 'image', key: 'basementToiletDore', path: 'assets/images/basement_toilet_dore.png'},
-                { type: 'spritesheet', key: 'jeff', path: 'assets/images/character_jeff.png', frameConfig: { frameWidth: 400, frameHeight: 892 } },
-                { type: 'image', key: 'jeffSign', path: 'assets/images/basement_jeff_sign.png' },
-                { type: 'image', key: 'basementCoin', path: 'assets/images/basement_coin.png' },
+                {type: 'spritesheet', key: 'jeff', path: 'assets/images/character_jeff.png', frameConfig: { frameWidth: 400, frameHeight: 892 } },
+                {type: 'image', key: 'jeffSign', path: 'assets/images/basement_jeff_sign.png' },
+                {type: 'image', key: 'basementCoin', path: 'assets/images/basement_coin.png' },
+                {type: 'audio', key: 'coinDropping', path: 'assets/sounds/coin_dropping.mp3' },
+                {type: 'audio', key: 'searchStock', path: 'assets/sounds/search_stock.mp3' },
+                {type: 'audio', key: 'walkingMan', path: 'assets/sounds/walking_man.mp3' },
+                {type: 'audio', key: 'toilet1', path: 'assets/sounds/toilet1.mp3' },
+                {type: 'audio', key: 'toilet2', path: 'assets/sounds/toilet2.mp3' },
             ],
             interactiveObjects: [
                 {
@@ -884,6 +893,8 @@ const GameData = {
                 {type: 'image', key: 'teamWB90', path: 'assets/images/team_wb_90.png'},
                 {type: 'image', key: 'teamWB100', path: 'assets/images/team_wb_100.png'},
                 {type: 'image', key: 'teamScrumGuide', path: 'assets/images/team_scrum_guide.png'},
+                {type: 'audio', key: 'sprayCan', path: 'assets/sounds/spray_can.mp3' },
+                {type: 'audio', key: 'soundOfWinning', path: 'assets/sounds/sound_of_winning.mp3' },
             ],
             interactiveObjects: [
                 {
@@ -1085,6 +1096,8 @@ const GameData = {
             sophieBottomPosition: 0.97,
             assets: [
                 {type: 'image', key: 'outro', path: 'assets/images/outro.png'},
+                {type: 'audio', key: 'parkAmbient', path: 'assets/sounds/park_ambient.mp3' },
+                {type: 'audio', key: 'parkSong', path: 'assets/sounds/park_song.mp3' },
             ],
             interactiveObjects: [],
         },

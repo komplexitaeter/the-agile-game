@@ -77,6 +77,11 @@ class MeetingScene extends BaseScene {
             rate: 1.4
         });
 
+        this.cokeExplosion = this.sound.add('cokeExplosion', {
+            volume: 0.7,
+            rate: 1.2
+        });
+
         // Sofort den Background-Talk starten, BEVOR Sophies Intro beginnt
         this.startBackgroundTalk();
 
@@ -297,6 +302,7 @@ class MeetingScene extends BaseScene {
 
         this.showMonolog(["Das Meeting ist in vollem Gange.", "Ich setze mich besser hin."], ()=>{
             this.focusInteraction();
+            this.walkingSound.play();
             this.tweens.add({
                 targets: this.sophie,
                 x: this.viewport.width * 0.503,
@@ -304,6 +310,8 @@ class MeetingScene extends BaseScene {
                 ease: 'Sine.easeOut',
                 onComplete: () => {
                     this.sophie.play('back');
+                    this.playWalkingSound = false;
+                    this.walkingSound.stop();
                     this.tweens.add({
                         targets: this.sophie,
                         y: this.viewport.height * 1.13,
@@ -345,6 +353,7 @@ class MeetingScene extends BaseScene {
             onComplete: () => {
                 this.startBackgroundTalk();
                 this.sophie.play('walk_right');
+                this.walkingSound.play();
                 this.tweens.add({
                     targets: this.sophie,
                     x: this.viewport.width * 0.85,
@@ -367,6 +376,7 @@ class MeetingScene extends BaseScene {
                                     duration: 1100,
                                     ease: 'Sine.easyInOut',
                                     onComplete: () => {
+                                        this.walkingSound.stop();
                                         this.tweens.add({
                                             targets: this.sophie,
                                             alpha: 0.3,
@@ -825,6 +835,8 @@ class MeetingScene extends BaseScene {
     playCokeBombAnimation(onComplete) {
         const centerX = this.viewport.width / 2;
         const centerY = this.viewport.height / 2;
+
+        this.cokeExplosion.play();
 
         // Explosionseffekt als Text
         const explosionText = this.add.text(centerX, centerY, "SPLASH!", {

@@ -61,6 +61,15 @@ class TeamScene extends BaseScene {
             this.interactiveObjects['teamTableLeg'].gameObject.setVisible(false);
         }
 
+        this.spayCan = this.sound.add('sprayCan', {
+            volume: 0.6,
+            rate: 1.4
+        });
+
+        this.soundOfWinning = this.sound.add('soundOfWinning', {
+            volume: 0.6,
+            rate: 1.4
+        });
         this.sophie.x = this.viewport.width * 0.78;
 
         this.backToDefault();
@@ -167,12 +176,7 @@ class TeamScene extends BaseScene {
 
     convinceTeam() {
         let switcherOptions = [];
-        switcherOptions.push({
-            text: "Ich bin Sophie Plaice und ich will dieses Team agil machen.",
-            callback: () => {
-                this.convinceByArguments();
-            }
-        });
+
         if (this.gameState.progress.lightHouseProjectGiven) {
             switcherOptions.push({
                 text: "Ich bin V.P. of Agile und ich habe den Auftrag von ganz oben, hier Scrum einzuführen.",
@@ -180,7 +184,15 @@ class TeamScene extends BaseScene {
                     this.convinceByOrder();
                 }
             });
+        } else {
+            switcherOptions.push({
+                text: "Ich bin Sophie Plaice und ich will dieses Team agil machen.",
+                callback: () => {
+                    this.convinceByArguments();
+                }
+            });
         }
+
         switcherOptions.push({
             text: "Ich bin Agile Coachin. Darf ich euch helfen?",
             callback: () => {
@@ -529,6 +541,8 @@ class TeamScene extends BaseScene {
             const textX = this.viewport.width * 0.44;  // Offset to the right of Sophie
             const textY  = this.viewport.height * 0.3;  // Above Sophie's feet, closer to hands
 
+            this.spayCan.play();
+
             // Display the sound effect text
             this.soundEffects.play(randomSprayText, textX, textY, {
                 duration: stageDelay * 0.8,  // Make sure it finishes before the next stage
@@ -739,6 +753,7 @@ class TeamScene extends BaseScene {
     finalizeGame() {
         this.focusInteraction();
 
+        this.soundOfWinning.play();
         this.showCharacterMonolog(this.getRandomDev(), ["Ja, du hast es geschafft."], ()=>{
             this.showCharacterMonolog(this.getRandomDev(), ["Herzlichen Glückwunsch!"], ()=>{
                 this.showCharacterMonolog(this.getRandomDev(), ["Das war eine der erfolgreichsten Scrum-Einführungen der Geschichte."], ()=>{

@@ -11,6 +11,8 @@ class BaseScene extends Phaser.Scene {
         this.fromScene = data.fromScene;
         this.entryPoint = data.entryPoint || 'default';
 
+        this.playWalkingSound = true;
+
         // GameStateManager initialisieren
         this.stateManager = new GameStateManager(this.scene.key);
 
@@ -193,6 +195,17 @@ class BaseScene extends Phaser.Scene {
             rate: 1.8
         });
         this.walkingSound.stop();
+
+        this.openingBottle = this.sound.add('openingBottle', {
+            volume: 0.6,
+            rate: 1.0
+        });
+
+        this.drinkingBottle = this.sound.add('drinkingBottle', {
+            volume: 0.6,
+            rate: 1.0
+        });
+
 
         // Pointer-Events
         this.input.on('pointerdown', this.handlePointerDown, this);
@@ -641,8 +654,9 @@ class BaseScene extends Phaser.Scene {
             });
         }
 
-        this.walkingSound.play();
-
+        if (relativeDistance>0.02 && this.playWalkingSound) {
+            this.walkingSound.play();
+        }
         // Bewegung für Sophie
         this.sophieTween = this.tweens.add({
             targets: this.sophie,
@@ -1051,6 +1065,7 @@ class BaseScene extends Phaser.Scene {
 
         this.sophie.play('back');
 
+        this.openingBottle.play();
         this.soundEffects.play("FLIP FLUP",
             this.sophie.x, this.sophie.y - (this.sophie.height * 0.7),
             {
@@ -1089,10 +1104,11 @@ class BaseScene extends Phaser.Scene {
         this.focusInteraction();
         this.sophie.play('give');
 
+        this.drinkingBottle.play();
         this.soundEffects.play("GLUCKGLUCKGLUCK",
             this.sophie.x, this.sophie.y - (this.sophie.height * 0.9),
             {
-                duration: 3000,
+                duration: 1500,
                 depth: this.sophie.depth + 10000,
                 style: {
                     fontSize: `40px`,
@@ -1137,6 +1153,8 @@ class BaseScene extends Phaser.Scene {
             this.focusInteraction();
 
             this.sophie.play('back');
+
+            this.openingBottle.play();
 
             this.soundEffects.play("FLIP FLUP",
                 this.sophie.x, this.sophie.y - (this.sophie.height * 0.7),

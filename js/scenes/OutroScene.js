@@ -30,8 +30,26 @@ class OutroScene extends BaseScene {
 
         this.outroSophie = {key: 'outro', x: 0, y: 0.45};
 
+        this.parkAmbient = this.sound.add('parkAmbient', {
+            volume: 1,
+            rate: 1,
+            loop: true
+        });
+
+        this.parkSong = this.sound.add('parkSong', {
+            volume: 0.2,
+            rate: 1,
+            loop: true
+        });
+
+        this.parkAmbient.play();
+        this.time.delayedCall(2500, ()=>{
+            this.parkSong.play();
+        })
+
+
         // Sophie Monolog starten nach kurzer Verzögerung
-        this.time.delayedCall(600, () => {
+        this.time.delayedCall(500, () => {
             this.showCharacterMonolog(this.outroSophie, [
                       "Puh, das war aufregend. Ging es dir auch so? Aber Spaß hatten wir schon.."
                      ,"Wenn du Lust auf Teil 2 hast, melde dich doch für unseren Newsletter an.."
