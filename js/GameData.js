@@ -97,6 +97,7 @@ const GameData = {
             assets: [
                 { type: 'image', key: 'building', path: 'assets/images/building.webp' },
                 { type: 'image', key: 'lanternNotice', path: 'assets/images/building_lantern_notice.png' },
+                { type: 'image', key: 'strangeWindow', path: 'assets/images/strange_window.png' },
                 { type: 'image', key: 'trash', path: 'assets/images/building_trash.png' },
                 { type: 'image', key: 'emptyBottle', path: 'assets/images/inv_coke_empty.png' },
                 { type: 'audio', key: 'trashSearch', path: 'assets/sounds/trash_search.mp3' },
@@ -212,7 +213,8 @@ const GameData = {
                 {
                     id: 'strangeWindow',
                     defaultAction: 1,
-                    type: 'rectangle',
+                    type: 'image',
+                    texture: 'strangeWindow',
                     relativeX: 0.494,
                     relativeY: 0.27,
                     relativeWidth: 0.014,
