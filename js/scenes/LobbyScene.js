@@ -564,6 +564,56 @@ class LobbyScene extends BaseScene {
         });
     }
 
+    useInvCatNoticeWithLobbyKen() {
+        this.focusInteraction(false);
+
+        this.moveSophie({x: this.viewport.width * 0.53, y: 0},
+            () => {
+                this.stopKeyboardSounds();
+
+                this.showCharacterMonolog(this.ken, ["Ich mochte diese Katze sehr.", "Ich frage mich, was ihr wohl zugestoßen ist."],()=>{
+                    this.sophie.play('walk_right');
+                    this.backToDefault();
+                });
+            }
+        ,'give', true);
+    }
+
+    useInvMagnetWithAccessControl() {
+        this.focusInteraction(false);
+        this.moveSophie({x: this.viewport.width, y: 0},
+            () => {
+                this.showMonolog(["Dieser MacGyver-Trick hätte vielleicht im 20. Jahrhundert funktioniert.", "Als Agile Coach sollte ich doch besser auf Social-Hacking setzen."], ()=>{
+
+                    if (!this.gameState.progress.accessControlUsedOnce) {
+                        this.useAccessControl()
+                    } else {
+                        this.backToDefault();
+                    }
+                })
+            }
+        ,'walk_right', true);
+    }
+
+    useInvManifestWithLobbyKen() {
+        this.focusInteraction(false);
+
+        this.moveSophie({x: this.viewport.width * 0.53, y: 0},
+            () => {
+                this.stopKeyboardSounds();
+
+                this.showMonolog(["Ich habe das hier im Fahrstuhl gefunden. Weißt du etwas darüber?"], ()=>{
+
+                    this.showCharacterMonolog(this.ken, ["Nein. Diese Zettel hängen seit ein paar Tagen im ganzen Haus."],()=>{
+                        this.sophie.play('walk_right');
+                        this.backToDefault();
+                    });
+
+                });
+            }
+            ,'give', true);
+    }
+
     useElevator() {
         this.focusInteraction(false);
 
