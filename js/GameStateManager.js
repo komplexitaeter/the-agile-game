@@ -54,6 +54,7 @@ class GameStateManager {
                 lightHouseOrderAccepted: false,
                 teamMotivated: false,
                 officeMagnetTaken: false,
+                everTalkedToJeff: false,
                 coinOnPlate: false,
                 scrumGuideGiven: false,
                 youKnowTheThreePillars: false,

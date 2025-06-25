@@ -57,6 +57,8 @@ class TeamScene extends BaseScene {
         this.scrumGuide.setDepth(this.bg.depth + 1);
         if (!this.gameState.progress.scrumGuideUsed) {
             this.scrumGuide.setVisible(false);
+        } else {
+            this.interactiveObjects['teamTableLeg'].gameObject.setVisible(false);
         }
 
         this.sophie.x = this.viewport.width * 0.78;
@@ -599,6 +601,8 @@ class TeamScene extends BaseScene {
                         pillarsFulfilled: this.gameState.progress.pillarsFulfilled + 1
                     }
                 });
+
+                this.interactiveObjects['teamTableLeg'].gameObject.setVisible(false);
 
                 this.stateManager.removeAsset(this.gameState, 'invScrumGuide');
                 this.controls.updateAssetsTaken();

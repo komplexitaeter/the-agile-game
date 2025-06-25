@@ -51,10 +51,24 @@ class LobbyScene extends BaseScene {
         this.dialogSwitcher = new DialogSwitcher(this);
 
         this.typingSound = this.sound.add('typing', {
-            volume: 0.175,
+            volume: 0.6,
             rate: 1.2
         });
 
+        this.elevatorPling = this.sound.add('elevatorPling', {
+            volume: 0.7,
+            rate: 1.2
+        });
+
+        this.elevatorDoreSound = this.sound.add('elevatorDoreSound', {
+            volume: 0.7,
+            rate: 1.2
+        });
+
+        this.inputError = this.sound.add('inputError', {
+            volume: 0.7,
+            rate: 0.8
+        });
 
         // Direkt beim Laden der Szene Tastaturgeräusche starten
         this.playKeybordSounds = false;
@@ -280,6 +294,13 @@ class LobbyScene extends BaseScene {
                                         });
                                     }
 
+                                    if (this.gameState.progress.everTalkedToJeff) {
+                                        switcherOptions.push({
+                                            text: "Kennst du eigentlich Jeff aus dem Keller?",
+                                            callback: () => this.subTalkKenAboutJeff()
+                                        });
+                                    }
+
                                     switcherOptions.push({
                                         text: "Ich schaue mich nur etwas um.",
                                         callback: () => this.subTalkKenAbort()
@@ -415,6 +436,14 @@ class LobbyScene extends BaseScene {
         });
     }
 
+
+    subTalkKenAboutJeff() {
+        this.showMonolog(["Kennst du eigentlich Jeff aus dem Keller?"], ()=>{
+            this.showCharacterMonolog(this.ken, ["Wir hatten mal ein spannendes Projekt in den 90ern.", "Aber auf Grund von professionellen Differenzen, ist unserer Beziehung inzwischen eher … kühl."],()=>{
+                this.backToDefault();
+            });
+        });
+    }
     subTalkKenAbort() {
         this.showMonolog(["Ich schaue mich nur mal um."], ()=>{
             this.showCharacterMonolog(this.ken, ["Ok, mach das. Sprich mich an, wenn du etwas brauchst."],()=>{
@@ -487,6 +516,7 @@ class LobbyScene extends BaseScene {
         this.moveSophie(this.interactiveObjects['accessControl'].gameObject, ()=>{
 
 
+            this.elevatorPling.play();
 
             this.soundEffects.play("PLING",
                 this.interactiveObjects['elevator'].gameObject.x,
@@ -502,26 +532,32 @@ class LobbyScene extends BaseScene {
                         strokeThickness: 7
                     },
                     onComplete: ()=>{
-                        this.tweens.add({
-                            targets: this.elevator_dore_left,
-                            x: this.viewport.width * 0.475,
-                            duration: 1200,
-                            ease: 'Sine.easeOut',
-                            onComplete: () => {
-                                this.backToDefault();
-                                this.updateGameState({
-                                    progress: {
-                                        isElevatorOpen: true
-                                    }
-                                });
-                            }
-                        });
-                        this.tweens.add({
-                            targets: this.elevator_dore_right,
-                            x: this.viewport.width * 0.52,
-                            duration: 750,
-                            ease: 'Sine.easeOut'
-                        });
+                        if (!this.gameState.progress.isElevatorOpen) {
+                            this.elevatorDoreSound.play();
+
+                            this.tweens.add({
+                                targets: this.elevator_dore_left,
+                                x: this.viewport.width * 0.475,
+                                duration: 1200,
+                                ease: 'Sine.easeOut',
+                                onComplete: () => {
+                                    this.backToDefault();
+                                    this.updateGameState({
+                                        progress: {
+                                            isElevatorOpen: true
+                                        }
+                                    });
+                                }
+                            });
+                            this.tweens.add({
+                                targets: this.elevator_dore_right,
+                                x: this.viewport.width * 0.52,
+                                duration: 750,
+                                ease: 'Sine.easeOut'
+                            });
+                        } else {
+                            this.backToDefault();
+                        }
                     }
                 }
             );
@@ -543,6 +579,7 @@ class LobbyScene extends BaseScene {
             });
         } else {
             this.moveSophie(this.interactiveObjects['elevator'].gameObject, ()=>{
+                this.inputError.play();
                 this.soundEffects.play("MEEAAAP MOP",
                     this.interactiveObjects['elevator'].gameObject.x,
                     this.interactiveObjects['elevator'].gameObject.y - (this.viewport.width * 0.05),
@@ -571,8 +608,11 @@ class LobbyScene extends BaseScene {
 
         this.moveSophie({x: this.viewport.width * 0.31, y: 0},
             () => {
+
                 this.moveSophie({x: this.viewport.width * 0.33, y: 0},
                     () => {
+
+                        this.walkingSound.play({rate: 1.8, volume: 0.5});
 
                         this.tweens.add({
                             targets: this.sophie,
@@ -583,6 +623,7 @@ class LobbyScene extends BaseScene {
                             duration: 1500,  // Dauer der Animation
                             ease: 'Sine.easeOut',
                             onComplete: () => {
+                                this.walkingSound.play({rate: 1.6, volume: 0.3});
 
                                 this.stopKeyboardSounds();
 
@@ -598,6 +639,7 @@ class LobbyScene extends BaseScene {
                                     onComplete: () => {
 
                                         this.sophie.play('back');
+                                        this.walkingSound.play({rate: 1.6, volume: 0.2});
 
                                         this.tweens.add({
                                             targets: this.sophie,
@@ -609,6 +651,7 @@ class LobbyScene extends BaseScene {
                                             onComplete: () => {
 
                                                 this.ken.play('ken_back');
+                                                this.walkingSound.stop();
 
                                                 this.tweens.add({
                                                     targets: this.sophie,
@@ -631,11 +674,13 @@ class LobbyScene extends BaseScene {
 
                     },
                     'back',
-                    true
+                    true,
+                    false
                 );
             },
             'walk_right',
-            true
+            true,
+            false
         );
     }
 }

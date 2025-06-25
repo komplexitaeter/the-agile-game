@@ -188,7 +188,7 @@ class BaseScene extends Phaser.Scene {
         this.soundEffects = new SoundEffect(this);
 
         this.walkingSound = this.sound.add('walking', {
-            volume: 0.3,
+            volume: 0.6,
             loop: true,
             rate: 1.8
         });

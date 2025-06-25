@@ -132,6 +132,14 @@ class BasementScene extends BaseScene {
                 }
             });
 
+            if (!this.gameState.progress.everTalkedToJeff) {
+                this.updateGameState({
+                    progress: {
+                        everTalkedToJeff: true
+                    }
+                });
+            }
+
             this.dialogSwitcher.showOptions(switcherOptions);
         });
         return true;

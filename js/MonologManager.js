@@ -13,7 +13,7 @@ class MonologManager {
         this.blockingOverlay = null;
 
         this.monologPling = this.scene.sound.add('monologPling', {
-            volume: 0.1,
+            volume: 0.5,
             rate: 2
         });
 

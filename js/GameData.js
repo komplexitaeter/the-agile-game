@@ -39,6 +39,10 @@ const GameData = {
         { type: 'audio', key: 'closeBag', path: 'assets/sounds/close_bag.mp3' },
         { type: 'audio', key: 'openBag', path: 'assets/sounds/open_bag.mp3' },
         { type: 'audio', key: 'walking', path: 'assets/sounds/walking.mp3' },
+        { type: 'audio', key: 'removeSticker', path: 'assets/sounds/remove_sticker.mp3' },
+        { type: 'audio', key: 'inputError', path: 'assets/sounds/input_error.mp3' },
+        { type: 'audio', key: 'elevatorPling', path: 'assets/sounds/elevator_pling.mp3' },
+        { type: 'audio', key: 'elevatorDoreSound', path: 'assets/sounds/elevator_dore_open.mp3' },
 
         // inventory assets
         { type: 'image', key: 'invMagnet', path: 'assets/images/inv_magnet.png' },
@@ -95,7 +99,6 @@ const GameData = {
                 { type: 'image', key: 'lanternNotice', path: 'assets/images/building_lantern_notice.png' },
                 { type: 'image', key: 'trash', path: 'assets/images/building_trash.png' },
                 { type: 'image', key: 'emptyBottle', path: 'assets/images/inv_coke_empty.png' },
-                { type: 'audio', key: 'removeSticker', path: 'assets/sounds/remove_sticker.mp3' },
                 { type: 'audio', key: 'trashSearch', path: 'assets/sounds/trash_search.mp3' },
                 { type: 'audio', key: 'magicSound', path: 'assets/sounds/magic_sound.mp3' },
             ],
@@ -145,7 +148,7 @@ const GameData = {
                     removable: true,
                     removeSound: "FLUP",
                     removeAudioCode: 'removeSticker',
-                    removeAudioVolume: 0.3,
+                    removeAudioVolume: 0.6,
                     removeAudioRate: 0.8,
                     inventoryAssets: ['invCatNotice', 'invMagnet']
                 },
@@ -164,7 +167,7 @@ const GameData = {
                     sophieViewFrame: "back",
                     viewSound: "RUMPELRUMPEL",
                     viewAudioCode: 'trashSearch',
-                    viewAudioVolume: 0.4,
+                    viewAudioVolume: 1,
                     viewAudioRate: 1.1,
                     view: ["Einiges davon könnte nützlich sein.", "Aber ich bin mir nicht sicher ob ich ausreichend Commitment habe, den Müll mitzunehmen."],
                     viewOnlyOnce: true,
@@ -362,6 +365,7 @@ const GameData = {
                 {type: 'image', key: 'elevator_dore_bg', path: 'assets/images/elevator_dore_bg.png'},
                 {type: 'image', key: 'elevator_dore_left', path: 'assets/images/elevator_dore_left.png'},
                 {type: 'image', key: 'elevator_dore_right', path: 'assets/images/elevator_dore_right.png'},
+                { type: 'audio', key: 'elevatorMoving', path: 'assets/sounds/elevator_moving.mp3' },
             ],
             interactiveObjects: [
                 {
@@ -397,6 +401,9 @@ const GameData = {
                     take: ["Den Magneten nehme ich auch mit."],
                     removable: true,
                     removeSound: "FLUP",
+                    removeAudioCode: 'removeSticker',
+                    removeAudioVolume: 0.6,
+                    removeAudioRate: 0.8,
                     inventoryAssets: ['invManifest', 'invMagnet']
                 },
                 {
@@ -1053,8 +1060,8 @@ const GameData = {
                     id: 'teamTableLeg',
                     defaultAction: 1,
                     type: 'rectangle',
-                    relativeX: 0.2,
-                    relativeY: 0.81,
+                    relativeX: 0.177,
+                    relativeY: 0.72,
                     relativeWidth: 0.3,
                     relativeHeight: 0.25,
                     hoverXOffset: 0.06,

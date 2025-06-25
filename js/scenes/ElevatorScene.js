@@ -33,6 +33,26 @@ class ElevatorScene extends BaseScene {
         this.dore_right.setOrigin(0.5, 0.5);
         this.dore_right.setDepth(this.bg.depth - 1);
 
+        this.elevatorPling = this.sound.add('elevatorPling', {
+            volume: 0.7,
+            rate: 1.2
+        });
+
+        this.elevatorDoreSound = this.sound.add('elevatorDoreSound', {
+            volume: 0.7,
+            rate: 1.1
+        });
+
+        this.inputError = this.sound.add('inputError', {
+            volume: 0.7,
+            rate: 1.2
+        });
+
+        this.elevatorMoving = this.sound.add('elevatorMoving', {
+            volume: 0.35,
+            rate: 0.9
+        });
+
         if (this.gameState.progress.manifestTaken) {
             this.interactiveObjects['manifest'].gameObject.setVisible(false);
         }
@@ -83,7 +103,8 @@ class ElevatorScene extends BaseScene {
                 let callback;
                 if (f.digit === this.gameState.progress.floorDigit) {
                     callback = ()=>{
-                        this.soundEffects.play("MÖP-MOP",
+                        this.inputError.play();
+                        this.soundEffects.play("MEEP-MOP",
                             this.viewport.width * 0.3,
                             this.viewport.height * 0.4,
                             {
@@ -129,8 +150,10 @@ class ElevatorScene extends BaseScene {
         this.moveDore('close', ()=>{
             this.shakeElevator(()=>{
 
+                this.elevatorMoving.stop();
                 this.updateFloorDisplay(floor);
 
+                this.elevatorPling.play();
                 this.soundEffects.play("BLING",
                     this.viewport.width * 0.3,
                     this.viewport.height * 0.4,
@@ -157,6 +180,8 @@ class ElevatorScene extends BaseScene {
     moveDore(mode, onComplete = ()=>{}) {
 
         console.log(mode);
+
+        this.elevatorDoreSound.play();
 
         let leftX = this.viewport.width / 2 + (this.viewport.width * -0.075);
         let rightX = this.viewport.width / 2 + (this.viewport.width * 0.075);
@@ -228,6 +253,8 @@ class ElevatorScene extends BaseScene {
         this.floorDisplay.setFontSize(Math.round(originalValues.floorDisplay.fontSize * scaleFactor));
         // Weiter nach oben anpassen (-12 statt -8)
         this.floorDisplay.y = originalValues.floorDisplay.y -2;
+
+        this.elevatorMoving.play();
 
         // Rest der Funktion bleibt unverändert
         this.time.delayedCall(250, () => {
