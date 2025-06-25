@@ -88,7 +88,8 @@ const GameData = {
             assets: [
                 { type: 'image', key: 'building_intro', path: 'assets/images/intro.webp' },
                 { type: 'audio', key: 'busDrivesAway', path: 'assets/sounds/bus_drives_away.mp3' },
-                { type: 'image', key: 'bus', path: 'assets/images/intro_bus.png' }
+                { type: 'image', key: 'bus', path: 'assets/images/intro_bus.png' },
+                { type: 'audio', key: 'epicIntro', path: 'assets/sounds/epic_intro.mp3' },
             ],
             interactiveObjects: []
         },

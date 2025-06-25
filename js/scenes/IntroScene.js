@@ -35,6 +35,13 @@ class IntroScene extends BaseScene {
             this.changeScene('BuildingScene');
         } else {
             this.sophie.play('back');
+
+            this.epicIntro = this.sound.add('epicIntro', {
+                volume: 0.3,
+                rate: 1
+            });
+
+            this.epicIntro.play();
         }
     }
 
@@ -165,6 +172,8 @@ class IntroScene extends BaseScene {
         // Verhindere, dass diese Methode mehrmals ausgeführt wird
         if (this.soundTextCreated) return;
         this.soundTextCreated = true;
+
+        this.epicIntro.stop();
 
         // Ziel außerhalb des Viewports rechts
         const busTargetX = this.viewport.width + this.bus.width / 1.4;
