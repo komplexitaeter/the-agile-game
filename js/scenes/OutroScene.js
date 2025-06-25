@@ -31,7 +31,7 @@ class OutroScene extends BaseScene {
         this.outroSophie = {key: 'outro', x: 0, y: 0.45};
 
         this.parkAmbient = this.sound.add('parkAmbient', {
-            volume: 1.3,
+            volume: 1.4,
             rate: 1,
             loop: true
         });
