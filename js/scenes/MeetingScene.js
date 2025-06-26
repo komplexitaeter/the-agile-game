@@ -72,15 +72,15 @@ class MeetingScene extends BaseScene {
             this.interactiveObjects['meetingBusinessCards'].gameObject.setVisible(false);
         }
 
-        this.tick = this.sound.add('tick', {
-            volume: 0.3,
-            rate: 1.4
-        });
-
         this.cokeExplosion = this.sound.add('cokeExplosion', {
             volume: 0.7,
             rate: 1.2
         });
+
+        this.managerTalk = [];
+        this.managerTalk[0] = this.sound.add('managerTalk1');
+        this.managerTalk[1] = this.sound.add('managerTalk2');
+        this.managerTalk[2] = this.sound.add('managerTalk3');
 
         // Sofort den Background-Talk starten, BEVOR Sophies Intro beginnt
         this.startBackgroundTalk();
@@ -103,6 +103,30 @@ class MeetingScene extends BaseScene {
             ...baseStyle,
             backgroundColor: '#333333' // Dunkler Hintergrund für alle Manager-Texte
         };
+    }
+
+    playRandomManagerTalk() {
+        // Zufälligen Index wählen (0, 1, oder 2)
+        const randomIndex = Phaser.Math.Between(0, 2);
+
+        // Zufällige Lautstärke zwischen 0.6 und 1.0
+        const randomVolume = Phaser.Math.FloatBetween(0.3, 0.5);
+
+        // Zufällige Geschwindigkeit zwischen 0.8 und 1.5
+        const randomRate = Phaser.Math.FloatBetween(1.5, 3);
+
+        // Sound abspielen
+        this.managerTalk[randomIndex].play({
+            volume: randomVolume,
+            rate: randomRate
+        });
+    }
+
+    stopRandomManagerTalk() {
+        // Alle Manager-Talk Sounds stoppen
+        this.managerTalk.forEach(sound => {
+            sound.stop();
+        });
     }
 
     startBackgroundTalk() {
@@ -222,7 +246,7 @@ class MeetingScene extends BaseScene {
         // Speichern des aktuellen Textes, damit er in stopBackgroundTalk() sofort entfernt werden kann
         this.currentBackgroundText = text;
 
-        this.tick.play();
+        this.playRandomManagerTalk();
 
         // Timer für nächsten Text setzen (genau nach displayDuration)
         this.backgroundTalkTimer = this.time.delayedCall(displayDuration, () => {
@@ -267,6 +291,8 @@ class MeetingScene extends BaseScene {
 
     stopBackgroundTalk() {
         this.playBackgroundTalk = false;
+
+        this.stopRandomManagerTalk();
 
         // Aktuellen Timer anhalten
         if (this.backgroundTalkTimer) {
@@ -331,20 +357,6 @@ class MeetingScene extends BaseScene {
 
     useMeetingExit() {
         this.focusInteraction();
-        if (this.gameState.progress.managerAttention) {
-            this.useMeetingExitSub();
-        } else {
-            this.showMonolog(["Ich werde hier scheinbar komplett ignoriert."
-                , "Ich muss mir etwas kluges überlegen, um ihre Aufmerksamkeit zu bekommen."]
-            ,()=>{
-                this.useMeetingExitSub();
-                }
-            );
-        }
-    }
-
-    useMeetingExitSub() {
-        this.focusInteraction();
         this.tweens.add({
             targets: this.sophie,
             y: this.viewport.height * this.sceneConfig.sophieBottomPosition,
@@ -360,34 +372,50 @@ class MeetingScene extends BaseScene {
                     duration: 1100,
                     ease: 'Sine.easyInOut',
                     onComplete: () => {
+                        if (this.gameState.progress.managerAttention) {
+                            this.useMeetingExitSub();
+                        } else {
+                            this.walkingSound.stop();
+                            this.showMonolog(["Ich werde hier scheinbar komplett ignoriert."
+                                    , "Ich muss mir etwas kluges überlegen, um ihre Aufmerksamkeit zu bekommen."]
+                                ,()=>{
+                                    this.walkingSound.play();
+                                    this.useMeetingExitSub();
+                                }
+                            );
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    useMeetingExitSub() {
+        this.focusInteraction();
+        this.tweens.add({
+            targets: this.sophie,
+            x: this.viewport.width * 0.9,
+            y: this.viewport.height * 0.95,
+            duration: 300,
+            ease: 'Sine.easyInOut',
+            onComplete: () => {
+                this.sophie.play('back');
+                this.tweens.add({
+                    targets: this.sophie,
+                    x: this.viewport.width * 0.835,
+                    y: this.viewport.height * 0.73,
+                    scale: this.sceneConfig.sophieScale * 0.7,
+                    duration: 1100,
+                    ease: 'Sine.easyInOut',
+                    onComplete: () => {
+                        this.walkingSound.stop();
                         this.tweens.add({
                             targets: this.sophie,
-                            x: this.viewport.width * 0.9,
-                            y: this.viewport.height * 0.95,
-                            duration: 300,
-                            ease: 'Sine.easyInOut',
+                            alpha: 0.3,
+                            duration: 400,
                             onComplete: () => {
-                                this.sophie.play('back');
-                                this.tweens.add({
-                                    targets: this.sophie,
-                                    x: this.viewport.width * 0.835,
-                                    y: this.viewport.height * 0.73,
-                                    scale: this.sceneConfig.sophieScale * 0.7,
-                                    duration: 1100,
-                                    ease: 'Sine.easyInOut',
-                                    onComplete: () => {
-                                        this.walkingSound.stop();
-                                        this.tweens.add({
-                                            targets: this.sophie,
-                                            alpha: 0.3,
-                                            duration: 400,
-                                            onComplete: () => {
-                                                this.stopBackgroundTalk();
-                                                this.changeScene('LoungeScene');
-                                            }
-                                        });
-                                    }
-                                });
+                                this.stopBackgroundTalk();
+                                this.changeScene('LoungeScene');
                             }
                         });
                     }
