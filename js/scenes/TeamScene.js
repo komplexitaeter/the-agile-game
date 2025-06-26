@@ -225,7 +225,7 @@ class TeamScene extends BaseScene {
     convinceByOrder() {
             this.showMonolog(["Ich bin V.P. of Agile und ich habe den Auftrag von ganz oben, hier Scrum einzuführen."],()=>{
                 this.showCharacterMonolog(this.getRandomDev(), ["Ok. Herzlichen Glückwunsch!"],()=>{
-                    this.showCharacterMonolog(this.getRandomDev(), ["Aber ohne unsere Motivation als Team wirs du nichts bewirken können."],()=>{
+                    this.showCharacterMonolog(this.getRandomDev(), ["Aber ohne unsere Motivation als Team wirst du nichts bewirken können."],()=>{
                         this.showCharacterMonolog(this.getRandomDev(), ["Also, motivier uns."],()=>{
                             this.updateGameState({
                                 progress: {
