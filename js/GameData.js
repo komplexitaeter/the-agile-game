@@ -1,7 +1,7 @@
 const GameData = {
 
     // Debug-Modus
-    debug: true, // Auf false setzen für Produktionsversion
+    debug: false, // Auf false setzen für Produktionsversion
 
     // Spieler-Informationen
     player: {
@@ -725,28 +725,9 @@ const GameData = {
                     relativeWidth: 0.3,
                     relativeHeight: 0.062,
                     hoverText: "Büroutensilien",
-                    hoverDepth: 100001,
+                    hoverDepth: 10010,
                     debug: true,
-                    depth: 100000,
-                    view: ["Da liegt ein Magnet und allerlei nützliche Dinge."],
-                    take: ["Da ist ein Magnet. Den nehme ich mit.", "Den Rest lasse ich hier."],
-                    removable: true,
-                    inventoryAssets: ['invMagnet']
-                },
-
-                {
-                    id: 'officeMagnetX',
-                    defaultAction: 2,
-                    type: 'rectangle',
-                    relativeX: 0.51,
-                    relativeY: 0.6,
-                    hoverYOffset: 0.01,
-                    relativeWidth: 0.3,
-                    relativeHeight: 0.062,
-                    hoverText: "Büroutensilien",
-                    hoverDepth: 100001,
-                    debug: true,
-                    depth: 1000000,
+                    depth: 10009,
                     view: ["Da liegt ein Magnet und allerlei nützliche Dinge."],
                     take: ["Da ist ein Magnet. Den nehme ich mit.", "Den Rest lasse ich hier."],
                     removable: true,

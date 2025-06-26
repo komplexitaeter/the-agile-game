@@ -707,12 +707,20 @@ class BaseScene extends Phaser.Scene {
             return;
         }
 
+        // WICHTIG: Wenn ein Monolog aktiv ist, soll IMMER der Monolog weitergeschaltet werden
+        // Keine interaktiven Objekte verarbeiten!
+        if (this.isMonologActive) {
+            // Monolog-Klick wird vom MonologManager selbst über das blockingOverlay behandelt
+            // Hier nichts machen - der MonologManager fängt das Event ab
+            return;
+        }
+
         // Pointer in Weltkoordinaten umrechnen
         const worldPoint = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
         let moveSophie = true;
 
-        // Eine Liste der geklickten Objekte sammeln
-        let clickedInteractives = [];
+        // Eine Liste ALLER geklickten Objekte sammeln (inklusive Sophie)
+        let clickedObjects = [];
 
         // Alle interaktiven Objekte durchgehen und prüfen
         for (const key in this.interactiveObjects) {
@@ -725,8 +733,8 @@ class BaseScene extends Phaser.Scene {
                 let isClicked = false;
 
                 if (entry.data.type === 'rectangle' || entry.data.type === 'image') {
-                    const halfWidth = (gameObj.width * (entry.data.scaleFactor || 1) )/ 2;
-                    const halfHeight = (gameObj.height * (entry.data.scaleFactor || 1) ) / 2;
+                    const halfWidth = (gameObj.width * (entry.data.scaleFactor || 1)) / 2;
+                    const halfHeight = (gameObj.height * (entry.data.scaleFactor || 1)) / 2;
                     isClicked = (
                         worldPoint.x >= gameObj.x - halfWidth &&
                         worldPoint.x <= gameObj.x + halfWidth &&
@@ -741,24 +749,24 @@ class BaseScene extends Phaser.Scene {
                 }
 
                 if (isClicked) {
-                    clickedInteractives.push({
+                    clickedObjects.push({
                         key: key,
                         gameObject: gameObj,
                         data: entry.data,
-                        depth: gameObj.depth || 0
+                        depth: gameObj.depth || 0,
+                        type: 'interactive'
                     });
                 }
             }
         }
 
-        // Prüfen, ob Sophie geklickt wurde
-        let isSophieClicked = false;
+        // Sophie als klickbares Objekt hinzufügen, wenn sie geklickt wurde
         if (this.sophie && this.sophie.input && this.sophie.input.enabled) {
             // Einfache Bounding-Box-Prüfung für Sophie
             const sophieHalfWidth = this.sophie.displayWidth / 2;
             const sophieHeight = this.sophie.displayHeight;
 
-            isSophieClicked = (
+            const isSophieClicked = (
                 worldPoint.x >= this.sophie.x - sophieHalfWidth &&
                 worldPoint.x <= this.sophie.x + sophieHalfWidth &&
                 worldPoint.y >= this.sophie.y - sophieHeight &&
@@ -766,37 +774,49 @@ class BaseScene extends Phaser.Scene {
             );
 
             if (isSophieClicked) {
+                clickedObjects.push({
+                    key: 'sophie',
+                    gameObject: this.sophie,
+                    data: null,
+                    depth: this.sophie.depth || 10000, // Sophie hat normalerweise depth 10000
+                    type: 'sophie'
+                });
+            }
+        }
+
+        // Alle geklickten Objekte nach Z-Tiefe sortieren (höchste zuerst)
+        clickedObjects.sort((a, b) => b.depth - a.depth);
+
+        // Das oberste Objekt verarbeiten
+        if (clickedObjects.length > 0) {
+            const topObject = clickedObjects[0];
+
+            if (topObject.type === 'sophie') {
+                // Sophie wurde geklickt und ist das oberste Objekt
                 if (this.controls.getActiveAction().name === 'use') {
                     this.controls.handleUse('sophie', 'Sophie');
                 }
-                return;
+                return; // Beende hier, da Sophie geklickt wurde
+            } else {
+                // Ein interaktives Objekt wurde geklickt und ist das oberste
+                const defaultAction = topObject.data.defaultAction;
+
+                if (defaultAction
+                    && !this.controls.isPromptUseAction
+                    && this.controls.activeActionIndex === 0) {
+                    this.controls.setActiveAction(defaultAction);
+                }
+
+                // Aktion behandeln
+                moveSophie = this.controls.handle(this, topObject.key, worldPoint, this.hoverTexts[topObject.key].text);
             }
         }
 
-        // Wenn interaktive Objekte gefunden wurden
-        if (clickedInteractives.length > 0) {
-            // Nach Z-Tiefe sortieren
-            clickedInteractives.sort((a, b) => b.depth - a.depth);
-
-            // Das oberste Objekt verwenden
-            const topObject = clickedInteractives[0];
-            const defaultAction = this.interactiveObjects[topObject.key].data.defaultAction;
-
-            if (defaultAction
-                && !this.controls.isPromptUseAction
-                && this.controls.activeActionIndex === 0) {
-                this.controls.setActiveAction(defaultAction);
-            }
-
-            // Aktion behandeln
-            moveSophie = this.controls.handle(this, topObject.key, worldPoint, this.hoverTexts[topObject.key].text);
-        }
-
+        // Nur bewegen, wenn kein interaktives Objekt behandelt wurde oder explizit erlaubt
         if (this.canMoveSophie && !this.isMonologActive && moveSophie) {
             if (this.controls.isBagOpen) {
                 this.controls.closeBag();
-            }
-            else {
+            } else {
                 const worldPoint = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
                 this.moveSophie(worldPoint);
             }
