@@ -63,9 +63,20 @@ class CEOOfficeScene extends BaseScene {
         this.noel.play('noel_right');
 
         this.tick = this.sound.add('tick', {
-            volume: 0.3,
-            rate: 1.4
+            volume: 0.25,
+            rate: 2
         });
+
+        this.tickShort = this.sound.add('tickShort', {
+            volume: 0.25,
+            rate: 1.9
+        });
+
+        this.tickShortest = this.sound.add('tickShortest', {
+            volume: 0.25,
+            rate: 2.1
+        });
+
 
         this.noelWalkSound = this.sound.add('walking', {
             volume: 0.5,
@@ -209,7 +220,8 @@ class CEOOfficeScene extends BaseScene {
         // Pausendauer anpassen
         const pauseDuration = Phaser.Math.Between(100, 400);
 
-        this.tick.play();
+        this.playTickByTextLength(talkText);
+
         this.backgroundTalkTimer = this.time.delayedCall(displayDuration, () => {
             this.tweens.add({
                 targets: text,
@@ -232,8 +244,27 @@ class CEOOfficeScene extends BaseScene {
         });
     }
 
+    playTickByTextLength(text) {
+        const textLength = text.length;
+
+        if (textLength <= 10) {
+            // Kurze Texte (z.B. "Yeaah...", "Great...", "Geht das so?")
+            this.tickShortest.play();
+        } else if (textLength <= 45) {
+            // Mittlere Texte (z.B. "DER T-REX SUPPORT BIN ICH!", "Zu theatralisch?")
+            this.tickShort.play();
+        } else {
+            // Lange Texte (z.B. "IN FÜNF JAHREN WIRD JEDER HAUSHALT...", "MIT DIESER TECHNOLOGIE...")
+            this.tick.play();
+        }
+    }
+
     stopBackgroundTalk() {
         this.playBackgroundTalk = false;
+
+        this.tick.stop();
+        this.tickShort.stop();
+        this.tickShortest.stop();
 
         // Timer anhalten
         if (this.backgroundTalkTimer) {
