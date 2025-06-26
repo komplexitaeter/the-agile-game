@@ -741,4 +741,47 @@ class BasementScene extends BaseScene {
         },'back', true, false);
     }
 
+    useInvManifestWithBasementJeff() {
+        this.focusInteraction();
+
+        this.moveSophie({x: this.viewport.width * 0.5, y: this.sophie.y}, () => {
+            this.showMonolog(["Ich habe das hier gefunden."], ()=>{
+                this.showCharacterMonolog(this.jeff, ["Der Weg zur dunklen Seite der Macht.", "Ich warne dich, sei bloß vorsichtig mein Liebes."], ()=>{
+                   this.backToDefault();
+                });
+            });
+        });
+    }
+
+    useInvCatNoticeWithBasementJeff() {
+        this.focusInteraction();
+
+        this.moveSophie({x: this.viewport.width * 0.5, y: this.sophie.y}, () => {
+            this.showMonolog(["Die Katz scheint für Fraxicle sehr wichtig gewesen zu sein?"], ()=>{
+                this.showCharacterMonolog(this.jeff, ["Seit Mimi nicht mehr da ist, geht es mit dem Unternehmen bergab."], ()=>{
+                    this.backToDefault();
+                });
+            });
+        });
+    }
+
+    useInvAccessFormWithBasementJeff() {
+        this.focusInteraction();
+
+        this.moveSophie({x: this.viewport.width * 0.5, y: this.sophie.y}, () => {
+            this.showMonolog(["Kannst du mir hier eine Unterschrift geben?"], ()=>{
+
+                let answerText = ["Ich habe leider keinen Stift dabei, um es auszufüllen.",
+                    "Aber es gibt hier im Haus einige vielbeschäftigte Manager, die dir sicherlich helfen können."];
+                if (this.stateManager.hasAsset(this.gameState, 'invPen')) {
+                    answerText = ["Danke, aber ich geben meinen Fans inzwischen keine Autogramme mehr. "];
+                }
+
+                this.showCharacterMonolog(this.jeff, answerText, ()=>{
+                    this.backToDefault();
+                });
+            });
+        });
+    }
+
 }

@@ -115,6 +115,8 @@ class MeetingScene extends BaseScene {
         // Zufällige Geschwindigkeit zwischen 0.8 und 1.5
         const randomRate = Phaser.Math.FloatBetween(1.5, 3);
 
+        this.stopRandomManagerTalk();
+
         // Sound abspielen
         this.managerTalk[randomIndex].play({
             volume: randomVolume,
@@ -953,6 +955,95 @@ class MeetingScene extends BaseScene {
         });
 
         return false;
+    }
+
+
+    showManagerMonolog(manager, textLines, onMonologComplete) {
+
+        const managerX = this.viewport.width * manager.x;
+        const managerY = this.viewport.height * manager.y;
+
+        // Stil für ManagerC
+        const managerStyle = {
+            ...this.monologManager.speakerStyles['manager'],
+            fill: manager.color
+        };
+
+        const dummySpeaker = this.add.sprite(managerX, managerY, 'pixel');
+        dummySpeaker.setAlpha(0);
+        dummySpeaker.key = manager.key;
+        dummySpeaker.displayHeight = 100;
+
+        this.monologManager.show({
+            lines: textLines,
+            speaker: dummySpeaker,
+            speakerType: 'manager',
+            style: managerStyle,
+            onComplete: () => {
+                dummySpeaker.destroy();
+                onMonologComplete();
+            }
+        });
+    }
+
+    useInvAccessFormWithManagers() {
+        let wasBackgroundTalkPlaying = this.playBackgroundTalk;
+
+        this.focusInteraction();
+        this.stopBackgroundTalk();
+
+        this.showMonolog(["Ich brauche hier eine Unterschrift."], ()=>{
+            this.showManagerMonolog(this.managers[0], ["Oh-ha, wir können da nichts tun."], ()=> {
+                this.showManagerMonolog(this.managers[1], ["Ja, dafür reicht unserer Hierarchiestufe nicht aus."], ()=> {
+                    this.showManagerMonolog(this.managers[2], ["Genau, damit muss du nach ganz oben gehen."], ()=> {
+                        this.backToDefault();
+                        if (wasBackgroundTalkPlaying) {
+                            this.startBackgroundTalk();
+                        }
+                    });
+                });
+            });
+        });
+    }
+
+    useInvManifestWithManagers() {
+        let wasBackgroundTalkPlaying = this.playBackgroundTalk;
+
+        this.focusInteraction();
+        this.stopBackgroundTalk();
+
+        this.showMonolog(["Könnt ihr mir das hier bitte erklären?"], ()=>{
+            this.showManagerMonolog(this.managers[2], ["Steck das sofort wieder weg."], ()=> {
+                this.showManagerMonolog(this.managers[1], ["Das hier ist nie passiert."], ()=> {
+                    this.showManagerMonolog(this.managers[0], ["What happened in the Meeting stays in the Meeting!"], ()=> {
+                        this.backToDefault();
+                        if (wasBackgroundTalkPlaying) {
+                            this.startBackgroundTalk();
+                        }
+                    });
+                });
+            });
+        });
+    }
+
+    useInvCatNoticeWithManagers() {
+        let wasBackgroundTalkPlaying = this.playBackgroundTalk;
+
+        this.focusInteraction();
+        this.stopBackgroundTalk();
+
+        this.showMonolog(["Ich habe das hier gefunden."], ()=>{
+            this.showManagerMonolog(this.managers[1], ["Oje, das reißt alte Wunden wieder auf."], ()=> {
+                this.showManagerMonolog(this.managers[2], ["Sie hat uns damals wochenlang damit beschäftigt, die Katze zu suchen."], ()=> {
+                    this.showManagerMonolog(this.managers[0], ["Viele von uns haben ihren Job verloren, als wir ihr die schlechte Nachricht mitteilen mussten."], ()=> {
+                        this.backToDefault();
+                        if (wasBackgroundTalkPlaying) {
+                            this.startBackgroundTalk();
+                        }
+                    });
+                });
+            });
+        });
     }
 
     shutdown() {

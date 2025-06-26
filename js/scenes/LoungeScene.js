@@ -228,4 +228,11 @@ class LoungeScene extends BaseScene {
         });
     }
 
+    useInvCokeEmptyWithMilkShaker() {
+        this.focusInteraction();
+        this.showMonolog(["Es macht keinen Sinn, eine leere Flasche zu ‚shaken’."], ()=>{
+            this.backToDefault();
+        })
+    }
+
 }

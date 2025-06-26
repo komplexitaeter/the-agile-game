@@ -247,6 +247,10 @@ class CEOOfficeScene extends BaseScene {
     playTickByTextLength(text) {
         const textLength = text.length;
 
+        this.tick.stop();
+        this.tickShort.stop();
+        this.tickShortest.stop();
+
         if (textLength <= 10) {
             // Kurze Texte (z.B. "Yeaah...", "Great...", "Geht das so?")
             this.tickShortest.play();
