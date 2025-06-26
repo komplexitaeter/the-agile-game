@@ -140,7 +140,7 @@ class BasementScene extends BaseScene {
             });
 
             switcherOptions.push({
-                text: "Icb bin Sophie Plaice und ich möchte diese Organisation agil machen.",
+                text: "Ich bin Sophie Plaice und ich möchte diese Organisation agil machen.",
                 callback: () => {
                     this.subTalkJeffAgile();
                 }
@@ -244,7 +244,7 @@ class BasementScene extends BaseScene {
     }
 
     subTalkJeffAgile() {
-        this.showMonolog(["Icb bin Sophie Plaice und ich möchte diese Organisation agil machen."], ()=>{
+        this.showMonolog(["Ich bin Sophie Plaice und ich möchte diese Organisation agil machen."], ()=>{
             this.showCharacterMonolog(this.jeff, ["Ich muss dich warnen.", "Der Weg zur dunklen Seite der Macht ist sehr verlockend."],()=>{
                 this.showMonolog(["Und ich dachte, mit Agile wird alles besser?"], ()=>{
                     this.showCharacterMonolog(this.jeff, ["Das dachte ich einst auch.", "Aber Agilität löst tatsächlich gar kein einziges Problem."],()=>{
