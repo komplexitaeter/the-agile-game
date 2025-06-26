@@ -70,6 +70,12 @@ class TeamScene extends BaseScene {
             volume: 0.6,
             rate: 1.4
         });
+
+        this.cuteCatMeow = this.sound.add('cuteCatMeow', {
+            volume: 0.7,
+            rate: 1.3
+        });
+
         this.sophie.x = this.viewport.width * 0.78;
 
         this.backToDefault();
@@ -740,6 +746,79 @@ class TeamScene extends BaseScene {
             },'back', true)
 
         }
+    }
+
+    useInvCokeClosedWithDevs() {
+        this.focusInteraction();
+        this.showCharacterMonolog(this.getRandomDev(), ["Willst du uns beleidigen?."], () => {
+            this.showCharacterMonolog(this.getRandomDev(), ["Steck das bitte schnell wieder weg."], () => {
+                this.showCharacterMonolog(this.getRandomDev(), ["Wir arbeiten aktiv gegen solche IT-Klischees."], () => {
+                    this.backToDefault();
+                });
+            });
+        });
+    }
+
+    useInvScrumGuideWithDevs() {
+        this.focusInteraction();
+        this.showMonolog(["Ich habe hier einen Scrum Guide!"], ()=>{
+            this.showCharacterMonolog(this.getRandomDev(), ["Was für ein plumper Versuch!"], () => {
+                this.showCharacterMonolog(this.getRandomDev(), ["Sollen wir uns das etwa selber durchlesen?"], () => {
+                    this.showCharacterMonolog(this.getRandomDev(), ["So wird das mit deiner Scrum Einführung nicht klappen."], () => {
+                        this.backToDefault();
+                    });
+                });
+            });
+        });
+    }
+
+    useInvManifestWithDevs() {
+        this.focusInteraction();
+        this.showMonolog(["Ich habe das Gefühl, dass sie den Inhalt des Aushangs bereits kennen."], ()=>{
+            this.backToDefault();
+        });
+    }
+
+    useInvPenWithTeamWhiteBoard() {
+        this.focusInteraction();
+        this.showMonolog(["Ich würde von der Agile Community verbannt werden, ..."
+            , "wenn ich einen Permanentmarker auf einem nagelneuen Whiteboard verwende."], ()=>{
+            this.backToDefault();
+        });
+    }
+
+    useInvMagnetWithTeamWhiteBoard() {
+        this.focusInteraction();
+        this.showMonolog(["Nur die Magnete auf das Whiteboard zu heften wäre kein sauberes Scrum."], ()=>{
+            this.backToDefault();
+        });
+    }
+
+    useInvCatNoticeWithDevs() {
+        this.focusInteraction();
+        this.showMonolog(["Könnt ihr mir was zur Katze sagen?"], ()=>{
+            this.showCharacterMonolog(this.devs[1], ["Nein, die haben wir nicht gesehen."], () => {
+                this.showCharacterMonolog(this.devs[3], ["Da musst du woanders suchen."], () => {
+                    this.showCharacterMonolog(this.devs[5], ["Hier ist sie nicht."], () => {
+                        this.cuteCatMeow.play();
+                        this.soundEffects.play("MIAUUZ", this.viewport.width * 0.88, this.viewport.height * 0.45, {
+                            duration: 2500,
+                            depth: this.sophie.depth + 1,
+                            onComplete: ()=>{
+                                this.backToDefault();
+                            },
+                            style: {
+                                fontSize: '40px',
+                                fill: '#ec7a08',
+                                fontFamily: 'Courier New, monospace',
+                                stroke: '#000000',
+                                strokeThickness: 7
+                            }
+                        });
+                    });
+                });
+            });
+        });
     }
 
     checkFinalizeGame() {

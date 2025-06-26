@@ -901,6 +901,7 @@ const GameData = {
                 {type: 'image', key: 'teamScrumGuide', path: 'assets/images/team_scrum_guide.png'},
                 {type: 'audio', key: 'sprayCan', path: 'assets/sounds/spray_can.mp3' },
                 {type: 'audio', key: 'soundOfWinning', path: 'assets/sounds/sound_of_winning.mp3' },
+                {type: 'audio', key: 'cuteCatMeow', path: 'assets/sounds/cute_little_cat.mp3' },
             ],
             interactiveObjects: [
                 {
