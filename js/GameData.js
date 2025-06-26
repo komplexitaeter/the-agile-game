@@ -451,7 +451,7 @@ const GameData = {
                 {type: 'image', key: 'meetingBusinessCardB', path: 'assets/images/meeting_business_card.png'},
                 {type: 'image', key: 'meetingBusinessCardC', path: 'assets/images/meeting_business_card.png'},
                 {type: 'audio', key: 'cokeExplosion', path: 'assets/sounds/coke_explosion.mp3' },
-
+                {type: 'audio', key: 'slidingCard', path: 'assets/sounds/sliding_card.mp3' },
             ],
             interactiveObjects: [
                 {

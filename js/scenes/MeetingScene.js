@@ -642,6 +642,8 @@ class MeetingScene extends BaseScene {
 
         allCards.push(cardA);
 
+        this.sound.add('slidingCard', { volume: 0.8, rate: 1 }).play();
+
         // Karte B erstellen (verzögert)
         this.time.delayedCall(300, () => {
             const cardB = this.add.image(
@@ -654,6 +656,8 @@ class MeetingScene extends BaseScene {
                 .setScale(0.4);
 
             allCards.push(cardB);
+
+            this.sound.add('slidingCard', { volume: 0.7, rate: 1.2 }).play();
 
             // Karte B animieren
             this.tweens.add({
@@ -678,6 +682,7 @@ class MeetingScene extends BaseScene {
                 .setScale(0.8);
 
             allCards.push(cardC);
+            this.sound.add('slidingCard', { volume: 1, rate: 0.95 }).play();
 
             // Karte C animieren - letzte Animation mit finalem Callback
             this.tweens.add({
@@ -703,6 +708,7 @@ class MeetingScene extends BaseScene {
             });
         });
 
+        this.sound.add('slidingCard', { volume: 1.1, rate: 0.9 }).play();
         // Karte A animieren (startet sofort)
         this.tweens.add({
             targets: cardA,
