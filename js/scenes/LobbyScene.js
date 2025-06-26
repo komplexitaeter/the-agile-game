@@ -1,8 +1,4 @@
 // LobbyScene.js
-/*
-todo: [Warning] Missing animation: null (phaser.min.js, line 1) -> vermutlich beim Formular abholen
-
- */
 class LobbyScene extends BaseScene {
     constructor() {
         super({ key: 'LobbyScene' });
@@ -435,8 +431,10 @@ class LobbyScene extends BaseScene {
                                     this.showMonolog(["Was auch immer ich damit anfangen soll."], ()=>{
                                         this.backToDefault();
                                     })
-                                }, true);
-                        }, true);
+                                },'walk_left',  true
+                            );
+                        },'back_hand_up', true
+                    );
                 });
             });
         });
@@ -484,6 +482,7 @@ class LobbyScene extends BaseScene {
     }
 
     subTalkKenRoomTrick() {
+        this.focusInteraction();
         this.showMonolog(["Ich habe gleich ein Meeting im Raum R9.012 Ernie & Bert."
             , "Hat schon jemand die Zugangskarte für den Meetingraum abgeholt?"], ()=>{
             this.showCharacterMonolog(this.ken, ["Moment, ich schaue da mal nach,"], ()=>{
@@ -503,9 +502,12 @@ class LobbyScene extends BaseScene {
                                 }
                             });
 
+                            this.focusInteraction();
                             this.showMonolog(["Danke, dann kann ich schon mal das Meeting vorbereiten."], ()=>{
                                 this.moveSophie({x: this.viewport.width * 0.8, y: 0}, ()=>{
-                                    this.showMonolog(["Das war einfacher als gedacht."]);
+                                    this.showMonolog(["Das war einfacher als gedacht."], ()=>{
+                                        this.backToDefault();
+                                    });
                                 });
                                 this.backToDefault();
                             });
