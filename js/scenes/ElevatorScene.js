@@ -3,10 +3,10 @@ class ElevatorScene extends BaseScene {
         super({ key: 'ElevatorScene' });
 
         this.floors = [
-            {digit: 'G.O.A.T', lable: 'CEO', sceneKey: 'CEOOfficeScene'},
-            {digit: '09', lable: 'Meetingräume', sceneKey: 'LoungeScene'},
-            {digit: 'EG', lable: 'Lobby (EG)', sceneKey: 'LobbyScene'},
-            {digit: '-1', lable: 'Toilette & IT', sceneKey: 'BasementScene'},
+            {digit: 'G.O.A.T', label: 'CEO', sceneKey: 'CEOOfficeScene'},
+            {digit: '09', label: 'Meetingräume', sceneKey: 'LoungeScene'},
+            {digit: 'EG', label: 'Lobby (EG)', sceneKey: 'LobbyScene'},
+            {digit: '-1', label: 'Toilette & IT', sceneKey: 'BasementScene'},
         ];
     }
 
@@ -128,7 +128,7 @@ class ElevatorScene extends BaseScene {
                 }
 
                 switcherOptions.push({
-                    text: f.lable,
+                    text: f.label,
                     callback: () =>  callback()
                 });
             })

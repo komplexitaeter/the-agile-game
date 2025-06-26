@@ -389,7 +389,9 @@ class LobbyScene extends BaseScene {
                 switcherOptions.push({
                     text: "Meine Personalnummer ist die " + employeeNumber + ".",
                     callback: () => {
+                        this.focusInteraction();
                         this.showMonolog(["Meine Personalnummer ist die " + employeeNumber + "."], ()=>{
+                            this.focusInteraction();
                             this.showCharacterMonolog(this.ken, ["Moment.", "Ich schaue da mal nach."],()=>{
                                 this.playKeybordSounds = true;
                                 this.playKeyboardSound(()=>{
@@ -496,20 +498,18 @@ class LobbyScene extends BaseScene {
                             this.addInventoryAssets(['invAccessCard']);
                             this.controls.updateAssetsTaken();
 
-                           this.updateGameState({
+                            this.updateGameState({
                                 progress: {
                                     hasAccessCard: true
                                 }
                             });
 
-                            this.focusInteraction();
                             this.showMonolog(["Danke, dann kann ich schon mal das Meeting vorbereiten."], ()=>{
                                 this.moveSophie({x: this.viewport.width * 0.8, y: 0}, ()=>{
                                     this.showMonolog(["Das war einfacher als gedacht."], ()=>{
                                         this.backToDefault();
                                     });
                                 });
-                                this.backToDefault();
                             });
                         },'give', true);
                     });
