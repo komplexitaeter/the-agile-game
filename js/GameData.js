@@ -1,7 +1,7 @@
 const GameData = {
 
     // Debug-Modus
-    debug: false, // Auf false setzen für Produktionsversion
+    debug: true, // Auf false setzen für Produktionsversion
 
     // Spieler-Informationen
     player: {
@@ -43,9 +43,6 @@ const GameData = {
         { type: 'audio', key: 'inputError', path: 'assets/sounds/input_error.mp3' },
         { type: 'audio', key: 'elevatorPling', path: 'assets/sounds/elevator_pling.mp3' },
         { type: 'audio', key: 'elevatorDoreSound', path: 'assets/sounds/elevator_dore_open.mp3' },
-        { type: 'audio', key: 'tick', path: 'assets/sounds/CEO_tick.mp3' },
-        { type: 'audio', key: 'tickShort', path: 'assets/sounds/CEO_tick_short.mp3' },
-        { type: 'audio', key: 'tickShortest', path: 'assets/sounds/CEO_tick_shortest.mp3' },
         { type: 'audio', key: 'drinkingBottle', path: 'assets/sounds/drinking_bottle.mp3' },
         { type: 'audio', key: 'openingBottle', path: 'assets/sounds/opening_bottle.mp3' },
 
@@ -679,7 +676,10 @@ const GameData = {
             assets: [
                 {type: 'image', key: 'ceoOffice', path: 'assets/images/ceo_office.png'},
                 {type: 'image', key: 'ceoOfficeFront', path: 'assets/images/ceo_office_front.png'},
-                { type: 'spritesheet', key: 'noel', path: 'assets/images/character_noel.png', frameConfig: { frameWidth: 350, frameHeight: 834 } },
+                {type: 'spritesheet', key: 'noel', path: 'assets/images/character_noel.png', frameConfig: { frameWidth: 350, frameHeight: 834 } },
+                {type: 'audio', key: 'tick', path: 'assets/sounds/CEO_tick.mp3' },
+                {type: 'audio', key: 'tickShort', path: 'assets/sounds/CEO_tick_short.mp3' },
+                {type: 'audio', key: 'tickShortest', path: 'assets/sounds/CEO_tick_shortest.mp3' },
             ],
             interactiveObjects: [
                 {
@@ -728,6 +728,25 @@ const GameData = {
                     hoverDepth: 100001,
                     debug: true,
                     depth: 100000,
+                    view: ["Da liegt ein Magnet und allerlei nützliche Dinge."],
+                    take: ["Da ist ein Magnet. Den nehme ich mit.", "Den Rest lasse ich hier."],
+                    removable: true,
+                    inventoryAssets: ['invMagnet']
+                },
+
+                {
+                    id: 'officeMagnetX',
+                    defaultAction: 2,
+                    type: 'rectangle',
+                    relativeX: 0.51,
+                    relativeY: 0.6,
+                    hoverYOffset: 0.01,
+                    relativeWidth: 0.3,
+                    relativeHeight: 0.062,
+                    hoverText: "Büroutensilien",
+                    hoverDepth: 100001,
+                    debug: true,
+                    depth: 1000000,
                     view: ["Da liegt ein Magnet und allerlei nützliche Dinge."],
                     take: ["Da ist ein Magnet. Den nehme ich mit.", "Den Rest lasse ich hier."],
                     removable: true,

@@ -987,6 +987,13 @@ class MeetingScene extends BaseScene {
     }
 
     useInvAccessFormWithManagers() {
+        if (!this.gameState.progress.managerAttention) {
+            this.showMonolog(["Ich glaube, ich muss erst ihre Aufmerksamkeit gewinnen."], ()=>{
+                this.backToDefault();
+            });
+            return;
+        }
+
         let wasBackgroundTalkPlaying = this.playBackgroundTalk;
 
         this.focusInteraction();
@@ -1007,6 +1014,13 @@ class MeetingScene extends BaseScene {
     }
 
     useInvManifestWithManagers() {
+        if (!this.gameState.progress.managerAttention) {
+            this.showMonolog(["Ich glaube, ich muss erst ihre Aufmerksamkeit gewinnen."], ()=>{
+                this.backToDefault();
+            });
+            return;
+        }
+
         let wasBackgroundTalkPlaying = this.playBackgroundTalk;
 
         this.focusInteraction();
@@ -1027,6 +1041,13 @@ class MeetingScene extends BaseScene {
     }
 
     useInvCatNoticeWithManagers() {
+        if (!this.gameState.progress.managerAttention) {
+            this.showMonolog(["Ich glaube, ich muss erst ihre Aufmerksamkeit gewinnen."], ()=>{
+                this.backToDefault();
+            });
+            return;
+        }
+
         let wasBackgroundTalkPlaying = this.playBackgroundTalk;
 
         this.focusInteraction();
