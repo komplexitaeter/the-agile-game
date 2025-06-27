@@ -804,9 +804,6 @@ class TeamScene extends BaseScene {
                         this.soundEffects.play("MIAUUZ", this.viewport.width * 0.88, this.viewport.height * 0.45, {
                             duration: 2500,
                             depth: this.sophie.depth + 1,
-                            onComplete: ()=>{
-                                this.backToDefault();
-                            },
                             style: {
                                 fontSize: '40px',
                                 fill: '#ec7a08',
@@ -815,6 +812,7 @@ class TeamScene extends BaseScene {
                                 strokeThickness: 7
                             }
                         });
+                        this.backToDefault();
                     });
                 });
             });
