@@ -1055,8 +1055,8 @@ class MeetingScene extends BaseScene {
 
         this.showMonolog(["Ich habe das hier gefunden."], ()=>{
             this.showManagerMonolog(this.managers[1], ["Oje, das reißt alte Wunden wieder auf."], ()=> {
-                this.showManagerMonolog(this.managers[2], ["Sie hat uns damals wochenlang damit beschäftigt, die Katze zu suchen."], ()=> {
-                    this.showManagerMonolog(this.managers[0], ["Viele von uns haben ihren Job verloren, als wir ihr die schlechte Nachricht mitteilen mussten."], ()=> {
+                this.showManagerMonolog(this.managers[2], ["SIE hat uns damals wochenlang damit beschäftigt, die Katze zu suchen."], ()=> {
+                    this.showManagerMonolog(this.managers[0], ["Viele von uns haben ihren Job verloren, als wir IHR die schlechte Nachricht mitteilen mussten."], ()=> {
                         this.backToDefault();
                         if (wasBackgroundTalkPlaying) {
                             this.startBackgroundTalk();
