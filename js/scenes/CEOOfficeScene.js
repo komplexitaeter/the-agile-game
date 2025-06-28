@@ -497,7 +497,7 @@ class CEOOfficeScene extends BaseScene {
                         ease: 'Power1',
                         onComplete: () => {
                             this.noelWalkSound.stop();
-                            this.showCharacterMonolog(this.noel, ["Oh, meine Katze Mimi.", "***SCHLUCHZ***", "Sie ist mir vor Jahren genommen worden.", "Ich vermisse sie sehr."], ()=>{
+                            this.showCharacterMonolog(this.noel, ["Oh, meine Katze Mimi.", "***SCHLUCHZ***", "Sie ist mir vor Wochen genommen worden.", "Ich vermisse sie sehr."], ()=>{
                                this.showMonolog(["Das tut mir sehr leid.", "Wenn ich sie finde, werde ich sie dir zurückbringen."], ()=>{
                                    this.showCharacterMonolog(this.noel, ["Das ist sehr nett von dir.", "Warte, ich habe da gerade eine sehr gute Idee."], ()=>{
                                        this.showMonolog(["Jetzt bin ich gespannt."], ()=>{
