@@ -193,7 +193,7 @@ class BasementScene extends BaseScene {
                         });
 
                         this.controls.updateAssetsTaken();
-                        this.showMonolog(["Der Scum Guide in Version 2017.", "Meine Liblingsversion.", "Persönlich signiert von Jeff Sutherland.", "Vielen, vielen Dank!"], ()=>{
+                        this.showMonolog(["Der Scum Guide in Version 2017.", "Meine Lieblingsversion.", "Persönlich signiert von Jeff Sutherland.", "Vielen, vielen Dank!"], ()=>{
                             this.backToDefault();
                         });
                     })
