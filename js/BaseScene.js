@@ -456,7 +456,6 @@ class BaseScene extends Phaser.Scene {
         this.handleResize({ width: this.scale.width, height: this.scale.height });
     }
 
-    // Vereinfachte Resize-Methode
     handleResize(gameSize) {
         if (this.isResizing) return; // Gegen Rekursion schützen
 
@@ -468,15 +467,20 @@ class BaseScene extends Phaser.Scene {
         // Das Game-Canvas direkt aktualisieren
         this.scale.resize(width, height);
 
-        // Verzögertes Neupositionieren aller Elemente
+        // Verzögertes Neupositionieren aller Elemente mit Arrow-Function um Kontext zu bewahren
         requestAnimationFrame(() => {
             this.scaleToFit(width, height);
             this.isResizing = false;
         });
     }
 
-    // Neue, vereinfachte Methode zur Skalierung
     scaleToFit(width, height) {
+        // Prüfe ob cameras.main existiert
+        if (!this.cameras || !this.cameras.main) {
+            console.warn('Camera not available in scaleToFit');
+            return;
+        }
+
         // Skalierungsfaktor berechnen
         const scaleX = width / this.viewport.width;
         const scaleY = height / this.viewport.height;

@@ -1,6 +1,4 @@
 // BuildingScene.js - Hauptszene mit interaktiver Sophie
-/* todo: MimiZettelMitKen: Miau
-*   Aufzug Anzeige direkt nach Pling ändern*/
 class BuildingScene extends BaseScene {
     constructor() {
         super({ key: 'BuildingScene' });
@@ -27,8 +25,21 @@ class BuildingScene extends BaseScene {
             this.interactiveObjects['emptyBottle'].gameObject.setVisible(false);
         }
 
+        this.windowCover = this.add.image(this.viewport.width *0.4951, this.viewport.height *0.269
+            , 'strangeWindowCover')
+        this.windowCover.setOrigin(0.5, 0.5);
+        this.windowCover.setDepth(12);
+
+        this.windowPerson = this.add.image(this.viewport.width * 0.485, this.viewport.height *0.269
+            , 'strangeWindowPerson')
+        this.windowPerson.setOrigin(0.5, 0.5);
+        this.windowPerson.setDepth(11);
+
         if (this.gameState.progress.meetingRoomKnown) {
             this.interactiveObjects['strangeWindow'].gameObject.setVisible(false);
+            this.windowPerson.setVisible(false);
+        } else {
+            this.animatePerson();
         }
 
         if (this.entryPoint === 'fired') {
@@ -41,6 +52,42 @@ class BuildingScene extends BaseScene {
 
         }
 
+    }
+
+    animatePerson() {
+        // Berechne die Boundaries basierend auf der Viewport-Breite
+        const leftBoundary = this.viewport.width * 0.48;
+        const rightBoundary = this.viewport.width * 0.505;
+
+        // Starte die Person an der linken Grenze
+        this.windowPerson.x = leftBoundary;
+
+        // Funktion für Bewegung nach rechts
+        const moveRight = () => {
+            this.windowPerson.setFlipX(true); // Person schaut nach rechts
+            this.tweens.add({
+                targets: this.windowPerson,
+                x: rightBoundary,
+                duration: 3000,
+                ease: 'Sine.easeInOut',
+                onComplete: moveLeft
+            });
+        };
+
+        // Funktion für Bewegung nach links
+        const moveLeft = () => {
+            this.windowPerson.setFlipX(false); // Person schaut nach links
+            this.tweens.add({
+                targets: this.windowPerson,
+                x: leftBoundary,
+                duration: 3000,
+                ease: 'Sine.easeInOut',
+                onComplete: moveRight
+            });
+        };
+
+        // Starte die Animation
+        moveRight();
     }
 
     takeLanternNotice(objectKey, worldPoint) {
@@ -111,6 +158,7 @@ class BuildingScene extends BaseScene {
                                     }
                                 });
                                 this.interactiveObjects['strangeWindow'].gameObject.setVisible(false);
+                                this.windowPerson.setVisible(false);
                                 this.backToDefault();
                             }
                         )

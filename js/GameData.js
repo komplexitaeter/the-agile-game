@@ -101,6 +101,8 @@ const GameData = {
                 { type: 'image', key: 'building', path: 'assets/images/building.webp' },
                 { type: 'image', key: 'lanternNotice', path: 'assets/images/building_lantern_notice.png' },
                 { type: 'image', key: 'strangeWindow', path: 'assets/images/strange_window.png' },
+                { type: 'image', key: 'strangeWindowCover', path: 'assets/images/strange_window_cover.png' },
+                { type: 'image', key: 'strangeWindowPerson', path: 'assets/images/strange_window_person.png' },
                 { type: 'image', key: 'trash', path: 'assets/images/building_trash.png' },
                 { type: 'image', key: 'emptyBottle', path: 'assets/images/inv_coke_empty.png' },
                 { type: 'audio', key: 'trashSearch', path: 'assets/sounds/trash_search.mp3' },
