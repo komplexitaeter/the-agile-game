@@ -1,7 +1,6 @@
 class OutroScene extends BaseScene {
     constructor() {
         super({ key: 'OutroScene' });
-        this.newsletterSubscribed = false;
     }
 
     create() {
@@ -10,7 +9,7 @@ class OutroScene extends BaseScene {
         this.congratsText = this.add.text(
             this.viewport.width * 0.5,
             this.viewport.height * 0.1,
-            'Herzlichen Glückwunsch!',
+            t('Herzlichen Glückwunsch!', 'Congratulations!'),
             {
                 fontSize: '50px',
                 fontFamily: 'Courier New, monospace',
@@ -51,10 +50,15 @@ class OutroScene extends BaseScene {
         // Sophie Monolog starten nach kurzer Verzögerung
         this.time.delayedCall(500, () => {
             this.showCharacterMonolog(this.outroSophie, [
-                      "Puh, das war aufregend. Ging es dir auch so? Aber Spaß hatten wir schon.."
-                     ,"Wenn du Lust auf Teil 2 hast, melde dich doch für unseren Newsletter an.."
-                     ,"So bleibst du auf dem Laufenden und erfährst, wann es weiter geht.."],()=>{
-                window.location.href = 'https://www.komplexitaeter.de/kontakt/';
+                    t("Puh, das war aufregend. Ging es dir auch so? Aber Spaß hatten wir schon..",
+                        "Phew, that was exciting. Did you feel the same? But we had fun for sure.."),
+                    t("Wenn du Lust auf Teil 2 hast, melde dich doch für unseren Newsletter an..",
+                        "If you're interested in Part 2, sign up for our newsletter.."),
+                    t("So bleibst du auf dem Laufenden und erfährst, wann es weiter geht..",
+                        "That way you'll stay up to date and find out when it continues..")
+                ]
+                ,()=>{
+                window.location.href = 'https://www.komplexitaeter.de/the-agile-game-newsletter/#outro';
             });
         });
 
@@ -288,9 +292,6 @@ class OutroScene extends BaseScene {
 
         // Hier später die Brevo API-Integration
         console.log('Newsletter-Anmeldung:', email);
-
-        // Anzeigen, dass die Anmeldung erfolgreich war
-        this.newsletterSubscribed = true;
 
         // Formularelemente ausblenden
         if (this.emailInput) this.emailInput.setVisible(false);
