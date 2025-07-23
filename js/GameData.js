@@ -3,6 +3,24 @@ const GameData = {
     // Debug-Modus
     debug: false, // Auf false setzen für Produktionsversion
 
+    // Language Setting
+    currentLanguage: (() => {
+        // 1. Erst localStorage checken (User-Präferenz)
+        const saved = localStorage.getItem('gameLanguage');
+        if (saved) return saved;
+
+        // 2. URL Parameter checken
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlLang = urlParams.get('language');
+        if (urlLang) {
+            return urlLang.toLowerCase().startsWith('de') ? 'de' : 'en';
+        }
+
+        // 3. Browser-Sprache als Fallback
+        const browserLang = navigator.language || navigator.userLanguage;
+        return browserLang.startsWith('de') ? 'de' : 'en';
+    })(),
+
     // Spieler-Informationen
     player: {
         inventory: [],
@@ -103,7 +121,7 @@ const GameData = {
                 { type: 'image', key: 'strangeWindow', path: 'assets/images/strange_window.png' },
                 { type: 'image', key: 'strangeWindowCover', path: 'assets/images/strange_window_cover.png' },
                 { type: 'image', key: 'strangeWindowPerson', path: 'assets/images/strange_window_person.png' },
-                { type: 'image', key: 'trash', path: 'assets/images/building_trash.png' },
+                { type: 'image', key: 'trash', path: 'assets/images/building_trash_2.png' },
                 { type: 'image', key: 'emptyBottle', path: 'assets/images/inv_coke_empty.png' },
                 { type: 'audio', key: 'trashSearch', path: 'assets/sounds/trash_search.mp3' },
                 { type: 'audio', key: 'magicSound', path: 'assets/sounds/magic_sound.mp3' },
@@ -163,9 +181,9 @@ const GameData = {
                     defaultAction: 1,
                     type: 'rectangle',
                     relativeX: 0.383,
-                    relativeY: 0.929,
-                    relativeWidth: 0.082,
-                    relativeHeight: 0.085,
+                    relativeY: 0.928,
+                    relativeWidth: 0.086,
+                    relativeHeight: 0.095,
                     hoverText: "Mülleimer",
                     exactPositioning: true,
                     debug: true,
@@ -178,16 +196,19 @@ const GameData = {
                     view: ["Einiges davon könnte nützlich sein.", "Aber ich bin mir nicht sicher ob ich ausreichend Commitment habe, den Müll mitzunehmen."],
                     viewOnlyOnce: true,
                     take: ["Die sind sehr groß und voller Müll und bleiben genau dort wo sie sind."],
+                    afterViewMoveY: 0.48,
+                    afterViewFrame: 'walk_left',
                 },
                 {
                     id: 'trash',
                     defaultAction: 2,
                     type: 'image',
                     texture: 'trash',
-                    relativeX: 0.41,
-                    relativeY: 0.905,
-                    relativeWidth: 0.012,
-                    relativeHeight: 0.04,
+                    relativeX: 0.408,
+                    relativeY: 0.927,
+                    relativeWidth: 0.01,
+                    relativeHeight: 0.05,
+                    hoverYOffset: -0.016,
                     hoverText: "Müll",
                     debug: true,
                     depth: 10,
@@ -1114,19 +1135,6 @@ const GameData = {
 
     },
 
-
-    // Monologe
-    monologs: {
-        intro: [
-            "Ich bin Sophie Plaice.",
-            "Ich will die größte Agile Coachin aller Zeiten werden.",
-            "MÖGEN DIE SPIELE BEGINNEN!!!",
-            "Ähm.",
-            "Da ist mein Temperament wohl etwas mit mir durchgegangen.",
-            "Lass uns einfach anfangen."
-        ]
-    },
-
     inventoryItems: [
         {key: 'invCokeClosed', title: 'Cola', show: false, view: ["Eine Flasche Coke."]},
         {key: 'invCokeBomb', title: 'Coke-Bombe', show: false, view: ["Eine stark geschüttelte Flasche Cola."]},
@@ -1156,3 +1164,7 @@ const GameData = {
         return [...commonAssets, ...sceneAssets];
     }
 };
+
+function t(de, en) {
+    return GameData.currentLanguage === 'en' ? en : de;
+}

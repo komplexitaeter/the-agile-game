@@ -413,16 +413,6 @@ class MonologManager {
         this.scene.isMonologActive = false;
         this.scene.controls.enable();
 
-        // IntroScene-spezifische Logik (aus BaseScene übernommen)
-        if (this.scene.scene.key === 'IntroScene' &&
-            this.currentLines === GameData.monologs.intro) {
-            this.scene.updateGameState({
-                progress: {
-                    hasSeenIntro: true
-                }
-            });
-        }
-
         // Status zurücksetzen
         this.isActive = false;
         this.currentIndex = 0;

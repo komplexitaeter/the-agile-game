@@ -954,7 +954,18 @@ class BaseScene extends Phaser.Scene {
                     depth: this.sophie.depth + 1,
                     onComplete: () => {
                         this.showMonolog(text, ()=>{
-                            this.backToDefault();
+
+                            if (interactiveObject.data.afterViewMoveY) {
+                                console.log('DDDD');
+                                this.moveSophie({x: this.viewport.width * interactiveObject.data.afterViewMoveY
+                                    , y:this.sophie.y}, ()=>{
+                                    this.backToDefault();
+                                },interactiveObject.data.afterViewFrame);
+                            } else {
+                                this.backToDefault();
+                            }
+
+
                         });
                     },
                     style: {

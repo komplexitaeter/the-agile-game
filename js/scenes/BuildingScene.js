@@ -115,6 +115,15 @@ class BuildingScene extends BaseScene {
 
     }
 
+    viewStrangeWindow(objectKey, worldPoint) {
+        this.updateGameState({
+            progress: {
+                strangeWindowViewedOnce: true
+            }
+        });
+
+    }
+
     takeTrash(objectKey, worldPoint) {
         this.updateGameState({
             progress: {

@@ -226,9 +226,22 @@ class IntroScene extends BaseScene {
         }
 
         // Monolog anzeigen und danach zur Hauptszene wechseln
-        this.showMonolog(GameData.monologs.intro, () => {
-            // Zur ersten spielbaren Szene wechseln
-            this.changeScene('BuildingScene');
+        this.showMonolog([
+            t("Ich bin Sophie Plaice.", "I am Sophie Plaice."),
+            "Ich will die größte Agile Coachin aller Zeiten werden.",
+            "MÖGEN DIE SPIELE BEGINNEN!!!",
+            "Ähm.",
+            "Da ist mein Temperament wohl etwas mit mir durchgegangen.",
+            "Lass uns einfach anfangen."], () => {
+
+                this.updateGameState({
+                    progress: {
+                        hasSeenIntro: true
+                    }
+                });
+
+                // Zur ersten spielbaren Szene wechseln
+                this.changeScene('BuildingScene');
         });
     }
 }

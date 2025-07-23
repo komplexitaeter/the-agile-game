@@ -33,6 +33,7 @@ class GameStateManager {
                 trashTaken: false,
                 emptyBottleTaken: false,
                 lanternNoticeTaken: false,
+                strangeWindowViewedOnce: false,
                 meetingRoomKnown: false,
                 accessControlUsedOnce: false,
                 everTalkedToKen: false,
