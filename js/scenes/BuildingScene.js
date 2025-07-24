@@ -44,7 +44,8 @@ class BuildingScene extends BaseScene {
 
         if (this.entryPoint === 'fired') {
             this.sophie.play('walk_left');
-            this.showMonolog(["Ich hatte mir meinen ersten Arbeitstag anders vorgestellt."], ()=>{
+            this.showMonolog([t("Ich hatte mir meinen ersten Arbeitstag anders vorgestellt."
+                , "I had imagined my first working-day differently.")], ()=>{
                 this.backToDefault();
             })
         } else {
@@ -149,16 +150,17 @@ class BuildingScene extends BaseScene {
         this.focusInteraction();
 
         this.showMonolog(
-            ["Ich kann es als eine Art Fernrohr verwenden."],
-            ()=>{
-
+            [t("Ich kann es als eine Art Fernrohr verwenden."
+                , "I can use it as a kind of telescope.")], ()=>{
                 this.moveSophie({x: this.viewport.width * 0.43, y: 0},
                     ()=>{
                         const magicSound = this.sound.add('magicSound', {volume:0.2, rate: 1});
                         magicSound.play();
 
                         this.showMonolog(
-                            ["Da steht R9.012 Ernie & Bert", "Ein weiteres Milliardenunternehmen, das Meetingräume nach der Sesamstraße benennt."],
+                            [t("Da steht R9.012 Ernie & Bert", "It says R9.012 Ernie & Bert")
+                                , t("Ein weiteres Milliardenunternehmen, das Meetingräume nach der Sesamstraße benennt."
+                                , "Another billion-dollar company that names meeting rooms after Sesame Street.")],
                             ()=>{
                                 this.sophie.play('walk_left');
                                 this.updateGameState({

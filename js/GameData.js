@@ -1,25 +1,27 @@
+// Hilfsfunktion für die Spracheinstellung (vor GameData definieren)
+function getCurrentLanguage() {
+    const saved = localStorage.getItem('gameLanguage');
+    if (saved) return saved;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlLang = urlParams.get('language');
+    if (urlLang) {
+        return urlLang.toLowerCase().startsWith('de') ? 'de' : 'en';
+    }
+
+    const browserLang = navigator.language || navigator.userLanguage;
+    return browserLang.startsWith('de') ? 'de' : 'en';
+}
+
+// t-Funktion vor GameData definieren
+function t(de, en) {
+    return getCurrentLanguage() === 'en' ? en : de;
+}
+
 const GameData = {
 
     // Debug-Modus
     debug: false, // Auf false setzen für Produktionsversion
-
-    // Language Setting
-    currentLanguage: (() => {
-        // 1. Erst localStorage checken (User-Präferenz)
-        const saved = localStorage.getItem('gameLanguage');
-        if (saved) return saved;
-
-        // 2. URL Parameter checken
-        const urlParams = new URLSearchParams(window.location.search);
-        const urlLang = urlParams.get('language');
-        if (urlLang) {
-            return urlLang.toLowerCase().startsWith('de') ? 'de' : 'en';
-        }
-
-        // 3. Browser-Sprache als Fallback
-        const browserLang = navigator.language || navigator.userLanguage;
-        return browserLang.startsWith('de') ? 'de' : 'en';
-    })(),
 
     // Spieler-Informationen
     player: {
@@ -135,11 +137,18 @@ const GameData = {
                     relativeY: 0.85,
                     relativeWidth: 0.065,
                     relativeHeight: 0.15,
-                    hoverText: "Werbeplakat",
+                    hoverText: t("Werbeplakat", "Advertising Poster"),
                     debug: true,
                     depth: 10,
-                    view: ['Werbung:', '"Fraxicle Inc. - Wir lassen Träume wahr werden!"', "Es bleibt absolut unklar, womit diese Firma Geld verdient."],
-                    take: ["Das ist sicherlich wichtig für das Marketing von Fraxicle.", "Als Agile Coach will ich den direkten Kontakt mit dem Kunden nicht beeinträchtigen."]
+                    view: [
+                        t('Werbung:', 'Advertisement:'),
+                        t('"Fraxicle Inc. - Wir lassen Träume wahr werden!"', '"Fraxicle Inc. - We make dreams come true!"'),
+                        t("Es bleibt absolut unklar, womit diese Firma Geld verdient.", "It remains absolutely unclear how this company makes money.")
+                    ],
+                    take: [
+                        t("Das ist sicherlich wichtig für das Marketing von Fraxicle.", "That's certainly important for Fraxicle's marketing."),
+                        t("Als Agile Coach will ich den direkten Kontakt mit dem Kunden nicht beeinträchtigen.", "As an Agile Coach, I don't want to interfere with direct customer contact.")
+                    ]
                 },
                 {
                     id: 'busStop',
@@ -149,11 +158,17 @@ const GameData = {
                     relativeY: 0.88,
                     relativeWidth: 0.14,
                     relativeHeight: 0.18,
-                    hoverText: "Bushaltestelle",
+                    hoverText: t("Bushaltestelle", "Bus Stop"),
                     debug: true,
                     depth: 10,
-                    view: ["Commerce Center A, Springfield, Ohio.", "Der nächste Bus kommt erst in 9 Stunden."],
-                    take: ["Das ist eine öffentliche Einrichtung.", "Ich lasse sie besser hier."]
+                    view: [
+                        t("Commerce Center A, Springfield, Ohio.", "Commerce Center A, Springfield, Ohio."),
+                        t("Der nächste Bus kommt erst in 9 Stunden.", "The next bus won't come for another 9 hours.")
+                    ],
+                    take: [
+                        t("Das ist eine öffentliche Einrichtung.", "That's a public facility."),
+                        t("Ich lasse sie besser hier.", "I'd better leave it here.")
+                    ]
                 },
                 {
                     id: 'lanternNotice',
@@ -164,13 +179,25 @@ const GameData = {
                     relativeY: 0.834,
                     relativeWidth: 0.012,
                     relativeHeight: 0.04,
-                    hoverText: "Zettel",
+                    hoverText: t("Zettel", "Note"),
                     debug: true,
                     depth: 10,
-                    view: ["Katze Mimi ist entlaufen.", "Der Zettel ist schon etwas älter.","Arme Katze Mimi.","Am Zettel ist ein Magnet."],
-                    take: ["Der Zettel ist schon etwas älter.", "Katze Mimi ist entlaufen.","Arme Katze Mimi.","Am Zettel ist noch ein Magnet.", "Den nehme ich auch mit.", "Wie auch immer der auf dem Holzmast haften konnte ¯\\_(ツ)_/¯"],
+                    view: [
+                        t("Katze Mimi ist entlaufen.", "Cat Mimi has run away."),
+                        t("Der Zettel ist schon etwas älter.", "The note is already quite old."),
+                        t("Arme Katze Mimi.", "Poor cat Mimi."),
+                        t("Am Zettel ist ein Magnet.", "There's a magnet on the note.")
+                    ],
+                    take: [
+                        t("Der Zettel ist schon etwas älter.", "The note is already quite old."),
+                        t("Katze Mimi ist entlaufen.", "Cat Mimi has run away."),
+                        t("Arme Katze Mimi.", "Poor cat Mimi."),
+                        t("Am Zettel ist noch ein Magnet.", "There's still a magnet on the note."),
+                        t("Den nehme ich auch mit.", "I'll take that too."),
+                        t("Wie auch immer der auf dem Holzmast haften konnte ¯\\_(ツ)_/¯", "However it managed to stick to the wooden post ¯\\_(ツ)_/¯")
+                    ],
                     removable: true,
-                    removeSound: "FLUP",
+                    removeSound: t("FLUP", "FLUP"),
                     removeAudioCode: 'removeSticker',
                     removeAudioVolume: 0.6,
                     removeAudioRate: 0.8,
@@ -184,18 +211,21 @@ const GameData = {
                     relativeY: 0.928,
                     relativeWidth: 0.086,
                     relativeHeight: 0.095,
-                    hoverText: "Mülleimer",
+                    hoverText: t("Mülleimer", "Trash Bins"),
                     exactPositioning: true,
                     debug: true,
                     depth: 11,
                     sophieViewFrame: "back",
-                    viewSound: "RUMPELRUMPEL",
+                    viewSound: t("RUMPELRUMPEL", "RUMMAGE RUMMAGE"),
                     viewAudioCode: 'trashSearch',
                     viewAudioVolume: 1,
                     viewAudioRate: 1.1,
-                    view: ["Einiges davon könnte nützlich sein.", "Aber ich bin mir nicht sicher ob ich ausreichend Commitment habe, den Müll mitzunehmen."],
+                    view: [
+                        t("Einiges davon könnte nützlich sein.", "Some of this could be useful."),
+                        t("Aber ich bin mir nicht sicher ob ich ausreichend Commitment habe, den Müll mitzunehmen.", "But I'm not sure if I have enough commitment to take the trash with me.")
+                    ],
                     viewOnlyOnce: true,
-                    take: ["Die sind sehr groß und voller Müll und bleiben genau dort wo sie sind."],
+                    take: [t("Die sind sehr groß und voller Müll und bleiben genau dort wo sie sind.", "They're very big and full of trash and stay exactly where they are.")],
                     afterViewMoveY: 0.48,
                     afterViewFrame: 'walk_left',
                 },
@@ -209,12 +239,21 @@ const GameData = {
                     relativeWidth: 0.01,
                     relativeHeight: 0.05,
                     hoverYOffset: -0.016,
-                    hoverText: "Müll",
+                    hoverText: t("Müll", "Trash"),
                     debug: true,
                     depth: 10,
-                    view: ["Alle was ich als fest und kompakt identifizieren konnte."],
-                    preTake: ["Ich kann nicht fassen, dass ich das hier wirklich tue.", "Ich werde das der Gewerkschaft melden.", "Ich fordere bessere Arbeitsbedingungen für uns Agile Coaches!"],
-                    take: ["Na was haben wir denn hier:","Ein Spraydose Farbe RAL 9016 - Verkehrsweiß.", "Eine Münze.", "Und eine leere Rolle Klopapier.", "IGITTTT!!!" ],
+                    view: [t("Alle was ich als fest und kompakt identifizieren konnte.", "Everything I could identify as solid and compact.")],
+                    preTake: [
+                        t("Ich kann nicht fassen, dass ich das hier wirklich tue.", "I can't believe I'm actually doing this."),
+                        t("Ich werde das der Gewerkschaft melden.", "I'm going to report this to the union."),
+                        t("Ich fordere bessere Arbeitsbedingungen für uns Agile Coaches!", "I demand better working conditions for us Agile Coaches!")
+                    ],
+                    take: [
+                        t("Na was haben wir denn hier:", "Well, what do we have here:"),
+                        t("Eine Spraydose Farbe RAL 9016 - Verkehrsweiß.", "A spray can of paint in color RAL 9016 - Traffic White."),                        t("Eine Münze.", "A coin."),
+                        t("Und eine leere Rolle Klopapier.", "And an empty toilet paper roll."),
+                        t("IGITTTT!!!", "YUCK!!!")
+                    ],
                     removable: true,
                     inventoryAssets: ['invCoin', 'invSprayCan', 'invEmptyToiletPaperRole']
                 },
@@ -228,12 +267,15 @@ const GameData = {
                     scaleFactor: 0.052,
                     relativeWidth: 0.012,
                     relativeHeight: 0.04,
-                    hoverText: "Leere Flasche",
+                    hoverText: t("Leere Flasche", "Empty Bottle"),
                     debug: true,
                     depth: 9,
-                    view: ["Es ist eine leere Coke Flasche."],
+                    view: [t("Es ist eine leere Coke Flasche.", "It's an empty Coke bottle.")],
                     removable: true,
-                    take: ["Es ist eine leere Coke Flasche.", "Ich nehme sie mal mit."],
+                    take: [
+                        t("Es ist eine leere Coke Flasche.", "It's an empty Coke bottle."),
+                        t("Ich nehme sie mal mit.", "I'll take it with me.")
+                    ],
                     inventoryAssets: ['invCokeEmpty']
                 },
                 {
@@ -245,13 +287,17 @@ const GameData = {
                     relativeY: 0.27,
                     relativeWidth: 0.014,
                     relativeHeight: 0.05,
-                    hoverText: "Auffälliges Fenster",
+                    hoverText: t("Auffälliges Fenster", "Strange Window"),
                     debug: true,
                     depth: 10,
-                    view: ["Könnte ein Meetingraum sein.", "Ich kann von hier unten die Details nicht erkennen.", "Ich bräuchte etwas, durch das ich hindurchsehen kann."],
+                    view: [
+                        t("Könnte ein Meetingraum sein.", "Could be a meeting room."),
+                        t("Ich kann von hier unten die Details nicht erkennen.", "I can't see the details from down here."),
+                        t("Ich bräuchte etwas, durch das ich hindurchsehen kann.", "I would need something to look through.")
+                    ],
                     sophieViewFrame: "back",
-                    preTake: ["Agiler Wahnsinn oder was?"],
-                    take: ["Ich kletter da jetzt auf keinen Fall rauf."],
+                    preTake: [t("Agiler Wahnsinn oder was?", "Agile madness or what?")],
+                    take: [t("Ich kletter da jetzt auf keinen Fall rauf.", "I'm definitely not climbing up there.")],
                     sophieTakeFrame: "back"
                 },
                 {
@@ -262,11 +308,11 @@ const GameData = {
                     relativeY: 0.82,
                     relativeWidth: 0.1,
                     relativeHeight: 0.11,
-                    hoverText: "Eingang zur Lobby",
+                    hoverText: t("Eingang zur Lobby", "Entrance to Lobby"),
                     debug: true,
                     depth: 10,
-                    view: ["Ohne Zweifel der Eingang zu diesem auffällig geformten Gebäude."],
-                    take: ["Es heißt nicht ohne Grund Im-mo-bi-li-e."]
+                    view: [t("Ohne Zweifel der Eingang zu diesem auffällig geformten Gebäude.", "Without a doubt the entrance to this strikingly shaped building.")],
+                    take: [t("Es heißt nicht ohne Grund Im-mo-bi-li-e.", "It's called real estate for a reason.")]
                 },
             ]
         },
@@ -1136,23 +1182,161 @@ const GameData = {
     },
 
     inventoryItems: [
-        {key: 'invCokeClosed', title: 'Cola', show: false, view: ["Eine Flasche Coke."]},
-        {key: 'invCokeBomb', title: 'Coke-Bombe', show: false, view: ["Eine stark geschüttelte Flasche Cola."]},
-        {key: 'invAccessForm', title: 'Formular', show: false, view: ["Damit ich reinkomme, muss ich ...", "... es von jemandem ausfüllen lassen, ...", "... der drin ist.", "Ein absolut sinnloses Formular."]},
-        {key: 'invGummyBears', title: 'Gummibären', show: false, view: ["Eine Tüte leckerer Gummibären.", "Sie sind vegan und es musste kein Bär dafür sterben."]},
-        {key: 'invEmptyToiletPaperRole', title: 'Klorolle', show: false, view: ["Eine leere Papierrolle.", "Ich spreche nicht darüber, wo ich sie her habe."]},
-        {key: 'invMagnet', title: 'Magnet', titlePlural: 'Magnete', show: false, view: ["Scheinbar magnetisch.", "Ich könnte stundenlang damit spielen."], viewSound: "KLICK-KLACK"},
-        {key: 'invManifest', title: 'Manifest', show: false, view: ["Aufruf zur ARBEITERREVOLUTION!!!", "Es werden besserer Arbeitsbedingungen für Mitarbeiter gefordert.", "Man kann mitmachen eine Gewerkschaft zu gründen."]},
-        {key: 'invCatNotice', title: 'Mimi-Zettel', show: false, view: ["Katze Mimi ist entlaufen und wird gesucht.", "Der Zettel ist schon etwas älter." ,"Arme Katze Mimi"]},
-        {key: 'invCoin', title: 'Münze', show: false, view: ["1 Bitcoin", "WOW", "Ich bin reich.", "Theoretisch."]},
-        {key: 'invCokeOpen', title: 'Offene Cola', show: false, view: ["Die Flasche ist offen.", "Ich sollte sie sehr bald trinken."]},
-        {key: 'invCokeEmpty', title: 'Leere Coke', show: false, view: ["Eine leere Flasche Coke."]},
-        {key: 'invBottleOpener', title: 'Öffner', show: false, view: ["Damit öffnet man Flaschen."]},
-        {key: 'invScrumGuide', title: 'Scrum Guide', show: false, view: ["Eine von Jeff Sutherland signierte Ausgabe des Scrum Guide."]},
-        {key: 'invSprayCan', title: 'Spraydose', show: false, view: ["Ein Spraydose Farbe RAL 9016 - Verkehrsweiß."]},
-        {key: 'invPen', title: 'Stift', show: false, view: ["Ein Permanentmarker.", "Bitte niemals auf Whiteboards benutzen."]},
-        {key: 'invBusinessCards', title: 'Karten', show: false, view: ["Ein Stapel Visitenkarten.", "Die Rückseiten sind noch frei."]},
-        {key: 'invAccessCard', title: 'Zugangskarte', show: false, view: ["Meine Eintrittskarte in die \"Welt der Träume.\"", "Sie öffnet den Aufzug."]},
+        {
+            key: 'invCokeClosed',
+            title: t('Cola', 'Coke'),
+            show: false,
+            view: [
+                t("Eine Flasche Coke.", "A bottle of Coke.")
+            ]
+        },
+        {
+            key: 'invCokeBomb',
+            title: t('Coke-Bombe', 'Coke Bomb'),
+            show: false,
+            view: [
+                t("Eine stark geschüttelte Flasche Cola.", "A heavily shaken bottle of cola.")
+            ]
+        },
+        {
+            key: 'invAccessForm',
+            title: t('Formular', 'Form'),
+            show: false,
+            view: [
+                t("Damit ich reinkomme, muss ich ...", "To get in, I have to ..."),
+                t("... es von jemandem ausfüllen lassen, ...", "... have it filled out by someone ..."),
+                t("... der drin ist.", "... who's inside."),
+                t("Ein absolut sinnloses Formular.", "An absolutely pointless form.")
+            ]
+        },
+        {
+            key: 'invGummyBears',
+            title: t('Gummibären', 'Gummy Bears'),
+            show: false,
+            view: [
+                t("Eine Tüte leckerer Gummibären.", "A bag of delicious gummy bears."),
+                t("Sie sind vegan und es musste kein Bär dafür sterben.", "They are vegan and no bear had to die for them.")
+            ]
+        },
+        {
+            key: 'invEmptyToiletPaperRole',
+            title: t('Klorolle', 'Toilet Roll'),
+            show: false,
+            view: [
+                t("Eine leere Papierrolle.", "An empty paper roll."),
+                t("Ich spreche nicht darüber, wo ich sie her habe.", "I don't talk about where I got it from.")
+            ]
+        },
+        {
+            key: 'invMagnet',
+            title: t('Magnet', 'Magnet'),
+            titlePlural: t('Magnete', 'Magnets'),
+            show: false,
+            view: [
+                t("Scheinbar magnetisch.", "Apparently magnetic."),
+                t("Ich könnte stundenlang damit spielen.", "I could play with it for hours.")
+            ],
+            viewSound: t("KLICK-KLACK", "CLICK-CLACK")
+        },
+        {
+            key: 'invManifest',
+            title: t('Manifest', 'Manifesto'),
+            show: false,
+            view: [
+                t("Aufruf zur ARBEITERREVOLUTION!!!", "Call for WORKER REVOLUTION!!!"),
+                t("Es werden besserer Arbeitsbedingungen für Mitarbeiter gefordert.", "Better working conditions for employees are demanded."),
+                t("Man kann mitmachen eine Gewerkschaft zu gründen.", "You can join to form a union.")
+            ]
+        },
+        {
+            key: 'invCatNotice',
+            title: t('Mimi-Zettel', 'Mimi Note'),
+            show: false,
+            view: [
+                t("Katze Mimi ist entlaufen und wird gesucht.", "Cat Mimi has run away and is being searched for."),
+                t("Der Zettel ist schon etwas älter.", "The note is already quite old."),
+                t("Arme Katze Mimi", "Poor cat Mimi")
+            ]
+        },
+        {
+            key: 'invCoin',
+            title: t('Münze', 'Coin'),
+            show: false,
+            view: [
+                t("1 Bitcoin", "1 Bitcoin"),
+                t("WOW", "WOW"),
+                t("Ich bin reich.", "I'm rich."),
+                t("Theoretisch.", "Theoretically.")
+            ]
+        },
+        {
+            key: 'invCokeOpen',
+            title: t('Offene Cola', 'Open Coke'),
+            show: false,
+            view: [
+                t("Die Flasche ist offen.", "The bottle is open."),
+                t("Ich sollte sie sehr bald trinken.", "I should drink it very soon.")
+            ]
+        },
+        {
+            key: 'invCokeEmpty',
+            title: t('Leere Coke', 'Empty Coke'),
+            show: false,
+            view: [
+                t("Eine leere Flasche Coke.", "An empty bottle of Coke.")
+            ]
+        },
+        {
+            key: 'invBottleOpener',
+            title: t('Öffner', 'Opener'),
+            show: false,
+            view: [
+                t("Damit öffnet man Flaschen.", "This is for opening bottles.")
+            ]
+        },
+        {
+            key: 'invScrumGuide',
+            title: t('Scrum Guide', 'Scrum Guide'),
+            show: false,
+            view: [
+                t("Eine von Jeff Sutherland signierte Ausgabe des Scrum Guide.", "A Jeff Sutherland signed edition of the Scrum Guide.")
+            ]
+        },
+        {
+            key: 'invSprayCan',
+            title: t('Spraydose', 'Spray Can'),
+            show: false,
+            view: [
+                t("Eine Spraydose Farbe RAL 9016 - Verkehrsweiß.", "A spray can of paint RAL 9016 - Traffic White.")
+            ]
+        },
+        {
+            key: 'invPen',
+            title: t('Stift', 'Pen'),
+            show: false,
+            view: [
+                t("Ein Permanentmarker.", "A permanent marker."),
+                t("Bitte niemals auf Whiteboards benutzen.", "Please never use on whiteboards.")
+            ]
+        },
+        {
+            key: 'invBusinessCards',
+            title: t('Karten', 'Cards'),
+            show: false,
+            view: [
+                t("Ein Stapel Visitenkarten.", "A stack of business cards."),
+                t("Die Rückseiten sind noch frei.", "The backs are still blank.")
+            ]
+        },
+        {
+            key: 'invAccessCard',
+            title: t('Zugangskarte', 'Access Card'),
+            show: false,
+            view: [
+                t("Meine Eintrittskarte in die \"Welt der Träume.\"", "My ticket to the \"World of Dreams.\""),
+                t("Sie öffnet den Aufzug.", "It opens the elevator.")
+            ]
+        },
     ],
 
     // Hilfsmethode zum Abrufen aller Assets für eine Szene
@@ -1164,7 +1348,3 @@ const GameData = {
         return [...commonAssets, ...sceneAssets];
     }
 };
-
-function t(de, en) {
-    return GameData.currentLanguage === 'en' ? en : de;
-}

@@ -941,7 +941,7 @@ class BaseScene extends Phaser.Scene {
     }
 
     talkToAnything(objectKey, worldPoint) {
-        const text = "Damit kann man sich nicht unterhalten.";
+        const text = t("Damit kann man sich nicht unterhalten.", "You can't talk to that.");
 
         // Zeige einen generischen Dialog mit der Monolog-Funktionalität
         this.showMonolog([text], null);
@@ -978,7 +978,6 @@ class BaseScene extends Phaser.Scene {
                         this.showMonolog(text, ()=>{
 
                             if (interactiveObject.data.afterViewMoveY) {
-                                console.log('DDDD');
                                 this.moveSophie({x: this.viewport.width * interactiveObject.data.afterViewMoveY
                                     , y:this.sophie.y}, ()=>{
                                     this.backToDefault();
@@ -1108,7 +1107,7 @@ class BaseScene extends Phaser.Scene {
 
     subExplodeCokeBomb() {
         this.focusInteraction();
-        this.showMonolog(["Ich hebe mir das besser für den richtigen Moment auf."], ()=>{
+        this.showMonolog([t("Ich hebe mir das besser für den richtigen Moment auf.", "I'd better save that for the right moment.")], ()=>{
             this.backToDefault();
         })
     }
@@ -1123,7 +1122,7 @@ class BaseScene extends Phaser.Scene {
         this.sophie.play('back');
 
         this.openingBottle.play();
-        this.soundEffects.play("FLIP FLUP",
+        this.soundEffects.play(t("FLIP FLUP", "FLIP FLOP"),
             this.sophie.x, this.sophie.y - (this.sophie.height * 0.7),
             {
                 duration: 1500,
@@ -1136,7 +1135,7 @@ class BaseScene extends Phaser.Scene {
                     strokeThickness: 7
                 },
                 onComplete: ()=>{
-                    this.showMonolog(["Ich sollte sie bald trinken, bevor alle Kohlensäure entweicht."], ()=>{
+                    this.showMonolog([t("Ich sollte sie bald trinken, bevor alle Kohlensäure entweicht.", "I should drink it soon before all the carbonation escapes.")], ()=>{
                         this.stateManager.removeAsset(this.gameState, 'invCokeClosed', 1);
                         this.addInventoryAssets(['invCokeOpen']);
                         this.controls.updateAssetsTaken();
@@ -1162,7 +1161,7 @@ class BaseScene extends Phaser.Scene {
         this.sophie.play('give');
 
         this.drinkingBottle.play();
-        this.soundEffects.play("GLUCKGLUCKGLUCK",
+        this.soundEffects.play(t("GLUCKGLUCKGLUCK", "GLUG GLUG GLUG"),
             this.sophie.x, this.sophie.y - (this.sophie.height * 0.9),
             {
                 duration: 1500,
@@ -1195,11 +1194,11 @@ class BaseScene extends Phaser.Scene {
     }
 
     useInvBottleOpenerWithInvCokeOpen() {
-        this.showMonolog(["Die Flasche ist bereits offen."]);
+        this.showMonolog([t("Die Flasche ist bereits offen.", "The bottle is already open.")]);
     }
 
     useInvCokeOpenWithInvBottleOpener() {
-        this.showMonolog(["Die Flasche ist bereits offen."]);
+        this.showMonolog([t("Die Flasche ist bereits offen.", "The bottle is already open.")]);
     }
 
     useSophieWithInvCokeClosed() {
@@ -1213,7 +1212,7 @@ class BaseScene extends Phaser.Scene {
 
             this.openingBottle.play();
 
-            this.soundEffects.play("FLIP FLUP",
+            this.soundEffects.play(t("FLIP FLUP", "FLIP FLOP"),
                 this.sophie.x, this.sophie.y - (this.sophie.height * 0.7),
                 {
                     duration: 1500,
@@ -1235,24 +1234,24 @@ class BaseScene extends Phaser.Scene {
             );
 
         } else {
-            this.showMonolog(["Ich habe nichts, um die Flasche zu öffnen."]);
+            this.showMonolog([t("Ich habe nichts, um die Flasche zu öffnen.", "I don't have anything to open the bottle with.")]);
         }
     }
 
     useInvGummyBearsWithSophie() {
-        this.showMonolog(["Die hebe ich mir für später auf."]);
+        this.showMonolog([t("Die hebe ich mir für später auf.", "I'll save those for later.")]);
     }
 
     useSophieWithInvGummyBears() {
-        this.showMonolog(["Die hebe ich mir für später auf."]);
+        this.showMonolog([t("Die hebe ich mir für später auf.", "I'll save those for later.")]);
     }
 
     useInvPenWithInvAccessForm() {
-        this.showMonolog(["Ich werde nicht noch mehr Zeit in diesen unsinnigen Prozess investieren."]);
+        this.showMonolog([t("Ich werde nicht noch mehr Zeit in diesen unsinnigen Prozess investieren.", "I won't invest any more time in this nonsensical process.")]);
     }
 
     useInvAccessFormWithInvPen() {
-        this.showMonolog(["Ich werde nicht noch mehr Zeit in diesen unsinnigen Prozess investieren."]);
+        this.showMonolog([t("Ich werde nicht noch mehr Zeit in diesen unsinnigen Prozess investieren.", "I won't invest any more time in this nonsensical process.")]);
     }
 
     useInvPenWithInvBusinessCards() {
@@ -1261,8 +1260,7 @@ class BaseScene extends Phaser.Scene {
 
     useInvBusinessCardsWithInvPen() {
         this.focusInteraction();
-        this.showMonolog(["Ich wüsste nicht, was ich da draufschreiben soll."],()=>{
-            this.backToDefault();
+        this.showMonolog([t("Ich wüsste nicht, was ich da draufschreiben soll.", "I wouldn't know what to write on there.")],()=>{            this.backToDefault();
         });
     }
 

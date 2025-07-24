@@ -90,7 +90,8 @@ class IntroScene extends BaseScene {
         const saveInfoText = this.add.text(
             textX,
             textY - 30,
-            "Hinweis: Dein Spielstand wird automatisch lokal im Browser gespeichert\nund bleibt auch nach einem Neustart erhalten.",
+            t("Hinweis: Dein Spielstand wird automatisch lokal im Browser gespeichert\nund bleibt auch nach einem Neustart erhalten."
+                , "Note: Your game progress is automatically saved locally in the browser\nand will persist after a restart."),
             {
                 fontSize: '28px',
                 fontFamily: 'Arial, sans-serif',
@@ -104,7 +105,8 @@ class IntroScene extends BaseScene {
         const infoText = this.add.text(
             textX,
             textY + 30,
-            "(Funktioniert nicht im privaten/inkognito Modus)",
+            t("(Funktioniert nicht im privaten/inkognito Modus)"
+                , "(Does not work in private/incognito mode)"),
             {
                 fontSize: '24px',
                 fontFamily: 'Arial, sans-serif',
@@ -179,7 +181,8 @@ class IntroScene extends BaseScene {
         const busTargetX = this.viewport.width + this.bus.width / 1.4;
 
         // Sound-Effekt mit SoundEffect-Klasse erstellen
-        this.soundEffects.play("BRRRRUUM", this.bus.x, this.bus.y, {
+        this.soundEffects.play(t("BRRRRUUM"
+                                ,"VRRROOOM"), this.bus.x, this.bus.y, {
             duration: 2200,
             depth: this.bus.depth + 1,
             style: {
@@ -217,7 +220,6 @@ class IntroScene extends BaseScene {
     startMonolog() {
         // Sicherstellen, dass die Szene und Sophie bereit sind
         if (!this.sophie || !this.sophie.active) {
-            console.warn("Sophie ist nicht bereit für den Monolog");
             // Nochmals verzögern, falls Sophie noch nicht bereit ist
             this.time.delayedCall(100, () => {
                 this.startMonolog();
@@ -228,20 +230,20 @@ class IntroScene extends BaseScene {
         // Monolog anzeigen und danach zur Hauptszene wechseln
         this.showMonolog([
             t("Ich bin Sophie Plaice.", "I am Sophie Plaice."),
-            "Ich will die größte Agile Coachin aller Zeiten werden.",
-            "MÖGEN DIE SPIELE BEGINNEN!!!",
-            "Ähm.",
-            "Da ist mein Temperament wohl etwas mit mir durchgegangen.",
-            "Lass uns einfach anfangen."], () => {
+            t("Ich will die größte Agile Coachin aller Zeiten werden.", "I want to become the greatest Agile Coach of all time."),
+            t("MÖGEN DIE SPIELE BEGINNEN!!!", "LET THE GAMES BEGIN!!!"),
+            t("Ähm.", "Um."),
+            t("Da ist mein Temperament wohl etwas mit mir durchgegangen.", "I guess my temperament got the better of me there."),
+            t("Lass uns einfach anfangen.", "Let's just get started.")], () => {
 
-                this.updateGameState({
-                    progress: {
-                        hasSeenIntro: true
-                    }
-                });
+            this.updateGameState({
+                progress: {
+                    hasSeenIntro: true
+                }
+            });
 
-                // Zur ersten spielbaren Szene wechseln
-                this.changeScene('BuildingScene');
+            // Zur ersten spielbaren Szene wechseln
+            this.changeScene('BuildingScene');
         });
     }
 }
