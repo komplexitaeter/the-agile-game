@@ -48,13 +48,32 @@
             margin: 0 auto;
         }
 
-        /* Media Query für kleine Bildschirme */
-        @media (max-height: 650px) {
+        /* Footer auf Mobile ausblenden */
+        @media (max-width: 768px), (hover: none) and (pointer: coarse) {
+            .footer {
+                display: none;
+            }
+        }
+
+        /* Nur für Desktop: Bei kleinen Bildschirmen Footer verkleinern */
+        @media (min-width: 769px) and (max-height: 650px) {
             .footer {
                 font-size: 9px;
                 padding: 2px 0;
             }
         }
+
+        /* Nur für Desktop: Bei sehr kleinen Bildschirmen Footer transparent machen */
+        @media (min-width: 769px) and (max-height: 500px) {
+            .footer {
+                opacity: 0.3;
+            }
+
+            .footer:hover {
+                opacity: 1;
+            }
+        }
+
 
         /* Bei sehr kleinen Bildschirmen Footer ausblenden */
         @media (max-height: 500px) {
@@ -66,6 +85,7 @@
                 opacity: 1;
             }
         }
+
     </style>
 </head>
 <body>
@@ -96,12 +116,13 @@
 <!-- Footer -->
 <div class="footer">
     <a href="https://www.komplexitaeter.de" target="_blank">©Komplexitäter</a> |
-    <a href="https://www.komplexitaeter.de/datenschutz#the-agile-game" target="_blank">Datenschutz</a> |
-    <a href="https://www.komplexitaeter.de/impressum" target="_blank">Impressum</a> |
-    <a href="https://feedback.komplexitaeter.de/?context=the-agile-game" target="_blank">Feedback</a>
+    <a href="https://www.komplexitaeter.de/datenschutz#the-agile-game" target="_blank" id="footer-privacy">Datenschutz</a> |
+    <a href="https://www.komplexitaeter.de/impressum" target="_blank" id="footer-imprint">Impressum</a> |
+    <a href="https://feedback.komplexitaeter.de/?context=the-agile-game" target="_blank" id="footer-feedback">Feedback</a>
 </div>
 
 <script>
+
     // Script zur intelligenten Anpassung des Footers
     document.addEventListener('DOMContentLoaded', function() {
         const footer = document.querySelector('.footer');
@@ -128,6 +149,11 @@
 
         // Mit etwas Verzögerung prüfen, um sicherzustellen, dass Canvas geladen ist
         setTimeout(checkFooterPosition, 500);
+
+        // Übersetzung des Footers
+        document.getElementById('footer-privacy').textContent = t('Datenschutz','Privacy Policy');
+        document.getElementById('footer-imprint').textContent = t('Impressum','Imprint');
+        document.getElementById('footer-feedback').textContent = t('Feedback','Feedback');
     });
 </script>
 

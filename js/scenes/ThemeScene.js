@@ -111,7 +111,9 @@ class ThemeScene extends BaseScene {
 
     setupButtons(hasSaveGame) {
         // Spielstart/Fortsetzen-Button
-        const buttonText = hasSaveGame ? "Spiel fortsetzen" : "Spiel starten";
+        const buttonText = hasSaveGame ?
+            t("Spiel fortsetzen", "Continue Game") :
+            t("Spiel starten", "Start Game");
 
         this.playButton = this.add.text(
             this.viewport.width / 2,
@@ -149,7 +151,7 @@ class ThemeScene extends BaseScene {
             this.resetButton = this.add.text(
                 this.viewport.width / 2,
                 this.viewport.height * 0.88,
-                "Von vorne starten",
+                t("Von vorne starten", "Start from beginning"),
                 {
                     fontSize: '24px',
                     fontFamily: 'Arial',

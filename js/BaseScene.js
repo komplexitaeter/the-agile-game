@@ -485,8 +485,21 @@ class BaseScene extends Phaser.Scene {
         const scaleX = width / this.viewport.width;
         const scaleY = height / this.viewport.height;
 
+        // Mobile Detection und entsprechende Skalierung
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+            || (window.innerWidth <= 768)
+            || (matchMedia('(hover: none) and (pointer: coarse)').matches);
+
+        const scaleFactor = isMobile ? 1 : 0.9; // 0% Rand auf Mobile, 10% auf Desktop
+
+        if (isMobile) {
+            document.body.style.backgroundColor = 'black';
+        } else {
+            document.body.style.backgroundColor = 'white';
+        }
+
         // Das kleinere der beiden verwenden, um Proportionen zu wahren
-        this.viewport.scale = Math.min(scaleX, scaleY) * 0.9; // 90% für etwas Rand
+        this.viewport.scale = Math.min(scaleX, scaleY) * scaleFactor;
 
         // Kamera einstellen
         this.cameras.main.setZoom(this.viewport.scale);
@@ -505,14 +518,24 @@ class BaseScene extends Phaser.Scene {
         this.maskGraphics.clear();
         this.maskGraphics.fillStyle(0xffffff);
 
-        // Abgerundetes Rechteck für die Maske erstellen
+        // Mobile Detection (gleiche Definition wie beim Skalierungsfaktor)
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+            || (window.innerWidth <= 768)
+            || (matchMedia('(hover: none) and (pointer: coarse)').matches);
+
         const x = 0;
         const y = 0;
         const width = this.viewport.width;
         const height = this.viewport.height;
-        const radius = Math.min(width, height) * 0.1; // Abgerundete Ecken (10% der kleineren Dimension)
 
-        this.maskGraphics.fillRoundedRect(x, y, width, height, radius);
+        if (isMobile) {
+            // Mobile: Einfaches Rechteck ohne runde Ecken
+            this.maskGraphics.fillRect(x, y, width, height);
+        } else {
+            // Desktop: Abgerundetes Rechteck
+            const radius = Math.min(width, height) * 0.1; // 10% der kleineren Dimension
+            this.maskGraphics.fillRoundedRect(x, y, width, height, radius);
+        }
 
         // Neue Geometriemaske erstellen
         const mask = this.maskGraphics.createGeometryMask();
@@ -549,7 +572,6 @@ class BaseScene extends Phaser.Scene {
                 this.sophie.y - this.sophie.displayHeight - 10
             );
         }
-
 
         this.controls.setMask(mask);
     }
