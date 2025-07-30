@@ -19,6 +19,12 @@ class BaseScene extends Phaser.Scene {
         // Spielstand laden
         this.gameState = this.stateManager.loadGameState();
 
+        if (!this.gameState.gameLanguage || this.gameState.gameLanguage === 'n/a') {
+            this.updateGameState({
+                gameLanguage: getCurrentLanguage()
+            });
+        }
+
         // Viewport-Konfiguration aus GameData übernehmen
         this.viewport = {
             width: GameData.viewport.width,    // Referenzbreite aus GameData

@@ -25,6 +25,7 @@ class GameStateManager {
             currentScene: this.defaultSceneKey,
             entryPoint: 'default',
             sophieRelativeX: 0.52,
+            gameLanguage: 'n/a',
             progress: {
                 floorDigit: 'EG',
                 hasSeenIntro: false,
