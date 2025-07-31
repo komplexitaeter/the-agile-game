@@ -26,6 +26,7 @@ class GameStateManager {
             entryPoint: 'default',
             sophieRelativeX: 0.52,
             gameLanguage: 'n/a',
+            userAgent: navigator.userAgent,
             progress: {
                 floorDigit: 'EG',
                 hasSeenIntro: false,

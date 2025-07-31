@@ -187,12 +187,15 @@ class ThemeScene extends BaseScene {
         }
     }
 
-    // Starte das Spiel basierend auf dem Spielstand
+// Starte das Spiel basierend auf dem Spielstand
     startGame() {
         let nextScene = 'IntroScene';
 
         this.sound.unlock();
         this.sound.setVolume(1);
+
+        // Fullscreen für Mobile aktivieren
+        this.activateFullscreenForMobile();
 
         // Wenn es einen gespeicherten Zustand gibt, nutze diesen
         if (this.gameState && this.gameState.currentScene && this.gameState.currentScene !== this.scene.key) {
@@ -200,5 +203,39 @@ class ThemeScene extends BaseScene {
         }
 
         this.changeScene(nextScene);
+    }
+
+    // Fullscreen-Aktivierung für Mobile Geräte
+    activateFullscreenForMobile() {
+        // Mobile Detection
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+            || (window.innerWidth <= 768)
+            || (matchMedia('(hover: none) and (pointer: coarse)').matches);
+
+        if (!isMobile) return;
+
+        // iOS Safari Scroll-Trick für Browser-UI minimieren
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        if (isIOS) {
+            setTimeout(() => {
+                window.scrollTo(0, 1);
+                setTimeout(() => window.scrollTo(0, 0), 100);
+            }, 100);
+        }
+
+        // Fullscreen für andere Mobile-Geräte
+        if (this.scale && this.scale.startFullscreen) {
+            try {
+                this.scale.startFullscreen();
+            } catch (error) {
+                console.log('Fullscreen activation failed:', error);
+                // Fallback: Versuche es über das Document
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.log('Document fullscreen failed:', err);
+                    });
+                }
+            }
+        }
     }
 }
