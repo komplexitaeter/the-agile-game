@@ -77,4 +77,7 @@ aus dem Standard-Log nicht erkennbar.
 Remote-URL auf Live ohne Token. Laut Log wurden `.git`-Inhalte massenhaft abgezogen (u. a. 2.742 Objekt-Abrufe
 mit `200`), auch `refs/heads/release` – den gab es im Checkout von the-agile-game nicht, also ist mindestens eine
 **weitere Site auf dem Server** betroffen.
-Offen: Welche Site(s)? Gleiche Sperre dort; prüfen, ob deren `.git` Geheimnisse enthält.
+Zweite offene Site: `kfs.komplexitaeter.de` (Sperre per Snippet `deny-dotfiles.conf` vorbereitet). Alle Repos
+sind öffentlich (Andreas, 2026-11-10): Durch `.git` abgeflossen sein kann nur, was nicht auf GitHub liegt
+(Token in der Remote-URL, Stash, nicht gepushte Commits, eingestagte Dateien).
+Offen: Sperre für kfs aktiv? Prüfung der lokalen Git-Inhalte von kfs. Poker-Server(s) mit derselben Schleife prüfen.

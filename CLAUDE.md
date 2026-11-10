@@ -114,7 +114,8 @@ haben sie nicht → `undefined` muss wie `false` funktionieren). Jedes `saveGame
 - Deployment: manuell `git pull` in `~/the-agile-game`; kein Build, keine Migrationen. `config.php` liegt nur dort.
 - Claude hat keinen Zugriff auf Server oder Datenbanken. Änderungen an Servern, Config oder DB bereitet Claude als
   Befehle vor und gibt vorher Bescheid; ausgeführt werden sie vom Betreiber.
-- Keine Secrets im Repo; Config-Dateien mit Zugangsdaten nie committen.
+- **Das Repo ist öffentlich** (wie alle komplexitaeter-Repos): Alles, was je committet wurde, ist öffentlich. Keine
+  Secrets im Repo; Config-Dateien mit Zugangsdaten nie committen.
 
 ## Zusammenarbeit
 
