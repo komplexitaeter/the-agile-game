@@ -407,7 +407,12 @@ function formatDateTime($dateTime) {
         codeBlocks.forEach(function(block) {
             const content = block.textContent;
             if (content.trim()) {  // Nur verarbeiten, wenn Inhalt vorhanden ist
-                highlighted = content
+                const escapeHtml = (text) => text
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+                // Escape every piece before writing it back via innerHTML (stored XSS via logged JSON)
+                const highlighted = escapeHtml(content)
                     .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
                         let cls = 'json-number';
                         if (/^"/.test(match)) {
