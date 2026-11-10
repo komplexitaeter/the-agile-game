@@ -128,10 +128,22 @@ spielt niemand wochenlang ein Adventure. Offen: Zielspieldauer für Part One (z.
 Liste von Nora, u. a. „nicht to schwer“, „wenn ich das wegnehmen“, „eine Whiteboard“, „Scum Guide“, „das Gefühlt“,
 „Alle was ich“, „Experiment, dass“, „Eine guter Check-In“, „die letzte Säulen“, „Das steht ‚Ken S.‘“.
 
-### B-19 Handy: Hochformat und Touch
+### B-19 Handy: Prototyp für gutes Spielgefühl im Querformat
 **Status:** neu
-Hochkant nur ein schmaler Streifen ohne Hinweis → „Bitte drehen“. Quer: Texte 6–11 px, Start-Buttons ~20 px hoch,
-Objektnamen nur per Hover. Laut Log kaum Handy-Spieler (35, davon 2 bis Outro).
+Heute: hochkant nur ein schmaler Streifen ohne Hinweis; quer winzig im Browser (iOS: kein Vollbild, die
+Vollbild-API gibt es auf dem iPhone nur für Videos), Bedienung teils per Hover, Touch-Ziele und Texte zu klein
+(6–11 px, Start-Buttons ~20 px). Laut Log kaum Handy-Spieler (35, davon 2 bis Outro) – deshalb auch keine
+LinkedIn-Werbung mehr (Andreas).
+Vorschlag: zeitlich begrenzter Prototyp (1–2 Tage) an 2–3 Szenen (z. B. Building, Lobby), Pia und Gero, auf einem
+Branch; Andreas testet auf dem iPhone (`php -S` auf dem Mac, iPhone im selben WLAN). Inhalt:
+- Hinweis „Bitte quer drehen“ im Hochformat.
+- Tippen statt Hover: erster Tipp zeigt Namen und hebt hervor, zweiter Tipp führt aus; Knopf „Hotspots zeigen“.
+- Klickflächen mindestens fingergroß, Texte/Inventar/Buttons mit Mindestgröße auf dem Bildschirm.
+- Tasche/Inventar in den seitlichen Rändern (iPhone quer ist breiter als 1792×1024).
+- Testweise: Kamera näher an Sophie auf kleinen Bildschirmen (größter Hebel, größter Umbau).
+- Optional: Web-App-Manifest für den Home-Bildschirm (Andreas: nutzt praktisch niemand – nur mitnehmen, wenn
+  billig).
+Danach entscheidet Andreas über den Ausbau. Alternative: B-32.
 
 ### B-20 Lesbarkeit der Sprechtexte
 **Status:** neu
@@ -192,3 +204,10 @@ Nach B-06 und B-09. Hauptrisiko Tween-Änderungen ab 3.60; geschätzt 1–2 Tage
 **Status:** neu (nebenbei)
 Toter Verbleisten-Code und `removeInventoryAsset`, Duplikate (Mobile-Erkennung, Lesezeit, Lautschrift-Stil,
 Cola-Handler), viele `console.log`. Am besten zusammen mit einem anderen Eintrag.
+
+### B-32 Handy als Türöffner (Plan B zu B-19)
+**Status:** neu (Idee)
+Wer den Link auf dem Handy öffnet, bekommt einen guten Einstieg (Titel, ein Satz Story, ggf. Intro) und das Angebot,
+am Rechner zu spielen: Link per Mail schicken bzw. kopieren. Optional „Auf dem Rechner weiterspielen“ über einen
+Fortsetzen-Link mit der Spiel-ID (Stand liegt dank Logger schon auf dem Server). Native App (z. B. Capacitor)
+bewusst nicht: Installieren wäre für LinkedIn-Besucher eine noch größere Hürde, dazu Store-Kosten und -Prüfung.
