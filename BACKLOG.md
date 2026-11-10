@@ -65,7 +65,7 @@ Beide kommen vom CDN (Phaser 3.55.2). Selbst ausliefern macht das Spiel unabhän
 Offen: Gewünscht? Phaser-Update separat betrachten.
 
 ### B-10 Interne Dateien auf Live nicht ausliefern (`.git`, Quellen, Doku)
-**Status:** neu – akut, Vorschlag Kai (2026-11-10)
+**Status:** im Sprint – akut. Bestätigt 2026-11-10: `/.git/HEAD` liefert auf Live `200`.
 nginx-`root` ist der Git-Checkout, ohne Sperren. Damit sind u. a. `/.git/` (komplette Historie inkl. der früher
 eingecheckten `config.php`), `/.claude/`, `*.md`, `/assets/xcf/` und `config.example.php` öffentlich abrufbar.
 Vorschlag: in der nginx-Site Punkt-Dateien/-Ordner (außer `.well-known`), `*.md`, `/assets/xcf/` und
