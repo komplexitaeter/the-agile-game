@@ -22,11 +22,9 @@ löschen bzw. bricht ab, weil sie dort lokal geändert ist. Vorher sichern, nach
 `600`; Pull mit `--ff-only`; danach keine Editor-Kopien wie `config.php~`/`.bak` im Web-Ordner.
 
 ### B-02 Branch `release` einführen
-**Status:** im Sprint
-Branch `release` von `master` angelegt (Kai, 2026-11-10). Es gibt nur den Live-Server, kein Staging (Andreas,
-2026-11-10); getestet wird vor dem Merge nach `master` lokal.
-Offen (macht Andreas in den GitHub-Einstellungen): Ruleset „protect release and master“ wie bei Poker (kein
-Löschen, kein Force-Push), „Automatically delete head branches“ aktivieren, ggf. Default-Branch auf `release`.
+**Status:** erledigt (2026-11-10)
+`release` von `master` angelegt; Branch-Schutz für `release` und `master`, gemergte Branches werden automatisch
+gelöscht (Andreas). Kein Staging, getestet wird vor dem Merge nach `master` lokal.
 
 ### B-03 Betrieb dokumentieren
 **Status:** erledigt (2026-11-10)
@@ -83,7 +81,7 @@ Außerdem sicher abbrechen (500 statt Login), wenn `_API_PASSWORD` leer oder noc
 versionierte Datei verschieben (ohne „Cannot redeclare“ mit der alten Server-Config).
 
 ### B-12 XSS in der Admin-Detailseite
-**Status:** im Sprint – akut (Sina, 2026-11-10); Fix in `release` (komplexitaeter/the-agile-game#3), Deploy offen
+**Status:** erledigt (live seit 2026-11-10, komplexitaeter/the-agile-game#3)
 Das JSON-Highlighting in `api/game_state_details.php` schrieb geloggte Daten ungeschützt per `innerHTML` zurück;
 über den öffentlichen Logger ließ sich so Skriptcode einschleusen, der beim Öffnen durch einen Admin läuft.
 Fix: escapen vor dem Highlighting (Branch `feature/B-12-xss-admin-details`).
