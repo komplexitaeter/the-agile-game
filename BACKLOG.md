@@ -21,14 +21,16 @@ löschen bzw. bricht ab, weil sie dort lokal geändert ist. Vorher sichern, nach
 (Befehle bereitet Kai vor).
 
 ### B-02 Branch `release` einführen
-**Status:** neu
-Bisher gibt es nur `master`. Für den Ablauf aus `CLAUDE.md` `release` von `master` anlegen und Ruleset
-„protect release and master“ wie bei Poker einrichten (macht Andreas).
-Offen: Gibt es einen Staging-Server, der `release` ausliefert?
+**Status:** im Sprint
+Branch `release` von `master` angelegt (Kai, 2026-11-10). Es gibt nur den Live-Server, kein Staging (Andreas,
+2026-11-10); getestet wird vor dem Merge nach `master` lokal.
+Offen (macht Andreas in den GitHub-Einstellungen): Ruleset „protect release and master“ wie bei Poker (kein
+Löschen, kein Force-Push), „Automatically delete head branches“ aktivieren, ggf. Default-Branch auf `release`.
 
 ### B-03 Betrieb dokumentieren
 **Status:** neu
-Server, Pfad, Deployment (vermutlich `git pull`), PHP-/MySQL-Version, Staging in `CLAUDE.md` festhalten.
+Live-Server (einziger Server, kein Staging): Pfad, Deployment (vermutlich `git pull`), PHP-/MySQL-Version in
+`CLAUDE.md` festhalten.
 Offen: Angaben von Andreas.
 
 ### B-04 Englische Übersetzung vervollständigen

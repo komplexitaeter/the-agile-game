@@ -106,7 +106,7 @@ haben sie nicht → `undefined` muss wie `false` funktionieren). Jedes `saveGame
 
 ## Betrieb
 
-- Deployment, Server und Staging: **noch nicht dokumentiert (B-03).**
+- Nur ein Server (Live, Branch `master`), kein Staging. Server, Pfad und Deployment: **noch nicht dokumentiert (B-03).**
 - Claude hat keinen Zugriff auf Server oder Datenbanken. Änderungen an Servern, Config oder DB bereitet Claude als
   Befehle vor und gibt vorher Bescheid; ausgeführt werden sie vom Betreiber.
 - Keine Secrets im Repo; Config-Dateien mit Zugangsdaten nie committen.
@@ -121,7 +121,8 @@ haben sie nicht → `undefined` muss wie `false` funktionieren). Jedes `saveGame
 3. **Sprint-Auswahl** – gemeinsam.
 4. **Planning** – je Eintrag Umsetzungsplan abstimmen, bevor Code entsteht.
 5. **Umsetzung** – nur das Geplante. Neues kommt ins Backlog.
-6. **Abschluss** – manueller Test auf Staging, dann `release` → `master`, Status in `BACKLOG.md` aktualisieren.
+6. **Abschluss** – manueller Test des `release`-Stands lokal (es gibt kein Staging), dann `release` → `master` und
+   Deploy auf Live, Status in `BACKLOG.md` aktualisieren.
 
 Ausnahme: akute Probleme sofort beheben und nachträglich im Backlog vermerken.
 
@@ -131,7 +132,8 @@ Ausnahme: akute Probleme sofort beheben und nachträglich im Backlog vermerken.
 - Je Backlog-Eintrag ein kurzlebiger Feature-Branch von `release` (`feature/B-xx-kurzname`), PR nach `release`.
 - Merge nach `release` macht Kai nach Review durch einen anderen Agenten als den Autor und grüner CI (sobald es CI gibt).
 - Kleinigkeiten (Doku, Backlog) direkt auf `release`.
-- Remote-Branches löscht GitHub nach dem Merge automatisch; `release` und `master` sind per Ruleset geschützt.
+- Remote-Branches löscht GitHub nach dem Merge automatisch; `release` und `master` sind per Ruleset geschützt
+  (beides einzurichten, B-02).
   Kai räumt lokale Worktrees und Branches nach dem Merge auf.
 
 **Rollen:** Die Hauptsitzung **„Kai“** spricht mit dem Team, koordiniert die Agenten, reviewt, mergt nach `release`
