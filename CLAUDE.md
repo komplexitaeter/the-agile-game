@@ -30,7 +30,10 @@ php -S 127.0.0.1:8000              # im Repo-Root, dann http://127.0.0.1:8000/
 - Spielstand zurücksetzen: `localStorage` leeren (`sophieAdventureState`, `gameLanguage`).
 - Sprache erzwingen: `?language=en` bzw. `?language=de` (nur wenn `localStorage.gameLanguage` noch leer ist).
 - Klickflächen sichtbar machen: `GameData.debug = true` in `js/GameData.js` (nicht committen).
-- Automatisierte Tests gibt es noch keine (offen, siehe „Bekannte technische Schulden“).
+- Klicks per Playwright: Die Kamera ist gezoomt und zentriert (Rand am Desktop). Welt- auf Seitenkoordinaten über
+  `camera.worldView` und die Canvas-Box umrechnen, nicht direkt relativ zur Canvas-Box. Headless sinken die FPS stark,
+  Kamera-Fades bleiben dann ggf. halb weiß.
+- Automatisierte Tests gibt es noch keine (B-06).
 
 ## Architektur
 
@@ -48,6 +51,11 @@ Lounge/Meeting, CEOOffice, Basement → Team → Outro. Neue Szene: Klasse anleg
 `interactiveObjects` (Klickflächen mit relativen Koordinaten, `hoverText`, Texte für `view`/`take`, `defaultAction`,
 `inventoryAssets`, `removable`, Sounds …). Dazu `commonAssets` (Sophie, Inventar-Icons, Standard-Sounds) und
 `inventoryItems`. Einfache Objekte brauchen keinen Szenen-Code.
+
+**Bedienung ohne Verbleiste (bewusst, Andreas):** Die frühere Verbleiste war Testern zu anstrengend; fast jede
+Objekt-Verb-Kombination ist eindeutig. Ein Klick löst die `defaultAction` des Objekts aus (`GameData`), Inventar-Items
+werden immer benutzt („Benutze X mit …“). Inventar-Items lassen sich deshalb nicht betrachten (ihre `view`-Texte sind
+unerreichbar, B-15). Reste der Verbleiste in `GameControls` (Styles, `buttons`) sind toter Code.
 
 **Verb-Dispatch (zentral, `GameControls.handle()`/`handleUse()`):** Aktionen `goTo`, `view`, `take`, `talkTo`, `use`.
 Klick auf Objekt `foo` ruft – falls vorhanden – die Szenenmethode `<aktion>Foo(objectKey, worldPoint)` auf
@@ -95,9 +103,8 @@ haben sie nicht → `undefined` muss wie `false` funktionieren). Jedes `saveGame
 
 - Keine Tests, kein Linting, keine CI (B-06).
 - Kein DB-Schema im Repo (B-05).
-- **Englische Übersetzung unvollständig** (B-04): laut Historie fertig sind Theme-, Intro- und Building-Szene; danach
-  teils nur deutsch, auch UI-Texte in `GameControls` („Gehe zu“, „Betrachte“ …, „Benutze … mit …“, „Das kann man so
-  nicht benutzen.“) und Lautschrift in einzelnen Szenen.
+- **Englische Übersetzung unvollständig** (B-04): übersetzt sind Theme, Intro, Building (und Teile von Outro,
+  Inventar, `BaseScene`); ab der Lobby kein `t()`, dazu „Benutze … mit …“ in `GameControls` und Lautschrift.
 - Logger: Fehlermeldung mit `$e->getMessage()` geht an den Client; keine Begrenzung von Größe/Rate der POSTs.
 - Admin-Passwort im Klartext-Vergleich in `config.php`.
 - Viel Logik in großen Szenen-Dateien (`BaseScene`, `MeetingScene`, `TeamScene`: 850–1.300 Zeilen),
