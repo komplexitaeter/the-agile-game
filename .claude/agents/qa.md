@@ -24,7 +24,8 @@ comments in English. Follow CLAUDE.md.
 - Check at least: game loads to `ThemeScene`, start leads into the game, affected scene switches work, no
   `pageerror` and no console errors besides the known local logger 500, both languages for changed texts.
 - The canvas has no DOM elements: click via coordinates relative to the 1792×1024 reference
-  (`relativeX/relativeY` from `GameData.js`) converted with the canvas bounding box; wait on game state
+  (`relativeX/relativeY` from `GameData.js`). The camera is zoomed and centred, so convert world to page
+  coordinates via `camera.worldView` plus the canvas bounding box; wait on game state
   (`page.waitForFunction`) instead of fixed sleeps where possible.
 - Tests describe current behaviour. If the game behaves unexpectedly, don't change game code: report it as a backlog
   candidate.

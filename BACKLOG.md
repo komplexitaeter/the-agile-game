@@ -13,7 +13,7 @@ Noch kein Sprint geplant.
 ## Einträge
 
 ### B-01 Zugangsdaten aus dem Repo: `config.example.php` + `.gitignore`
-**Status:** im Sprint (Andreas, 2026-11-10: „können wir gerne machen“)
+**Status:** erledigt (live seit 2026-11-10, komplexitaeter/the-agile-game#1, #2)
 `config.php` war eingecheckt. Jetzt: `config.example.php` mit Platzhaltern, `config.php` per `.gitignore`
 ausgeschlossen und aus dem Index entfernt. Die Werte auf dem Server weichen ohnehin von denen im Repo ab.
 **Achtung beim Deploy:** Der Commit löscht `config.php` aus Git. Ein `git pull` auf dem Server würde die Datei
@@ -35,9 +35,11 @@ In `CLAUDE.md`, Abschnitt „Betrieb“. Daraus folgt B-10.
 
 ### B-04 Englische Übersetzung vervollständigen
 **Status:** neu
-Begonnen im Juli 2025: Theme, Intro, Building fertig. Rest teilweise nur deutsch (grob 200 Stellen mit deutschem
-Text außerhalb von `t()`, Heuristik), darunter die Verbleiste und Meldungen in `GameControls` und Lautschrift.
-Offen: Wer übersetzt bzw. prüft die englischen Texte? Szene für Szene in mehreren kleinen Schritten?
+Begonnen im Juli 2025: Theme, Intro, Building fertig. Ab der Lobby kein `t()` mehr (Nora schätzt ~400 Stellen inkl.
+`GameData`), dazu „Benutze … mit …“ in `GameControls` und Lautschrift. Vorschlag: szenenweise (Lobby, Elevator/Lounge,
+Meeting, CEO, Basement, Team, Rest), Wortwitz übertragen statt wörtlich übersetzen.
+Laut Logdaten (Stand 2026-11-10) kaum englische Spieler: 21 von 133 EN-Besuchern starten das Intro, 17 erreichen
+die Lobby. Offen: Wollt ihr gezielt international werben? Wer prüft die englischen Texte?
 
 ### B-05 DB-Schema ins Repo
 **Status:** neu
@@ -48,7 +50,9 @@ Schema der Logging-DB (`game_state_main`, `game_state_history`) aus der Live-DB 
 **Status:** neu
 Spiel lädt, erste Szenenwechsel, keine Konsolenfehler, beide Sprachen. Phaser aus npm (gleiche Version) statt CDN,
 Analytics blockieren. Danach GitHub Actions bei PRs nach `release`.
-Offen: Umfang des ersten Schritts.
+Vorschlag Tessa für den ersten Schritt: (a) Seite lädt, Start-Button da, keine Fehler; (b) jede Szene per vorbereitetem
+Spielstand laden, keine Fehler, keine 4xx; (c) ein Interaktionstest in Building (Zettel nehmen → 2 Items);
+(d) EN-Check der Hover-Texte (`test.fixme` ab Lobby). Intro nur über Spielstand testen (Klickverhalten schwankt).
 
 ### B-07 Cache-Busting für JS und Assets
 **Status:** neu
@@ -63,7 +67,7 @@ POSTs. Interne Fehler nur ins Log, Größenlimit für `json`/`json_diff`.
 ### B-09 Phaser und Font Awesome selbst ausliefern
 **Status:** neu
 Beide kommen vom CDN (Phaser 3.55.2). Selbst ausliefern macht das Spiel unabhängiger und vereinfacht Tests.
-Offen: Gewünscht? Phaser-Update separat betrachten.
+Font Awesome wird nirgends benutzt und kann ersatzlos weg. Phaser-Update separat (B-30).
 
 ### B-10 Interne Dateien auf Live nicht ausliefern (`.git`, Quellen, Doku)
 **Status:** erledigt (2026-11-10)
@@ -77,3 +81,116 @@ Prüfen: `curl -I https://the-agile-game.komplexitaeter.de/.git/HEAD` muss `404`
 Außerdem sicher abbrechen (500 statt Login), wenn `_API_PASSWORD` leer oder noch `change_me` ist. Achtung:
 `require_auth()` liegt in `config.php` auf dem Server – Änderung dort von Hand nachziehen oder Funktion in eine
 versionierte Datei verschieben (ohne „Cannot redeclare“ mit der alten Server-Config).
+
+### B-12 XSS in der Admin-Detailseite
+**Status:** im Sprint – akut (Sina, 2026-11-10); Fix in `release` (komplexitaeter/the-agile-game#3), Deploy offen
+Das JSON-Highlighting in `api/game_state_details.php` schrieb geloggte Daten ungeschützt per `innerHTML` zurück;
+über den öffentlichen Logger ließ sich so Skriptcode einschleusen, der beim Öffnen durch einen Admin läuft.
+Fix: escapen vor dem Highlighting (Branch `feature/B-12-xss-admin-details`).
+Nebenbefunde (Sina, nicht sicherheitsrelevant): `formatJson()` escaped ungültiges JSON doppelt
+(`game_state_details.php:55`); Admin-Seiten geben DB-Fehler per `die(… getMessage())` aus – mit B-08 erledigen.
+
+## Vorschläge aus der Team-Sichtung (2026-11-10)
+
+Alle Einträge `neu`, nicht priorisiert. Grundlage: Sichtung durch Gero, Nora, Pia, Tessa, Ben, Sina und Auswertung
+der Logdaten (899 Spiele von Menschen, April 2025 bis November 2026; 58 bis zum Outro).
+
+### B-13 Einstiegs-Hinweis Lobby → Fenster
+**Status:** neu
+Größte Hürde laut Logdaten: Von 412 Spielern in der Lobby finden nur 171 den Meetingraum (Fernrohr am Fenster); wer
+aufgibt, tut es nach im Median 1,7 Minuten, nur 14 % davon haben das Fenster je angeschaut. Idee (Andreas): Ken
+verrät nichts, aber Sophie sagt nach der Abfuhr etwa „sinnlose Bürokratie, ich muss das System austricksen – wenn ich
+nur eine winzige Information über das Innere des Gebäudes hätte“. Optional eine zweite, vorsichtige Stufe.
+**Das Rätsel bleibt** (Einstiegsprüfung, ob man das Genre mag), nur Richtung, kein Lösungshinweis.
+Messen: Anteil Lobby → Fernrohr (heute 42 %) und Verweildauer.
+
+### B-14 Visitenkarten: Pointe und Obergrenze
+**Status:** neu
+Die Karten sammeln sich bewusst an (bis zu 105 im Log). Ab einer Schwelle sagt Sophie etwas Witziges, das die
+Sinnlosigkeit zeigt („genug Visitenkarten für drei Reorganisationen“), danach nimmt sie keine weiteren mehr.
+
+### B-15 Inventar-Items betrachten
+**Status:** neu
+Ohne Verbleiste sind die `view`-Texte der Inventar-Items unerreichbar. Idee: zweiter Klick auf dasselbe Item (heute
+ohne Wirkung) zeigt den Betrachten-Text.
+
+### B-16 Weniger Laufwege
+**Status:** neu
+Spieler bis zum Outro brauchen im Median 19 Aufzugfahrten, 7–8 Klicks auf die Toilettentür, 9 Gespräche mit Jeff.
+Ideen: Aufzug direkt ins Stockwerk, Meeting-Intro beim Wiederbetreten kürzen, Cola und Toilette näher zusammen,
+Rückweg nach „gefeuert“. Die zwei Toilettengänge sind zäh, aber kein Abbruchgrund (ab Lighthouse-Projekt 72 % bis Outro).
+
+### B-17 Optionale gestufte Hilfe
+**Status:** neu (Idee)
+Hinweise nur auf Wunsch, z. B. über Sophies Notizbuch: vage → deutlicher → Lösung. Hintergrund (Andreas): Heute
+spielt niemand wochenlang ein Adventure. Offen: Zielspieldauer für Part One (z. B. 20–30 min)?
+
+### B-18 Deutsche Tippfehler in Spieltexten
+**Status:** neu
+Liste von Nora, u. a. „nicht to schwer“, „wenn ich das wegnehmen“, „eine Whiteboard“, „Scum Guide“, „das Gefühlt“,
+„Alle was ich“, „Experiment, dass“, „Eine guter Check-In“, „die letzte Säulen“, „Das steht ‚Ken S.‘“.
+
+### B-19 Handy: Hochformat und Touch
+**Status:** neu
+Hochkant nur ein schmaler Streifen ohne Hinweis → „Bitte drehen“. Quer: Texte 6–11 px, Start-Buttons ~20 px hoch,
+Objektnamen nur per Hover. Laut Log kaum Handy-Spieler (35, davon 2 bis Outro).
+
+### B-20 Lesbarkeit der Sprechtexte
+**Status:** neu
+Manager-/Dev-Texte frei auf unruhigem Hintergrund, mehrere Sprecherfarben unter 4,5:1 (devA/devG 2,7, Jeff 3,0),
+Footer 1,6:1. Texte in Boxen setzen; Lesezeit (1,2 s + 0,3 s/Wort) anheben oder Weiterschalten per Klick.
+
+### B-21 Assets verkleinern
+**Status:** neu
+34 MB Bilder: 8 Hintergründe als PNG (2,5–3,2 MB), Inventar-Icons 950×950 px bei ~100 px Anzeige,
+`character_ken.png` 2160×1024. Mit WebP und kleineren Icons geschätzt 6–8 MB. Mit B-07 (Cache) abstimmen.
+
+### B-22 Ton ausschalten
+**Status:** neu
+Kein Mute-/Lautstärke-Regler, mehrere Loops. Idee: Lautsprecher-Symbol neben der Tasche.
+
+### B-23 Spielstand robust machen
+**Status:** neu
+Defaults mit alten Ständen zusammenführen (`undefined + 1` → `NaN`), kaputtes JSON verwerfen statt still neue IDs
+zu erzeugen, unbekannte `currentScene` abfangen (sonst weißer Bildschirm), ggf. `stateVersion`.
+
+### B-24 Aufräumen beim Szenenwechsel
+**Status:** neu
+`shutdown()` wird nie aufgerufen (kein `events.on('shutdown')`), Resize-Listener und Sounds sammeln sich bei jedem
+Szenenbesuch an. Dazu Absturzsicherungen in `createInteractiveObject`/`handlePointerDown`.
+
+### B-25 Intro und Einblenden
+**Status:** neu
+Klickverhalten im Intro schwankt (11–27 Klicks bis Building), Einblenden nach „Fortsetzen“ 2,5 s weißlich, Warnung
+„Camera not available in scaleToFit“ 4–6× pro Szenenwechsel.
+
+### B-26 Logging drosseln und Eingaben prüfen
+**Status:** neu (ergänzt B-08)
+Bis zu 5 POSTs pro Klick, jeweils mit komplettem Stand. Zusammenfassen (z. B. bei Szenenwechsel oder alle paar
+Sekunden), `json_id` nur `^[0-9]{12}$`, `json`/`json_diff` als Strings. Für Auswertungen: Zeit der *letzten*
+Ausführung je Aktion, `gameFinished`, User-Agent bzw. `isMobile` bei jedem Start.
+
+### B-27 Auswertungsseite für die Logdaten
+**Status:** neu
+Admin-Seite mit Trichter je Story-Flag, Abbruch je Szene, DE/EN, Mobile/Desktop, Bots herausgefiltert (z. B.
+Bytespider). Übersichtsseite paginieren bzw. auf Zeitraum begrenzen (lädt heute alles inkl. History-Zählung).
+
+### B-28 Datenschutz und Löschfrist
+**Status:** neu
+Datenschutzerklärung mit dem tatsächlichen Logging abgleichen (vollständiger User-Agent, Spiel-ID, Klickverlauf,
+Speicherdauer); Löschfrist festlegen, z. B. per MySQL-Event. Offen: Andreas.
+
+### B-29 Part Two: Ideen sammeln
+**Status:** neu
+Offene Fäden: Mimi, Gewerkschafts-Manifest. Ideen: Sprint Review vor Noel und den Managern, Skalierung, ein
+Augenzwinkern zu den echten drei Säulen (Transparenz, Überprüfung, Anpassung). Technik vorbereiten: Nachbarszenen
+in `GameData`, Debug-Einstieg (`?scene=…`).
+
+### B-30 Phaser auf 3.90
+**Status:** neu
+Nach B-06 und B-09. Hauptrisiko Tween-Änderungen ab 3.60; geschätzt 1–2 Tage inkl. Durchspielen.
+
+### B-31 Code aufräumen
+**Status:** neu (nebenbei)
+Toter Verbleisten-Code und `removeInventoryAsset`, Duplikate (Mobile-Erkennung, Lesezeit, Lautschrift-Stil,
+Cola-Handler), viele `console.log`. Am besten zusammen mit einem anderen Eintrag.
