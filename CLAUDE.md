@@ -137,6 +137,20 @@ Ausnahme: akute Probleme sofort beheben und nachträglich im Backlog vermerken.
   Kai räumt lokale Worktrees und Branches nach dem Merge auf.
 
 **Rollen:** Die Hauptsitzung **„Kai“** spricht mit dem Team, koordiniert die Agenten, reviewt, mergt nach `release`
-und legt den PR `release` → `master` an. Implementierungs-Agenten (`.claude/agents/`, noch nicht angelegt) arbeiten je
+und legt den PR `release` → `master` an. Implementierungs-Agenten (`.claude/agents/`) arbeiten je
 in einem eigenen Git-Worktree, geben einen Branch zurück und mergen nie selbst. Reviewt wird immer von einem anderen
 Agenten als dem Autor.
+
+| Agent (`.claude/agents/`) | Name | Zuständig für |
+|---|---|---|
+| (Hauptsitzung) | **Kai (KO)** | Kommunikation, Koordination, Review, Merges nach `release`, `master`-PR |
+| `gameplay` | **Gero (GP)** | Mechanik: `BaseScene`, `GameControls`, `GameStateManager`, Monolog/Dialog/Sound-Klassen, `game.js`, Szenenwechsel, Input, Skalierung, Spielstand |
+| `content` | **Nora (STORY)** | `GameData.scenes`, Szenen-Handler, Rätsel, Dialoge, Story-Flags, Texte DE/EN |
+| `art` | **Pia (ART)** | Bilder, Sprites, Sounds, Aussehen der UI, `index.html`-CSS, Mobile, Barrierefreiheit – gestaltet **und** setzt um |
+| `qa` | **Tessa (QA)** | Spiel lokal starten, Playwright-Smoke-Tests (lädt, Szenenwechsel, keine Konsolenfehler, beide Sprachen) |
+| `backend` | **Ben (BE)** | `api/`, `config.example.php`, DB-Schema |
+| `security-reviewer` | **Sina (SEC)** | prüft vor dem Merge: Secrets, SQL-Injection, XSS, Admin-Auth, Logger-Missbrauch |
+
+Abgrenzung: Gero baut Mechanik, Nora nutzt sie für Inhalte – braucht Nora eine neue Mechanik, beschreibt sie sie und
+Gero setzt um. Pia besitzt Aussehen und Assets, Verhalten bleibt bei Gero. Alle drei berühren `js/GameData.js`:
+gleichzeitige Arbeit daran kurz abstimmen (Merge-Konflikte).
