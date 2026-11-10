@@ -41,6 +41,7 @@ class DialogSwitcher {
             0xffffff,
             0.7
         ).setDepth(20000);
+        this.overlay.isUi = true; // drawn by the UI camera with ?zoom=1
 
         this.overlay.setInteractive();
 
@@ -51,7 +52,11 @@ class DialogSwitcher {
 
     // Erstellt Buttons für jede Option
     createOptionButtons(options) {
-        const buttonHeight = 50;
+        // Touch: options at least as high as a finger (B-19)
+        const uiCamera = this.scene.uiCamera || this.scene.cameras.main;
+        const buttonHeight = GameData.isTouch
+            ? Math.max(50, this.scene.worldSizeForCss(GameData.touch.minTargetCssPx, uiCamera))
+            : 50;
         const padding = 20;
         const startY = this.scene.viewport.height / 2 - (options.length * buttonHeight + (options.length - 1) * padding) / 2;
 
@@ -81,6 +86,10 @@ class DialogSwitcher {
                     wordWrap: { width: this.scene.viewport.width * 0.65 }
                 }
             ).setOrigin(0.5, 0.5).setDepth(20002);
+
+            button.isUi = true;
+            text.isUi = true;
+            this.scene.keepMinFontSize(text, 20, GameData.touch.minButtonCssPx, true);
 
             // Button interaktiv machen
             button.setInteractive();

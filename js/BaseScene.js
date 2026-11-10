@@ -47,6 +47,13 @@ class BaseScene extends Phaser.Scene {
         this.interactiveObjects = {};
         this.hoverTexts = {};
 
+        // Touch (B-19): object selected by the first tap, texts with a minimum screen size
+        this.touchSelectedKey = null;
+        this.touchHighlight = null;
+        this.minSizeTexts = [];
+        this.uiCamera = null;
+        this.hotspotsVisibleUntil = 0;
+
         // Wenn wir aus einer anderen Szene kommen und einblenden sollen
         this.fadeDuration = data.doFadeIn ? 900 : 2500;
 
@@ -220,6 +227,11 @@ class BaseScene extends Phaser.Scene {
         this.time.delayedCall(500, () => {
             this.preloadAdjacentScenes();
         });
+
+        // ?shine=1: let the interactive objects shine one after another once the scene has faded in
+        if (GameData.touch.shine) {
+            this.time.delayedCall(this.fadeDuration, () => this.shineInteractiveObjects());
+        }
     }
 
     // Erweiterte shutdown-Methode mit Ressourcenbereinigung
@@ -295,6 +307,7 @@ class BaseScene extends Phaser.Scene {
 
         sophieHoverText.setVisible(false);
         sophieHoverText.setDepth(10001); // Höher als Sophie, damit der Text immer sichtbar ist
+        sophieHoverText.baseHalfHeight = sophieHoverText.height / 2;
 
         // Hover-Text in die hoverTexts-Collection einfügen
         this.hoverTexts['sophie'] = sophieHoverText;
@@ -306,7 +319,7 @@ class BaseScene extends Phaser.Scene {
         // Event-Handler für den Hover-Effekt
         this.sophie.on('pointerover', () => {
             // Aktualisiere die Position bevor der Text sichtbar wird
-            if (!this.isMonologActive) {
+            if (!this.isMonologActive && !GameData.isTouch) {
                 sophieHoverText.setPosition(this.sophie.x, this.sophie.y - this.sophie.displayHeight - 10);
                 if (this.canMoveSophie) {
                     sophieHoverText.setVisible(true);
@@ -315,7 +328,9 @@ class BaseScene extends Phaser.Scene {
         });
 
         this.sophie.on('pointerout', () => {
-            sophieHoverText.setVisible(false);
+            if (!GameData.isTouch) {
+                sophieHoverText.setVisible(false);
+            }
         });
 
         // Aktualisiere die Hover-Text-Position wenn Sophie sich bewegt (auch durch andere Mechanismen)
@@ -421,6 +436,9 @@ class BaseScene extends Phaser.Scene {
             }
 
             hoverText.setVisible(false);
+            // Bottom edge of the text, used when a tap shows it with a larger font (touch)
+            hoverText.baseHalfHeight = hoverText.height / 2;
+            hoverText.baseBottom = hoverText.y + hoverText.baseHalfHeight;
             this.hoverTexts[objData.id] = hoverText;
         }
 
@@ -434,8 +452,8 @@ class BaseScene extends Phaser.Scene {
         gameObj.setInteractive({
         });
 
-        // Event-Handler
-        if (hoverText) {
+        // Event-Handler (on touch devices the first tap shows the text instead, see selectTouchTarget)
+        if (hoverText && !GameData.isTouch) {
             gameObj.on('pointerover', () => {
                 if (!this.isMonologActive) {
                     hoverText.setVisible(true);
@@ -508,10 +526,19 @@ class BaseScene extends Phaser.Scene {
         this.viewport.scale = Math.min(scaleX, scaleY) * scaleFactor;
 
         // Kamera einstellen
-        this.cameras.main.setZoom(this.viewport.scale);
-        this.cameras.main.centerOn(this.viewport.width / 2, this.viewport.height / 2);
+        if (this.uiCamera) {
+            this.applyZoomCamera();
+        } else {
+            this.cameras.main.setZoom(this.viewport.scale);
+            this.cameras.main.centerOn(this.viewport.width / 2, this.viewport.height / 2);
+        }
 
         this.updateMask();
+
+        if (GameData.isTouch) {
+            this.updateMinSizeTexts();
+            TouchHud.position();
+        }
     }
 
     updateMask() {
@@ -751,6 +778,9 @@ class BaseScene extends Phaser.Scene {
         const worldPoint = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
         let moveSophie = true;
 
+        // Touch: small objects get a larger tap area (the graphic stays as it is)
+        const minHalfSize = GameData.isTouch ? this.worldSizeForCss(GameData.touch.minTargetCssPx) / 2 : 0;
+
         // Eine Liste ALLER geklickten Objekte sammeln (inklusive Sophie)
         let clickedObjects = [];
 
@@ -763,30 +793,30 @@ class BaseScene extends Phaser.Scene {
             if (gameObj.input && gameObj.input.enabled && gameObj.visible) {
                 // Prüfen, ob der Klick in den Bounds liegt
                 let isClicked = false;
+                let isNear = false; // within the enlarged touch area
+                const dx = Math.abs(worldPoint.x - gameObj.x);
+                const dy = Math.abs(worldPoint.y - gameObj.y);
+                const distance = Math.sqrt(dx * dx + dy * dy);
 
                 if (entry.data.type === 'rectangle' || entry.data.type === 'image') {
                     const halfWidth = (gameObj.width * (entry.data.scaleFactor || 1)) / 2;
                     const halfHeight = (gameObj.height * (entry.data.scaleFactor || 1)) / 2;
-                    isClicked = (
-                        worldPoint.x >= gameObj.x - halfWidth &&
-                        worldPoint.x <= gameObj.x + halfWidth &&
-                        worldPoint.y >= gameObj.y - halfHeight &&
-                        worldPoint.y <= gameObj.y + halfHeight
-                    );
+                    isClicked = dx <= halfWidth && dy <= halfHeight;
+                    isNear = dx <= Math.max(halfWidth, minHalfSize) && dy <= Math.max(halfHeight, minHalfSize);
                 } else if (entry.data.type === 'circle') {
-                    const dx = worldPoint.x - gameObj.x;
-                    const dy = worldPoint.y - gameObj.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
                     isClicked = distance <= gameObj.radius;
+                    isNear = distance <= Math.max(gameObj.radius, minHalfSize);
                 }
 
-                if (isClicked) {
+                if (isClicked || isNear) {
                     clickedObjects.push({
                         key: key,
                         gameObject: gameObj,
                         data: entry.data,
                         depth: gameObj.depth || 0,
-                        type: 'interactive'
+                        type: 'interactive',
+                        exact: isClicked,
+                        distance: distance
                     });
                 }
             }
@@ -811,13 +841,18 @@ class BaseScene extends Phaser.Scene {
                     gameObject: this.sophie,
                     data: null,
                     depth: this.sophie.depth || 10000, // Sophie hat normalerweise depth 10000
-                    type: 'sophie'
+                    type: 'sophie',
+                    exact: true,
+                    distance: 0
                 });
             }
         }
 
-        // Alle geklickten Objekte nach Z-Tiefe sortieren (höchste zuerst)
-        clickedObjects.sort((a, b) => b.depth - a.depth);
+        // Alle geklickten Objekte nach Z-Tiefe sortieren (höchste zuerst);
+        // touch: direct hits before enlarged tap areas, then the nearest one
+        clickedObjects.sort((a, b) => (b.exact - a.exact)
+            || (b.depth - a.depth)
+            || (GameData.isTouch ? a.distance - b.distance : 0));
 
         // Das oberste Objekt verarbeiten
         if (clickedObjects.length > 0) {
@@ -826,10 +861,21 @@ class BaseScene extends Phaser.Scene {
             if (topObject.type === 'sophie') {
                 // Sophie wurde geklickt und ist das oberste Objekt
                 if (this.controls.getActiveAction().name === 'use') {
+                    // Touch: first tap only shows the name
+                    if (GameData.isTouch && !this.confirmTouchTarget('sophie')) {
+                        return;
+                    }
                     this.controls.handleUse('sophie', 'Sophie');
+                } else if (GameData.isTouch) {
+                    this.clearTouchSelection();
                 }
                 return; // Beende hier, da Sophie geklickt wurde
             } else {
+                // Touch: the first tap selects the object (name + highlight), the second one acts
+                if (GameData.isTouch && !this.confirmTouchTarget(topObject.key)) {
+                    return;
+                }
+
                 // Ein interaktives Objekt wurde geklickt und ist das oberste
                 const defaultAction = topObject.data.defaultAction;
 
@@ -842,6 +888,11 @@ class BaseScene extends Phaser.Scene {
                 // Aktion behandeln
                 moveSophie = this.controls.handle(this, topObject.key, worldPoint, this.hoverTexts[topObject.key].text);
             }
+        }
+
+        // Touch: a tap somewhere else drops the selection
+        if (GameData.isTouch && clickedObjects.length === 0) {
+            this.clearTouchSelection();
         }
 
         // Nur bewegen, wenn kein interaktives Objekt behandelt wurde oder explizit erlaubt
@@ -900,6 +951,12 @@ class BaseScene extends Phaser.Scene {
                 text.setVisible(false);
             }
         }
+
+        this.touchSelectedKey = null;
+        if (this.touchHighlight) {
+            this.touchHighlight.destroy();
+            this.touchHighlight = null;
+        }
     }
 
 
@@ -915,6 +972,9 @@ class BaseScene extends Phaser.Scene {
 
         // Wir verwenden direkt die Kamera für den Fade-Effekt
         this.cameras.main.fadeOut(300, 255, 255, 255); // 300ms zu Weiß ausblenden
+        if (this.uiCamera) {
+            this.uiCamera.fadeOut(300, 255, 255, 255);
+        }
 
         // Wenn das Ausblenden abgeschlossen ist, zur nächsten Szene wechseln
         this.cameras.main.once('camerafadeoutcomplete', () => {
@@ -1099,6 +1159,271 @@ class BaseScene extends Phaser.Scene {
         this.canMoveSophie = true;
         this.controls.setActiveAction(0);
         this.controls.enable();
+    }
+
+    // ---- Touch, hotspots, shine and closer camera (B-19) ----
+
+    // CSS pixels on the screen per world unit for the given camera
+    cssPerWorld(camera = this.cameras.main) {
+        const canvasCssWidth = this.game.canvas ? this.game.canvas.getBoundingClientRect().width : 0;
+        if (!canvasCssWidth) {
+            return 1;
+        }
+        return canvasCssWidth / this.scale.width * camera.zoom;
+    }
+
+    // World units needed for the given size in CSS pixels
+    worldSizeForCss(cssPx, camera = this.cameras.main) {
+        return cssPx / this.cssPerWorld(camera);
+    }
+
+    // Touch: keep a text at least minCssPx high on the screen, also after resizing/rotating
+    keepMinFontSize(text, basePx, minCssPx, isUi = false) {
+        if (!GameData.isTouch || !text) {
+            return;
+        }
+        const entry = { text, basePx, minCssPx, isUi };
+        this.minSizeTexts = this.minSizeTexts.filter(e => e.text !== text && e.text.active);
+        this.minSizeTexts.push(entry);
+        this.applyMinFontSize(entry);
+    }
+
+    applyMinFontSize(entry) {
+        const camera = entry.isUi && this.uiCamera ? this.uiCamera : this.cameras.main;
+        const size = Math.max(entry.basePx, Math.ceil(this.worldSizeForCss(entry.minCssPx, camera)));
+        entry.text.setFontSize(size + 'px');
+    }
+
+    updateMinSizeTexts() {
+        this.minSizeTexts = this.minSizeTexts.filter(e => e.text.active);
+        this.minSizeTexts.forEach(e => this.applyMinFontSize(e));
+    }
+
+    // Part of the scene that is visible on the screen (smaller than the scene with ?zoom=1)
+    getVisibleWorldRect() {
+        const full = new Phaser.Geom.Rectangle(0, 0, this.viewport.width, this.viewport.height);
+        const view = this.cameras.main.worldView;
+        if (!view || view.width === 0) {
+            return full;
+        }
+        return Phaser.Geom.Rectangle.Intersection(full, view);
+    }
+
+    // Keys of all interactive objects that can currently be clicked
+    getActiveInteractiveKeys() {
+        return Object.keys(this.interactiveObjects).filter(key => {
+            const gameObj = this.interactiveObjects[key].gameObject;
+            return gameObj && gameObj.active && gameObj.visible && gameObj.input && gameObj.input.enabled;
+        });
+    }
+
+    // Click area of an object (on touch at least minTargetCssPx)
+    getTargetBounds(key) {
+        if (key === 'sophie') {
+            return this.sophie.getBounds();
+        }
+        const entry = this.interactiveObjects[key];
+        const gameObj = entry.gameObject;
+        let halfWidth, halfHeight;
+        if (entry.data.type === 'circle') {
+            halfWidth = halfHeight = gameObj.radius;
+        } else {
+            halfWidth = (gameObj.width * (entry.data.scaleFactor || 1)) / 2;
+            halfHeight = (gameObj.height * (entry.data.scaleFactor || 1)) / 2;
+        }
+        if (GameData.isTouch) {
+            const minHalfSize = this.worldSizeForCss(GameData.touch.minTargetCssPx) / 2;
+            halfWidth = Math.max(halfWidth, minHalfSize);
+            halfHeight = Math.max(halfHeight, minHalfSize);
+        }
+        return new Phaser.Geom.Rectangle(gameObj.x - halfWidth, gameObj.y - halfHeight, halfWidth * 2, halfHeight * 2);
+    }
+
+    // Light outline with a soft glow around a rectangle (Phaser 3.55 has no preFX)
+    drawGlow(graphics, rect) {
+        const px = this.worldSizeForCss(1);
+        const cfg = GameData.touch;
+        const pad = cfg.highlightPaddingCssPx * px;
+        const x = rect.x - pad;
+        const y = rect.y - pad;
+        const w = rect.width + pad * 2;
+        const h = rect.height + pad * 2;
+        const radius = Math.min(8 * px, w / 2, h / 2);
+
+        graphics.fillStyle(cfg.highlightColor, 0.15);
+        graphics.fillRoundedRect(x, y, w, h, radius);
+        for (let i = 4; i >= 1; i--) {
+            graphics.lineStyle((cfg.highlightLineCssPx + i * 3) * px, cfg.highlightColor, 0.12);
+            graphics.strokeRoundedRect(x, y, w, h, radius);
+        }
+        graphics.lineStyle(cfg.highlightLineCssPx * px + 2 * px, 0x000000, 0.35);
+        graphics.strokeRoundedRect(x, y, w, h, radius);
+        graphics.lineStyle(cfg.highlightLineCssPx * px, cfg.highlightColor, 1);
+        graphics.strokeRoundedRect(x, y, w, h, radius);
+    }
+
+    // Fade a glow in and out around a rectangle
+    flashBounds(rect, delay, duration, hold = 0) {
+        const graphics = this.add.graphics().setDepth(10500).setAlpha(0);
+        this.drawGlow(graphics, rect);
+        this.tweens.add({
+            targets: graphics,
+            alpha: 1,
+            delay: delay,
+            duration: duration / 2,
+            hold: hold,
+            yoyo: true,
+            ease: 'Sine.easeInOut',
+            onComplete: () => graphics.destroy()
+        });
+        return graphics;
+    }
+
+    // "Show hotspots" button (touch): all active objects at once
+    showHotspots() {
+        if (this.hotspotsVisibleUntil && this.time.now < this.hotspotsVisibleUntil) {
+            return;
+        }
+        const cfg = GameData.touch;
+        this.hotspotsVisibleUntil = this.time.now + cfg.hotspotDurationMs + 600;
+        this.getActiveInteractiveKeys().forEach(key => {
+            this.flashBounds(this.getTargetBounds(key), 0, 600, cfg.hotspotDurationMs);
+            const text = this.hoverTexts[key];
+            if (cfg.hotspotShowNames && text && !this.isMonologActive) {
+                text.setVisible(true);
+                this.time.delayedCall(cfg.hotspotDurationMs + 300, () => {
+                    if (this.touchSelectedKey !== key) {
+                        text.setVisible(false);
+                    }
+                });
+            }
+        });
+    }
+
+    // ?shine=1: objects shine one after another (left to right) when the scene is entered
+    shineInteractiveObjects() {
+        const cfg = GameData.touch;
+        const keys = this.getActiveInteractiveKeys()
+            .sort((a, b) => this.interactiveObjects[a].gameObject.x - this.interactiveObjects[b].gameObject.x);
+        keys.forEach((key, index) => {
+            this.flashBounds(this.getTargetBounds(key), index * cfg.shineDelayMs, cfg.shineDurationMs);
+        });
+    }
+
+    // Touch: returns true if the object was already selected (second tap = action), otherwise selects it
+    confirmTouchTarget(key) {
+        if (this.touchSelectedKey === key) {
+            this.clearTouchSelection();
+            return true;
+        }
+        this.selectTouchTarget(key);
+        return false;
+    }
+
+    selectTouchTarget(key) {
+        this.hideAllHoverTexts();
+        this.controls.closeBag();
+        this.touchSelectedKey = key;
+
+        const bounds = this.getTargetBounds(key);
+        this.touchHighlight = this.add.graphics().setDepth(10500);
+        this.drawGlow(this.touchHighlight, bounds);
+        this.tweens.add({ targets: this.touchHighlight, alpha: 0.45, duration: 700, yoyo: true, repeat: -1 });
+
+        const text = this.hoverTexts[key];
+        if (!text) {
+            return;
+        }
+        if (text.baseHalfHeight === undefined) {
+            text.baseHalfHeight = text.height / 2;
+        }
+        this.keepMinFontSize(text, 20, GameData.touch.minHoverTextCssPx);
+        text.setOrigin(0.5, 1);
+        if (key === 'sophie') {
+            text.setPosition(this.sophie.x, this.sophie.y - this.sophie.displayHeight - 10 + text.baseHalfHeight);
+        } else {
+            text.y = text.baseBottom;
+        }
+
+        // Above the highlight, and on the screen
+        text.y = Math.min(text.y, bounds.top - this.worldSizeForCss(GameData.touch.highlightPaddingCssPx + 4));
+        const view = this.getVisibleWorldRect();
+        const margin = this.worldSizeForCss(4);
+        text.x = Phaser.Math.Clamp(text.x, view.left + text.width / 2 + margin, view.right - text.width / 2 - margin);
+        text.y = Math.max(text.y, view.top + text.height + margin);
+        text.setVisible(true);
+    }
+
+    clearTouchSelection() {
+        if (this.touchSelectedKey && this.hoverTexts[this.touchSelectedKey]) {
+            this.hoverTexts[this.touchSelectedKey].setVisible(false);
+        }
+        this.touchSelectedKey = null;
+        if (this.touchHighlight) {
+            this.touchHighlight.destroy();
+            this.touchHighlight = null;
+        }
+    }
+
+    // ?zoom=1 on small screens: the main camera shows a part of the scene around Sophie and follows her
+    // horizontally; a second camera draws the UI (bag panel, prompts, dialog options) unzoomed.
+    // Objects of the UI are marked with isUi = true (see GameControls, DialogSwitcher).
+    enableZoomCamera() {
+        if (this.uiCamera || !GameData.touch.zoom || !this.sophie) {
+            return;
+        }
+        const canvasHeight = this.game.canvas.getBoundingClientRect().height;
+        if (!canvasHeight || canvasHeight > GameData.touch.zoomMaxCanvasCssHeight) {
+            return;
+        }
+
+        this.uiCamera = this.cameras.add(0, 0, this.scale.width, this.scale.height);
+        this.uiCamera.fadeIn(this.fadeDuration, 255, 255, 255);
+        this.children.list.forEach(obj => this.assignCamera(obj));
+
+        // New objects are sorted in before the next frame is drawn (then we know their container)
+        let pending = [];
+        const onAdded = obj => pending.push(obj);
+        const onPreRender = () => {
+            pending.forEach(obj => this.assignCamera(obj));
+            pending = [];
+        };
+        this.events.on('addedtoscene', onAdded);
+        this.events.on('prerender', onPreRender);
+        this.events.once('shutdown', () => {
+            this.events.off('addedtoscene', onAdded);
+            this.events.off('prerender', onPreRender);
+            this.uiCamera = null;
+        });
+
+        this.cameras.main.startFollow(this.sophie, true, 0.08, 0);
+        this.applyZoomCamera();
+    }
+
+    assignCamera(obj) {
+        // Children are drawn by their container
+        if (!this.uiCamera || !obj.scene || obj.parentContainer) {
+            return;
+        }
+        if (obj.isUi) {
+            this.cameras.main.ignore(obj);
+        } else {
+            this.uiCamera.ignore(obj);
+        }
+    }
+
+    applyZoomCamera() {
+        const main = this.cameras.main;
+        const cfg = GameData.touch;
+
+        this.uiCamera.setZoom(this.viewport.scale);
+        this.uiCamera.centerOn(this.viewport.width / 2, this.viewport.height / 2);
+
+        main.setZoom(this.viewport.scale * cfg.zoomFactor);
+        main.setBounds(0, 0, this.viewport.width, this.viewport.height);
+        const viewHeight = main.height / main.zoom;
+        const centerY = viewHeight / 2 + (this.viewport.height - viewHeight) * cfg.zoomVerticalAnchor;
+        main.centerOn(this.sophie.x, centerY);
     }
 
     // Event-Handler down here

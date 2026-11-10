@@ -1,6 +1,22 @@
+// Staging copy (e.g. /staging/ on the live server): no server logging and its own localStorage namespace,
+// so live and staging save games do not overwrite each other.
+const IS_STAGING = window.location.pathname.includes('/staging/');
+
+function storageKey(key) {
+    return (IS_STAGING ? 'staging_' : '') + key;
+}
+
+// Touch devices (phones, tablets) get tap-to-select instead of hover (B-19). Determined once, here only.
+const IS_TOUCH = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
+// Prototype switches for B-19, e.g. ?shine=1 or ?zoom=1
+function urlFlag(name) {
+    return new URLSearchParams(window.location.search).get(name) === '1';
+}
+
 // Hilfsfunktion für die Spracheinstellung (vor GameData definieren)
 function getCurrentLanguage() {
-    const saved = localStorage.getItem('gameLanguage');
+    const saved = localStorage.getItem(storageKey('gameLanguage'));
     if (saved) return saved;
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -22,6 +38,33 @@ const GameData = {
 
     // Debug-Modus
     debug: false, // Auf false setzen für Produktionsversion
+
+    isStaging: IS_STAGING,
+    isTouch: IS_TOUCH,
+
+    // Mobile/touch settings (B-19). All sizes in CSS pixels on the screen; the game converts them
+    // against the current scaling. Only used on touch devices unless noted otherwise.
+    touch: {
+        minTargetCssPx: 44,          // minimum tap area of scene objects (hit area grows, graphic stays)
+        minHoverTextCssPx: 14,       // object names shown on tap
+        minMonologCssPx: 15,         // speech texts
+        minInventoryTitleCssPx: 13,  // item titles in the bag
+        minPromptCssPx: 14,          // "Use X with ..." prompt
+        minButtonCssPx: 18,          // start buttons on the title screen, dialog options
+        highlightColor: 0xffffff,    // outline of the selected object / hotspots / shine
+        highlightLineCssPx: 2,
+        highlightPaddingCssPx: 4,
+        hotspotDurationMs: 1600,     // "show hotspots" button
+        hotspotShowNames: false,     // also show object names while hotspots are shown
+        shine: urlFlag('shine'),     // ?shine=1: objects shine one after another on scene entry (also desktop)
+        shineDelayMs: 350,           // pause between two objects
+        shineDurationMs: 700,
+        zoom: urlFlag('zoom'),       // ?zoom=1: closer camera following Sophie on small screens
+        zoomFactor: 1.4,
+        zoomMaxCanvasCssHeight: 600, // "small screen": canvas not higher than this
+        zoomVerticalAnchor: 1,       // 0 = show top of the scene, 1 = bottom (Sophie's feet stay visible)
+        hudSizeCssPx: 56,            // bag and hotspot button (HTML, see index.html)
+    },
 
     // Spieler-Informationen
     player: {

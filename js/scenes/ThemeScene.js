@@ -129,6 +129,7 @@ class ThemeScene extends BaseScene {
                 strokeThickness: 2
             }
         ).setOrigin(0.5);
+        this.keepMinFontSize(this.playButton, 32, GameData.touch.minButtonCssPx);
 
         this.playButton.setInteractive({ useHandCursor: true });
 
@@ -162,6 +163,7 @@ class ThemeScene extends BaseScene {
                     strokeThickness: 1
                 }
             ).setOrigin(0.5);
+            this.keepMinFontSize(this.resetButton, 24, GameData.touch.minButtonCssPx);
 
             this.resetButton.setInteractive({ useHandCursor: true });
 

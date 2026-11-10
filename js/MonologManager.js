@@ -174,6 +174,13 @@ class MonologManager {
                 Math.round(parseInt(textStyle.fontSize) * GameData.constants.textScale)
             );
             this.textObject.setFontSize(fontSize + 'px');
+
+            // Touch: minimum size on the screen, wrapped to the visible part of the scene
+            if (GameData.isTouch) {
+                this.scene.keepMinFontSize(this.textObject, fontSize, GameData.touch.minMonologCssPx);
+                this.textObject.setWordWrapWidth(this.scene.getVisibleWorldRect().width * 0.9);
+                this.textObject.setAlign('center');
+            }
         }
 
         // Text im Viewport anpassen
@@ -276,27 +283,30 @@ class MonologManager {
         // Berechnen der aktuellen Grenzen des Textes
         const bounds = this.textObject.getBounds();
 
+        // Visible part of the scene (the whole scene unless the camera is zoomed in, ?zoom=1)
+        const view = this.scene.getVisibleWorldRect();
+
         // Prüfen, ob der Text links oder rechts außerhalb des Viewports liegt
         let newX = this.textObject.x;
         let newY = this.textObject.y;
 
         // Wenn der Text links rausragt
-        if (bounds.left < margin) {
-            newX = margin + bounds.width / 2;
+        if (bounds.left < view.left + margin) {
+            newX = view.left + margin + bounds.width / 2;
         }
         // Wenn der Text rechts rausragt
-        else if (bounds.right > this.scene.viewport.width - margin) {
-            newX = this.scene.viewport.width - margin - bounds.width / 2;
+        else if (bounds.right > view.right - margin) {
+            newX = view.right - margin - bounds.width / 2;
         }
 
         // Auch die vertikale Position überprüfen
         // Wenn der Text oben rausragt
-        if (bounds.top < margin) {
-            newY = margin + bounds.height / 2;
+        if (bounds.top < view.top + margin) {
+            newY = view.top + margin + bounds.height / 2;
         }
         // Wenn der Text unten rausragt
-        else if (bounds.bottom > this.scene.viewport.height - margin) {
-            newY = this.scene.viewport.height - margin - bounds.height / 2;
+        else if (bounds.bottom > view.bottom - margin) {
+            newY = view.bottom - margin - bounds.height / 2;
         }
 
         // Prüfen auf Überlappung mit der Controls-Box

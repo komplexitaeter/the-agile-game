@@ -2,8 +2,16 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>The Agile Game - Part One: A Lighthouse Project</title>
+    <!-- Home screen / web app (B-19) -->
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#000000">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Agile Game">
+    <link rel="apple-touch-icon" href="assets/images/icon_180.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.55.2/phaser.min.js"></script>
     <script defer data-domain="the-agile-game.komplexitaeter.de" src="https://plausible.io/js/script.js"></script>
     <style>
@@ -46,6 +54,81 @@
         canvas {
             display: block;
             margin: 0 auto;
+        }
+
+        /* Touch devices: bag and "show hotspots" (js/TouchHud.js, B-19) */
+        #touch-hud {
+            position: fixed;
+            z-index: 1001;
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        #touch-hud.visible {
+            display: flex;
+        }
+
+        #touch-hud.disabled {
+            opacity: 0.5;
+        }
+
+        .touch-hud-button {
+            width: var(--hud-size, 56px);
+            height: var(--hud-size, 56px);
+            padding: 4px;
+            border: none;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #201030;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .touch-hud-button img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .touch-hud-bag.pulse {
+            animation: touch-hud-pulse 0.7s ease;
+        }
+
+        @keyframes touch-hud-pulse {
+            40% { transform: scale(1.2); }
+        }
+
+        /* Portrait on touch devices: ask to rotate (B-19) */
+        #rotate-hint {
+            display: none;
+        }
+
+        @media (orientation: portrait) and (hover: none) and (pointer: coarse) {
+            #rotate-hint {
+                display: flex;
+                position: fixed;
+                inset: 0;
+                z-index: 2000;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 16px;
+                padding: 24px;
+                background-color: #000000;
+                color: #ffffff;
+                font-family: 'Courier New', monospace;
+                font-size: 22px;
+                text-align: center;
+            }
+
+            #rotate-hint .rotate-icon {
+                font-size: 64px;
+                transform: rotate(90deg);
+            }
         }
 
         /* Footer auf Mobile ausblenden */
@@ -94,6 +177,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <script src="js/GameData.js"></script>
+<script src="js/TouchHud.js"></script>
 <script src="js/GameControls.js"></script>
 <script src="js/SoundEffect.js"></script>
 <script src="js/MonologManager.js"></script>
@@ -112,6 +196,12 @@
 <script src="js/scenes/TeamScene.js"></script>
 <script src="js/scenes/OutroScene.js"></script>
 <script src="js/game.js"></script>
+
+<!-- Portrait hint on touch devices, text set below -->
+<div id="rotate-hint" role="alert">
+    <div class="rotate-icon" aria-hidden="true">&#x1F4F1;</div>
+    <div id="rotate-hint-text">Bitte quer drehen</div>
+</div>
 
 <!-- Footer -->
 <div class="footer">
@@ -149,6 +239,9 @@
 
         // Mit etwas Verzögerung prüfen, um sicherzustellen, dass Canvas geladen ist
         setTimeout(checkFooterPosition, 500);
+
+        document.getElementById('rotate-hint-text').textContent = t('Bitte drehe dein Gerät ins Querformat.',
+            'Please rotate your device to landscape.');
 
         // Übersetzung des Footers
         document.getElementById('footer-privacy').textContent = t('Datenschutz','Privacy Policy');

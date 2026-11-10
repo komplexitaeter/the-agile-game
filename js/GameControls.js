@@ -16,6 +16,9 @@ class GameControls {
         this.useItemKey = null;
         this.usePrompt = null;
 
+        // Touch: inventory slot selected by the first tap (B-19)
+        this.touchSelectedSlot = null;
+
         // Konstanten für das Layout
         this.config = {
             padding: 8,
@@ -87,6 +90,7 @@ class GameControls {
         // Container für alle UI-Elemente erstellen
         this.buttonContainer = this.scene.add.container(0, 0);
         this.buttonContainer.setDepth(11000); // Über allem anderen
+        this.buttonContainer.isUi = true; // drawn by the UI camera with ?zoom=1
 
         // Hintergrundbox für die Buttons erstellen
         this.createBackground();
@@ -189,12 +193,19 @@ class GameControls {
 
         // Zum Container hinzufügen
         this.buttonContainer.add(this.inventoryBag);
+
+        // Touch: bag (and hotspot button) are HTML buttons in the side margin instead, see TouchHud
+        if (GameData.isTouch) {
+            this.inventoryBag.setVisible(false);
+            this.background.setVisible(false);
+        }
     }
 
     createInventoryPanel() {
         // Inventarpanel als separaten Container erstellen
         this.inventoryPanel = this.scene.add.container(this.viewport.width, 0);
         this.inventoryPanel.setDepth(11000);
+        this.inventoryPanel.isUi = true;
 
         // Größe des Panels (35% der Breite, 100% Höhe)
         const panelWidth = this.viewport.width * 0.47;
@@ -290,31 +301,40 @@ class GameControls {
                 // Referenz zum GameControls-Objekt für Event-Handler
                 const self = this;
 
-                // Hover-Events
-                slot.on('pointerover', function() {
-                    // Slot neu zeichnen mit höherem Alpha-Wert
-                    this.clear();
-                    this.fillStyle(this.slotColor, this.hoverAlpha);
-                    this.fillRoundedRect(0, 0, this.slotSize, this.slotSize, this.cornerRadius);
+                // Hover-Events (touch: the first tap shows the title instead, see selectTouchSlot)
+                if (!GameData.isTouch) {
+                    slot.on('pointerover', function() {
+                        // Slot neu zeichnen mit höherem Alpha-Wert
+                        this.clear();
+                        this.fillStyle(this.slotColor, this.hoverAlpha);
+                        this.fillRoundedRect(0, 0, this.slotSize, this.slotSize, this.cornerRadius);
 
-                    // Prüfen, ob ein Item in diesem Slot ist, und wenn ja, den Text anzeigen
-                    self.showItemTitleAtSlot(this.slotIndex);
+                        // Prüfen, ob ein Item in diesem Slot ist, und wenn ja, den Text anzeigen
+                        self.showItemTitleAtSlot(this.slotIndex);
 
-                });
+                    });
 
-                slot.on('pointerout', function() {
-                    // Slot neu zeichnen mit normalem Alpha-Wert
-                    this.clear();
-                    this.fillStyle(this.slotColor, this.normalAlpha);
-                    this.fillRoundedRect(0, 0, this.slotSize, this.slotSize, this.cornerRadius);
+                    slot.on('pointerout', function() {
+                        // Slot neu zeichnen mit normalem Alpha-Wert
+                        this.clear();
+                        this.fillStyle(this.slotColor, this.normalAlpha);
+                        this.fillRoundedRect(0, 0, this.slotSize, this.slotSize, this.cornerRadius);
 
-                    // Itemtext ausblenden
-                    self.hideItemTitleAtSlot(this.slotIndex);
-                });
+                        // Itemtext ausblenden
+                        self.hideItemTitleAtSlot(this.slotIndex);
+                    });
+                }
 
                 slot.on('pointerdown', function(pointer, localX, localY, event) {
                     // Event-Propagation stoppen
                     event.stopPropagation();
+
+                    // Touch: first tap shows the title, second tap uses the item
+                    if (GameData.isTouch && self.touchSelectedSlot !== this.slotIndex) {
+                        self.selectTouchSlot(this.slotIndex);
+                        return;
+                    }
+                    self.clearTouchSlot();
 
                     self.handleItemClick(this.slotIndex);
                 });
@@ -445,7 +465,44 @@ class GameControls {
             );
             item.titleText.setOrigin(0.5, 0); // Horizontal zentriert, vertikal oben
             this.inventoryPanel.add(item.titleText);
+            if (GameData.isTouch) {
+                // Readable on top of the slot; Pia: look of the title
+                item.titleText.setBackgroundColor('#ffffff');
+                item.titleText.setPadding(6, 2, 6, 2);
+                this.scene.keepMinFontSize(item.titleText, 18, GameData.touch.minInventoryTitleCssPx, true);
+            }
         }
+    }
+
+    // Touch: highlight a slot and show the title of its item
+    selectTouchSlot(slotIndex) {
+        this.clearTouchSlot();
+        const slot = this.inventorySlots.find(s => s.slotIndex === slotIndex);
+        const item = GameData.inventoryItems.find(item => item.show && item.slotIndex === slotIndex);
+        if (!slot || !item) {
+            return;
+        }
+        this.touchSelectedSlot = slotIndex;
+        slot.clear();
+        slot.fillStyle(0x222222, 0.9);
+        slot.fillRoundedRect(0, 0, slot.slotSize, slot.slotSize, slot.cornerRadius);
+        slot.lineStyle(4, GameData.touch.highlightColor, 1);
+        slot.strokeRoundedRect(0, 0, slot.slotSize, slot.slotSize, slot.cornerRadius);
+        this.showItemTitleAtSlot(slotIndex);
+    }
+
+    clearTouchSlot() {
+        if (this.touchSelectedSlot === null) {
+            return;
+        }
+        const slot = this.inventorySlots.find(s => s.slotIndex === this.touchSelectedSlot);
+        if (slot) {
+            slot.clear();
+            slot.fillStyle(slot.slotColor, slot.normalAlpha);
+            slot.fillRoundedRect(0, 0, slot.slotSize, slot.slotSize, slot.cornerRadius);
+        }
+        this.hideItemTitleAtSlot(this.touchSelectedSlot);
+        this.touchSelectedSlot = null;
     }
 
     // Neue Methode: Blendet den Titel eines Items aus, das sich in einem bestimmten Slot befindet
@@ -532,6 +589,10 @@ class GameControls {
 
         // Grafik aktualisieren
         this.inventoryBag.setTexture(this.isBagOpen ? 'bag_open' : 'bag_closed');
+        if (GameData.isTouch) {
+            this.clearTouchSlot();
+            TouchHud.setBagOpen(this.isBagOpen);
+        }
 
         // Inventory-Panel ein- oder ausfahren
         this.toggleInventoryPanel();
@@ -636,6 +697,9 @@ class GameControls {
             this.inventoryBag.setAlpha(0.5);
             this.inventoryBag.disableInteractive();
         }
+        if (GameData.isTouch) {
+            TouchHud.setEnabled(this, false);
+        }
     }
 
     enable() {
@@ -649,6 +713,9 @@ class GameControls {
             this.inventoryBag.setAlpha(1);
             this.inventoryBag.setInteractive({ useHandCursor: true });
         }
+        if (GameData.isTouch) {
+            TouchHud.setEnabled(this, true);
+        }
     }
 
     show() {
@@ -656,12 +723,20 @@ class GameControls {
         if (this.inventoryPanel) {
             this.inventoryPanel.setVisible(true);
         }
+        if (GameData.isTouch) {
+            TouchHud.show(this);
+        }
+        // ?zoom=1: closer camera in scenes with Sophie and the bag
+        this.scene.enableZoomCamera();
     }
 
     hide() {
         this.buttonContainer.setVisible(false);
         if (this.inventoryPanel) {
             this.inventoryPanel.setVisible(false);
+        }
+        if (GameData.isTouch) {
+            TouchHud.hide();
         }
     }
 
@@ -731,6 +806,9 @@ class GameControls {
         const originalScale = this.inventoryBag.scale;
 
         this.openBagSound.play({volume: 0.6, rate: 2 });
+        if (GameData.isTouch) {
+            TouchHud.pulseBag();
+        }
 
         // Tasche animieren
         this.scene.tweens.add({
@@ -813,6 +891,7 @@ class GameControls {
         );
         this.usePrompt.setOrigin(0.5, 0);              // Horizontal zentriert, vertikal oben
         this.usePrompt.setVisible(false);              // Initial unsichtbar
+        this.scene.keepMinFontSize(this.usePrompt, 28, GameData.touch.minPromptCssPx, true);
 
         // Beide Elemente dem Button-Container hinzufügen für besseres Z-Management
         if (this.buttonContainer) {

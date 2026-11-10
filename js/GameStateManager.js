@@ -11,7 +11,7 @@ class GameStateManager {
 
     loadGameState() {
         try {
-            const savedState = localStorage.getItem('sophieAdventureState');
+            const savedState = localStorage.getItem(storageKey('sophieAdventureState'));
             if (savedState) {
                 return JSON.parse(savedState);
             }
@@ -83,7 +83,7 @@ class GameStateManager {
     saveGameState(gameState) {
         try {
             // Zuerst den alten Spielstand lesen, um das Diff zu erstellen
-            const oldStateJson = localStorage.getItem('sophieAdventureState');
+            const oldStateJson = localStorage.getItem(storageKey('sophieAdventureState'));
             let jsonDiff = null;
 
             if (oldStateJson) {
@@ -194,7 +194,7 @@ class GameStateManager {
             }
 
             // Neuen Spielstand in localStorage speichern
-            localStorage.setItem('sophieAdventureState', JSON.stringify(gameState));
+            localStorage.setItem(storageKey('sophieAdventureState'), JSON.stringify(gameState));
 
             if (GameData.debug) {
                 console.log(gameState);
@@ -211,6 +211,11 @@ class GameStateManager {
     }
 
     async logGameState(gameState, jsonDiff = null) {
+        // No server logging from the staging copy
+        if (GameData.isStaging) {
+            return false;
+        }
+
         try {
             // Sicherstellen, dass ein gameState vorhanden ist
             if (!gameState) {
@@ -292,7 +297,7 @@ class GameStateManager {
 
     checkForExistingGameState() {
         try {
-            const savedState = localStorage.getItem('sophieAdventureState');
+            const savedState = localStorage.getItem(storageKey('sophieAdventureState'));
 
             // Prüfen, ob ein Eintrag existiert und ob er ein gültiges JSON ist
             if (savedState) {
@@ -312,7 +317,7 @@ class GameStateManager {
     }
 
     resetGameState() {
-        localStorage.removeItem('sophieAdventureState');
+        localStorage.removeItem(storageKey('sophieAdventureState'));
     }
 
     // Fügt ein Asset zum Inventar hinzu
