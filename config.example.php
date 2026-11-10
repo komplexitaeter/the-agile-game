@@ -1,17 +1,18 @@
 <?php
+// Copy to config.php and fill in real values. config.php is not tracked by git.
 error_reporting(E_ALL);
 ini_set('display_errors', 'off');
 ini_set('log_errors', 'on');
 
 const _MYSQL_HOST = 'localhost';
-const _MYSQL_USER = 'root';
-const _MYSQL_PWD = 'root';
+const _MYSQL_USER = 'change_me';
+const _MYSQL_PWD = 'change_me';
 const _MYSQL_DB = 'the-agile-game';
 const _MYSQL_PORT = '3306';
 
 // Authentifizierungskonfiguration
 const _API_USERNAME = 'admin';
-const _API_PASSWORD = 'admin'; // Bitte ein starkes Passwort verwenden!
+const _API_PASSWORD = 'change_me'; // Bitte ein starkes Passwort verwenden!
 const _REQUIRE_AUTH = true; // Auf false setzen, um Auth zu deaktivieren
 
 

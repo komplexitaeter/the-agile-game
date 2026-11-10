@@ -19,7 +19,8 @@ Lizenz: GPL-3.0.
 Kein Build, kein `package.json`. Die Seite braucht einen Webserver (Assets per XHR); PHP liefert zugleich `api/` aus:
 
 ```bash
-php -S 127.0.0.1:8000        # im Repo-Root, dann http://127.0.0.1:8000/
+cp config.example.php config.php   # einmalig; config.php ist per .gitignore ausgeschlossen
+php -S 127.0.0.1:8000              # im Repo-Root, dann http://127.0.0.1:8000/
 ```
 
 - Ohne MySQL antwortet `api/game_state_logger.php` mit 500 → nur Konsolen-Warnung „Spielstand konnte nicht geloggt
@@ -70,7 +71,9 @@ haben sie nicht → `undefined` muss wie `false` funktionieren). Jedes `saveGame
 - `game_state_logger.php` – öffentlich, schreibt `game_state_main` (aktueller Stand je Spiel-ID) und
   `game_state_history` (Diffs), mit `GET_LOCK` je ID.
 - `game_state_overview.php`, `game_state_details.php` – Admin-Ansicht, Basic Auth über `require_auth()` aus `config.php`.
-- Ein DB-Schema liegt nicht im Repo (offen).
+- Ein DB-Schema liegt nicht im Repo (B-05). Die DB dient nur dem Logging; das Spiel braucht sie nicht.
+- `config.php` (DB-Zugang, Admin-Login, `require_auth()`) existiert nur auf dem Server bzw. lokal; Vorlage ist
+  `config.example.php`. Änderungen an `require_auth()` deshalb in beiden Dateien bedenken.
 
 **Assets:** `assets/images/` (PNG/WebP, Präfixe: `inv_*` Inventar, `character_*` Spritesheets, sonst
 `<szene>_<objekt>`), `assets/sounds/` (MP3), `assets/xcf/` GIMP-Quellen (nicht ausgeliefert, nicht referenziert).
@@ -85,17 +88,16 @@ haben sie nicht → `undefined` muss wie `false` funktionieren). Jedes `saveGame
 - Story-Flags in `gameState.progress` per `this.updateGameState({...})` bzw. über den StateManager ändern, nicht direkt
   in `localStorage`.
 - PHP: nur Prepared Statements (so bereits im Logger), Ausgaben in HTML mit `htmlspecialchars`.
-- **Cache-Busting:** Es gibt keinen Build mit Hashes und bisher keine `?v=`-Parameter. Bis das geklärt ist (Backlog),
-  bei geänderten JS-Dateien bzw. ersetzten Assets mit Rücksicht auf Browser-Caches arbeiten und im PR erwähnen.
+- **Cache-Busting:** Kein Build mit Hashes, bisher keine `?v=`-Parameter (seit Veröffentlichung kaum Änderungen).
+  Bis B-07 umgesetzt ist, geänderte JS-Dateien bzw. ersetzte Assets im PR erwähnen.
 
 ## Bekannte technische Schulden
 
-- **`config.php` mit DB- und Admin-Zugangsdaten ist eingecheckt**, es gibt keine `.gitignore` und keine
-  `config.example.php`. Zugangsdaten nie (weiter) committen.
-- Keine Tests, kein Linting, keine CI.
-- Kein DB-Schema im Repo.
-- Einige UI-Texte nur deutsch: Verben in `GameControls` („Gehe zu“, „Betrachte“ …), „Benutze … mit …“, „Das kann
-  man so nicht benutzen.“, Lautschrift in einzelnen Szenen (z. B. `LoungeScene`).
+- Keine Tests, kein Linting, keine CI (B-06).
+- Kein DB-Schema im Repo (B-05).
+- **Englische Übersetzung unvollständig** (B-04): laut Historie fertig sind Theme-, Intro- und Building-Szene; danach
+  teils nur deutsch, auch UI-Texte in `GameControls` („Gehe zu“, „Betrachte“ …, „Benutze … mit …“, „Das kann man so
+  nicht benutzen.“) und Lautschrift in einzelnen Szenen.
 - Logger: Fehlermeldung mit `$e->getMessage()` geht an den Client; keine Begrenzung von Größe/Rate der POSTs.
 - Admin-Passwort im Klartext-Vergleich in `config.php`.
 - Viel Logik in großen Szenen-Dateien (`BaseScene`, `MeetingScene`, `TeamScene`: 850–1.300 Zeilen),
@@ -104,7 +106,7 @@ haben sie nicht → `undefined` muss wie `false` funktionieren). Jedes `saveGame
 
 ## Betrieb
 
-- Deployment, Server und Staging: **noch nicht dokumentiert (offen).**
+- Deployment, Server und Staging: **noch nicht dokumentiert (B-03).**
 - Claude hat keinen Zugriff auf Server oder Datenbanken. Änderungen an Servern, Config oder DB bereitet Claude als
   Befehle vor und gibt vorher Bescheid; ausgeführt werden sie vom Betreiber.
 - Keine Secrets im Repo; Config-Dateien mit Zugangsdaten nie committen.
