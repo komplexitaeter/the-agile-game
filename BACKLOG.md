@@ -18,7 +18,7 @@ Noch kein Sprint geplant.
 ausgeschlossen und aus dem Index entfernt. Die Werte auf dem Server weichen ohnehin von denen im Repo ab.
 **Achtung beim Deploy:** Der Commit löscht `config.php` aus Git. Ein `git pull` auf dem Server würde die Datei
 löschen bzw. bricht ab, weil sie dort lokal geändert ist. Vorher sichern, nach dem Pull zurückkopieren
-(Befehle bereitet Kai vor).
+(Befehle bereitet Kai vor). Sicherung **außerhalb** von `~/the-agile-game`, sonst ist sie öffentlich abrufbar.
 
 ### B-02 Branch `release` einführen
 **Status:** im Sprint
@@ -28,10 +28,9 @@ Offen (macht Andreas in den GitHub-Einstellungen): Ruleset „protect release an
 Löschen, kein Force-Push), „Automatically delete head branches“ aktivieren, ggf. Default-Branch auf `release`.
 
 ### B-03 Betrieb dokumentieren
-**Status:** neu
-Live-Server (einziger Server, kein Staging): Pfad, Deployment (vermutlich `git pull`), PHP-/MySQL-Version in
-`CLAUDE.md` festhalten.
-Offen: Angaben von Andreas.
+**Status:** erledigt (2026-11-10)
+Angaben von Andreas: Checkout `/home/ubuntu/the-agile-game/`, `git pull`, nginx-`root` = Checkout, PHP 8.4-FPM.
+In `CLAUDE.md`, Abschnitt „Betrieb“. Daraus folgt B-10.
 
 ### B-04 Englische Übersetzung vervollständigen
 **Status:** neu
@@ -64,3 +63,13 @@ POSTs. Interne Fehler nur ins Log, Größenlimit für `json`/`json_diff`.
 **Status:** neu
 Beide kommen vom CDN (Phaser 3.55.2). Selbst ausliefern macht das Spiel unabhängiger und vereinfacht Tests.
 Offen: Gewünscht? Phaser-Update separat betrachten.
+
+### B-10 Interne Dateien auf Live nicht ausliefern (`.git`, Quellen, Doku)
+**Status:** neu – akut, Vorschlag Kai (2026-11-10)
+nginx-`root` ist der Git-Checkout, ohne Sperren. Damit sind u. a. `/.git/` (komplette Historie inkl. der früher
+eingecheckten `config.php`), `/.claude/`, `*.md`, `/assets/xcf/` und `config.example.php` öffentlich abrufbar.
+Vorschlag: in der nginx-Site Punkt-Dateien/-Ordner (außer `.well-known`), `*.md`, `/assets/xcf/` und
+`config.example.php` sperren (404). Prüfen per `curl -I https://the-agile-game.komplexitaeter.de/.git/HEAD`.
+Offen: Andreas führt die nginx-Änderung aus (Befehle von Kai). Ob die alten Werte aus der Historie irgendwo noch
+gelten, klärt Andreas.
+

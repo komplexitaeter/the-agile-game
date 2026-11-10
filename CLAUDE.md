@@ -106,7 +106,12 @@ haben sie nicht → `undefined` muss wie `false` funktionieren). Jedes `saveGame
 
 ## Betrieb
 
-- Nur ein Server (Live, Branch `master`), kein Staging. Server, Pfad und Deployment: **noch nicht dokumentiert (B-03).**
+- Nur ein Server (Live, Branch `master`), kein Staging. Ubuntu, nginx, PHP 8.4-FPM (`php8.4-fpm.sock`), MySQL.
+- Code: `/home/ubuntu/the-agile-game/` – ein Git-Checkout von `master`. **nginx-`root` ist der Checkout selbst**:
+  jede Datei im Repo ist öffentlich abrufbar, wenn nginx sie nicht sperrt (B-10). Nichts ins Repo legen, was nicht
+  öffentlich sein darf; Backups und Kopien von `config.php` nie in diesem Ordner ablegen.
+- nginx-Site: `/etc/nginx/sites-available/the-agile-game.komplexitaeter.de` (HTTPS per Let's Encrypt, `.php` an FPM).
+- Deployment: manuell `git pull` in `~/the-agile-game`; kein Build, keine Migrationen. `config.php` liegt nur dort.
 - Claude hat keinen Zugriff auf Server oder Datenbanken. Änderungen an Servern, Config oder DB bereitet Claude als
   Befehle vor und gibt vorher Bescheid; ausgeführt werden sie vom Betreiber.
 - Keine Secrets im Repo; Config-Dateien mit Zugangsdaten nie committen.
