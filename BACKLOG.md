@@ -13,7 +13,7 @@ Noch kein Sprint geplant.
 ## Einträge
 
 ### B-01 Zugangsdaten aus dem Repo: `config.example.php` + `.gitignore`
-**Status:** im Sprint (Andreas, 2026-11-10: „können wir gerne machen“)
+**Status:** erledigt (live seit 2026-11-10, komplexitaeter/the-agile-game#1, #2)
 `config.php` war eingecheckt. Jetzt: `config.example.php` mit Platzhaltern, `config.php` per `.gitignore`
 ausgeschlossen und aus dem Index entfernt. Die Werte auf dem Server weichen ohnehin von denen im Repo ab.
 **Achtung beim Deploy:** Der Commit löscht `config.php` aus Git. Ein `git pull` auf dem Server würde die Datei
