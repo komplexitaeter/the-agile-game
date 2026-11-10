@@ -80,4 +80,5 @@ mit `200`), auch `refs/heads/release` – den gab es im Checkout von the-agile-g
 Zweite offene Site: `kfs.komplexitaeter.de` (Sperre per Snippet `deny-dotfiles.conf` vorbereitet). Alle Repos
 sind öffentlich (Andreas, 2026-11-10): Durch `.git` abgeflossen sein kann nur, was nicht auf GitHub liegt
 (Token in der Remote-URL, Stash, nicht gepushte Commits, eingestagte Dateien).
-Offen: Sperre für kfs aktiv? Prüfung der lokalen Git-Inhalte von kfs. Poker-Server(s) mit derselben Schleife prüfen.
+kfs gesperrt seit 2026-11-10 (`/.git/HEAD` → `404`).
+Offen: Prüfung der lokalen Git-Inhalte von kfs. Poker-Server(s) mit derselben Schleife prüfen.
