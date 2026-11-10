@@ -46,16 +46,21 @@ const GameData = {
     // against the current scaling. Only used on touch devices unless noted otherwise.
     touch: {
         minTargetCssPx: 44,          // minimum tap area of scene objects (hit area grows, graphic stays)
-        minHoverTextCssPx: 14,       // object names shown on tap
-        minMonologCssPx: 15,         // speech texts
-        minInventoryTitleCssPx: 13,  // item titles in the bag
-        minPromptCssPx: 14,          // "Use X with ..." prompt
+        minHoverTextCssPx: 15,       // object names shown on tap
+        minMonologCssPx: 16,         // speech texts
+        monologWrapRatio: 0.6,       // speech texts wrap at this share of the visible width (short lines read better)
+        minInventoryTitleCssPx: 14,  // item titles in the bag
+        minPromptCssPx: 15,          // "Use X with ..." prompt
         minButtonCssPx: 18,          // start buttons on the title screen, dialog options
-        highlightColor: 0xffffff,    // outline of the selected object / hotspots / shine
+        // Warm amber like the lit windows of the building: visible on the light lobby and the dark/colourful
+        // scenes thanks to the dark edge (highlightEdgeAlpha), without looking like neon
+        highlightColor: 0xffc94a,    // outline of the selected object / hotspots / shine
+        highlightEdgeAlpha: 0.5,     // thin dark line around the outline
         highlightLineCssPx: 2,
         highlightPaddingCssPx: 4,
         hotspotDurationMs: 1600,     // "show hotspots" button
-        hotspotShowNames: false,     // also show object names while hotspots are shown
+        hotspotShowNames: false,     // also show object names while hotspots are shown (off: names overlap
+                                     // where objects sit close together; the first tap shows the name anyway)
         shine: urlFlag('shine'),     // ?shine=1: objects shine one after another on scene entry (also desktop)
         shineDelayMs: 350,           // pause between two objects
         shineDurationMs: 700,

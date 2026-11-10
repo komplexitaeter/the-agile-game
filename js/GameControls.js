@@ -470,6 +470,9 @@ class GameControls {
                 item.titleText.setBackgroundColor('#ffffff');
                 item.titleText.setPadding(6, 2, 6, 2);
                 this.scene.keepMinFontSize(item.titleText, 18, GameData.touch.minInventoryTitleCssPx, true);
+                // Long titles ("Zugangskarte", "3 Offene Cola") must not run off the right edge
+                const maxRight = this.scene.viewport.width - this.inventoryPanel.x - 4;
+                item.titleText.x = Math.min(item.image.x, maxRight - item.titleText.width / 2);
             }
         }
     }

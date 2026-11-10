@@ -1256,7 +1256,7 @@ class BaseScene extends Phaser.Scene {
             graphics.lineStyle((cfg.highlightLineCssPx + i * 3) * px, cfg.highlightColor, 0.12);
             graphics.strokeRoundedRect(x, y, w, h, radius);
         }
-        graphics.lineStyle(cfg.highlightLineCssPx * px + 2 * px, 0x000000, 0.35);
+        graphics.lineStyle(cfg.highlightLineCssPx * px + 2 * px, 0x000000, cfg.highlightEdgeAlpha);
         graphics.strokeRoundedRect(x, y, w, h, radius);
         graphics.lineStyle(cfg.highlightLineCssPx * px, cfg.highlightColor, 1);
         graphics.strokeRoundedRect(x, y, w, h, radius);

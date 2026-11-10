@@ -178,8 +178,9 @@ class MonologManager {
             // Touch: minimum size on the screen, wrapped to the visible part of the scene
             if (GameData.isTouch) {
                 this.scene.keepMinFontSize(this.textObject, fontSize, GameData.touch.minMonologCssPx);
-                this.textObject.setWordWrapWidth(this.scene.getVisibleWorldRect().width * 0.9);
+                this.textObject.setWordWrapWidth(this.scene.getVisibleWorldRect().width * GameData.touch.monologWrapRatio);
                 this.textObject.setAlign('center');
+                this._liftMultiLineText();
             }
         }
 
@@ -198,6 +199,12 @@ class MonologManager {
                 this._advance();
             });
         }
+    }
+
+    // Touch: wrapped texts get taller; let them grow upwards so they stay above the speaker's head
+    _liftMultiLineText() {
+        const lineHeight = parseFloat(this.textObject.style.fontSize) * 1.2;
+        this.textObject.y -= Math.max(0, this.textObject.height / 2 - lineHeight / 2);
     }
 
     /**
@@ -450,6 +457,9 @@ class MonologManager {
 
             // Text an die neue Position setzen
             this.textObject.setPosition(textPosition.x, textPosition.y);
+            if (GameData.isTouch) {
+                this._liftMultiLineText();
+            }
 
             // Blockierungsschicht an neue Viewport-Größe anpassen
             if (this.blockingOverlay) {
