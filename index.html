@@ -94,6 +94,16 @@
             max-height: 100%;
         }
 
+        .touch-hud-button svg {
+            width: 72%;
+            height: 72%;
+        }
+
+        .touch-hud-button:active {
+            background-color: rgba(255, 255, 255, 1);
+            transform: scale(0.94);
+        }
+
         .touch-hud-bag.pulse {
             animation: touch-hud-pulse 0.7s ease;
         }
@@ -116,18 +126,53 @@
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                gap: 16px;
+                gap: 20px;
                 padding: 24px;
-                background-color: #000000;
-                color: #ffffff;
+                padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+                background-color: #0e2437; /* navy of the title sign */
+                color: #faf4e0;
                 font-family: 'Courier New', monospace;
-                font-size: 22px;
                 text-align: center;
             }
 
+            #rotate-hint .rotate-title {
+                font-size: 34px;
+                font-weight: bold;
+                line-height: 1.05;
+                letter-spacing: 2px;
+            }
+
+            #rotate-hint .rotate-subtitle {
+                margin-top: 6px;
+                font-size: 15px;
+                opacity: 0.75;
+            }
+
             #rotate-hint .rotate-icon {
-                font-size: 64px;
-                transform: rotate(90deg);
+                width: 112px;
+                height: 112px;
+            }
+
+            #rotate-hint .rotate-icon .rotate-phone {
+                transform-origin: 56px 56px;
+                animation: rotate-hint-turn 2.4s ease-in-out infinite;
+            }
+
+            #rotate-hint .rotate-text {
+                max-width: 280px;
+                font-size: 18px;
+                line-height: 1.4;
+            }
+        }
+
+        @keyframes rotate-hint-turn {
+            0%, 25% { transform: rotate(0deg); }
+            55%, 100% { transform: rotate(90deg); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #rotate-hint .rotate-icon .rotate-phone {
+                animation: none;
             }
         }
 
@@ -174,7 +219,6 @@
 <body>
 
 <!-- Spiel-Scripts einbinden -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <script src="js/GameData.js"></script>
 <script src="js/TouchHud.js"></script>
@@ -199,8 +243,21 @@
 
 <!-- Portrait hint on touch devices, text set below -->
 <div id="rotate-hint" role="alert">
-    <div class="rotate-icon" aria-hidden="true">&#x1F4F1;</div>
-    <div id="rotate-hint-text">Bitte quer drehen</div>
+    <div>
+        <div class="rotate-title">THE<br>AGILE<br>GAME</div>
+        <div class="rotate-subtitle">Part One: A Lighthouse Project</div>
+    </div>
+    <svg class="rotate-icon" viewBox="0 0 112 112" aria-hidden="true" focusable="false">
+        <path d="M10 42A48 48 0 0 1 60 8.2" fill="none" stroke="#ffc94a" stroke-width="4" stroke-linecap="round"/>
+        <path d="M52 1.5L61 8.2L52 15" fill="none" stroke="#ffc94a" stroke-width="4" stroke-linecap="round"
+              stroke-linejoin="round"/>
+        <g class="rotate-phone">
+            <rect x="38" y="24" width="36" height="64" rx="7" fill="#0e2437" stroke="#faf4e0" stroke-width="4"/>
+            <rect x="44" y="32" width="24" height="44" rx="2" fill="#faf4e0" opacity="0.25"/>
+            <circle cx="56" cy="82" r="2.5" fill="#faf4e0"/>
+        </g>
+    </svg>
+    <div id="rotate-hint-text" class="rotate-text">Bitte quer drehen</div>
 </div>
 
 <!-- Footer -->

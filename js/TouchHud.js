@@ -10,6 +10,17 @@ const TouchHud = {
     controls: null,
     isEnabled: false,
 
+    // Eye with a sparkle, drawn like the bag (dark outline, beige/brown, amber like the highlight)
+    hotspotIcon: '<svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">'
+        + '<path d="M3 19C8 11 22 11 27 19C22 27 8 27 3 19Z" fill="#f4e6cc" stroke="#201818" '
+        + 'stroke-width="2.5" stroke-linejoin="round"/>'
+        + '<circle cx="15" cy="19" r="5" fill="#b07850" stroke="#201818" stroke-width="2"/>'
+        + '<circle cx="15" cy="19" r="2.1" fill="#201818"/>'
+        + '<circle cx="13.4" cy="17.4" r="1.1" fill="#ffffff"/>'
+        + '<path d="M26 1.5L27.4 4.6L30.5 6L27.4 7.4L26 10.5L24.6 7.4L21.5 6L24.6 4.6Z" fill="#ffc94a" '
+        + 'stroke="#201818" stroke-width="1.3" stroke-linejoin="round"/>'
+        + '</svg>',
+
     init() {
         if (this.root) {
             return;
@@ -23,7 +34,7 @@ const TouchHud = {
         this.hotspotButton.className = 'touch-hud-button touch-hud-hotspots';
         this.hotspotButton.setAttribute('aria-label', t('Hotspots zeigen', 'Show hotspots'));
         this.hotspotButton.title = t('Hotspots zeigen', 'Show hotspots');
-        this.hotspotButton.innerHTML = '<i class="fa-solid fa-eye" aria-hidden="true"></i>';
+        this.hotspotButton.innerHTML = this.hotspotIcon;
         this.hotspotButton.addEventListener('click', () => {
             if (this.controls && this.isEnabled) {
                 this.controls.scene.showHotspots();
