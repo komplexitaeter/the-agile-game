@@ -70,6 +70,10 @@ nginx-`root` ist der Git-Checkout, ohne Sperren. Damit sind u. a. `/.git/` (komp
 eingecheckten `config.php`), `/.claude/`, `*.md`, `/assets/xcf/` und `config.example.php` öffentlich abrufbar.
 Vorschlag: in der nginx-Site Punkt-Dateien/-Ordner (außer `.well-known`), `*.md`, `/assets/xcf/` und
 `config.example.php` sperren (404). Prüfen per `curl -I https://the-agile-game.komplexitaeter.de/.git/HEAD`.
-Offen: Andreas führt die nginx-Änderung aus (Befehle von Kai). Ob die alten Werte aus der Historie irgendwo noch
+Befund 2026-11-10: kein `git stash`, `config.php` nur in den drei auch auf GitHub sichtbaren Commits. Im
+(gemeinsamen) nginx-Access-Log mehrere Scanner mit `200` auf `/.git/config` (27.10.–09.11.2026); welche Site, ist
+aus dem Standard-Log nicht erkennbar.
+Offen: nginx-Sperre aktiv? `.git/config` auf Live ohne Token in der Remote-URL? Andere Sites auf dem Server mit
+offenem `.git`? Wurden auch `/.git/objects/` abgerufen? Ob die alten Werte aus der Historie irgendwo noch
 gelten, klärt Andreas.
 
