@@ -83,10 +83,12 @@ Außerdem sicher abbrechen (500 statt Login), wenn `_API_PASSWORD` leer oder noc
 versionierte Datei verschieben (ohne „Cannot redeclare“ mit der alten Server-Config).
 
 ### B-12 XSS in der Admin-Detailseite
-**Status:** im Sprint – akut (Sina, 2026-11-10)
+**Status:** im Sprint – akut (Sina, 2026-11-10); Fix in `release` (komplexitaeter/the-agile-game#3), Deploy offen
 Das JSON-Highlighting in `api/game_state_details.php` schrieb geloggte Daten ungeschützt per `innerHTML` zurück;
 über den öffentlichen Logger ließ sich so Skriptcode einschleusen, der beim Öffnen durch einen Admin läuft.
 Fix: escapen vor dem Highlighting (Branch `feature/B-12-xss-admin-details`).
+Nebenbefunde (Sina, nicht sicherheitsrelevant): `formatJson()` escaped ungültiges JSON doppelt
+(`game_state_details.php:55`); Admin-Seiten geben DB-Fehler per `die(… getMessage())` aus – mit B-08 erledigen.
 
 ## Vorschläge aus der Team-Sichtung (2026-11-10)
 
