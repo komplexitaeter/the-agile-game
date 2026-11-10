@@ -65,7 +65,8 @@ Beide kommen vom CDN (Phaser 3.55.2). Selbst ausliefern macht das Spiel unabhän
 Offen: Gewünscht? Phaser-Update separat betrachten.
 
 ### B-10 Interne Dateien auf Live nicht ausliefern (`.git`, Quellen, Doku)
-**Status:** im Sprint – akut. Bestätigt 2026-11-10: `/.git/HEAD` liefert auf Live `200`.
+**Status:** im Sprint – akut. Bestätigt 2026-11-10: `/.git/HEAD` lieferte auf Live `200`; seit 2026-11-10 gesperrt
+(Snippet `/etc/nginx/snippets/the-agile-game-deny.conf`, `/.git/HEAD` → `404`).
 nginx-`root` ist der Git-Checkout, ohne Sperren. Damit sind u. a. `/.git/` (komplette Historie inkl. der früher
 eingecheckten `config.php`), `/.claude/`, `*.md`, `/assets/xcf/` und `config.example.php` öffentlich abrufbar.
 Vorschlag: in der nginx-Site Punkt-Dateien/-Ordner (außer `.well-known`), `*.md`, `/assets/xcf/` und
@@ -73,7 +74,7 @@ Vorschlag: in der nginx-Site Punkt-Dateien/-Ordner (außer `.well-known`), `*.md
 Befund 2026-11-10: kein `git stash`, `config.php` nur in den drei auch auf GitHub sichtbaren Commits. Im
 (gemeinsamen) nginx-Access-Log mehrere Scanner mit `200` auf `/.git/config` (27.10.–09.11.2026); welche Site, ist
 aus dem Standard-Log nicht erkennbar.
-Offen: nginx-Sperre aktiv? `.git/config` auf Live ohne Token in der Remote-URL? Andere Sites auf dem Server mit
-offenem `.git`? Wurden auch `/.git/objects/` abgerufen? Ob die alten Werte aus der Historie irgendwo noch
-gelten, klärt Andreas.
-
+Remote-URL auf Live ohne Token. Laut Log wurden `.git`-Inhalte massenhaft abgezogen (u. a. 2.742 Objekt-Abrufe
+mit `200`), auch `refs/heads/release` – den gab es im Checkout von the-agile-game nicht, also ist mindestens eine
+**weitere Site auf dem Server** betroffen.
+Offen: Welche Site(s)? Gleiche Sperre dort; prüfen, ob deren `.git` Geheimnisse enthält.
