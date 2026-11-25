@@ -6,6 +6,17 @@ Status: `neu` → `refined` (gemeinsam verstanden, bereit für einen Sprint) →
 Reihenfolge = grobe Priorität, wird im Refinement angepasst. Die Einträge unten sind noch nicht priorisiert
 (Reihenfolge = Anlage beim ersten Durchsehen des Codes, 2026-11-10).
 
+## Leitidee (Andreas, 2026-11-25)
+
+Das Spiel übt auf spielerische Art **Gesellschaftskritik, im Kleinen und im Großen**: Agile als Cargo-Kult, der
+Scrum Guide als ikonisch-statisches Regelwerk mit Lizenzmodell, Bürokratie, die Eigenverantwortung erstickt, ein
+größenwahnsinniger CEO, für den Menschen Spielfiguren sind, Manager, die nur reden, Teams, die sich wirksam vor dem
+Chaos schützen. Ziel: das mit Spielwitz und tiefer Ironie zugänglich machen – im Bewusstsein, dass die
+Aufmerksamkeitsspanne für ein Indie-Spiel heute sehr kurz ist. Die ersten Minuten müssen tragen.
+
+**Richtung (2026-11-25):** Teil 2 ist gefragt. Damit Teil 1 dann nicht das schwache Glied ist, wird Teil 1
+schrittweise neu aufgelegt (Remaster), mit Handy (quer) als gleichwertigem Ziel – Pilot: B-35.
+
 ## Aktueller Sprint
 
 Noch kein Sprint geplant.
@@ -216,3 +227,26 @@ Mindestgrößen für Texte auf Touch-Geräten (Monolog, Objektnamen, Inventar-Ti
 Knopf, der kurz alle aktiven Objekte hervorhebt (Prototyp in B-19, Augen-Symbol von Pia). Offen (Andreas): welche
 Objekte er zeigen darf – manche sind bewusst überlagert/versteckt, und das ändert sich im Spielverlauf. Braucht eine
 Auswahl je Objekt (z. B. Flag in `GameData`, ggf. abhängig von Story-Flags). Könnte auch beim Lobby-Hänger helfen (B-13).
+
+### B-35 Remaster-Pilot: Building und Lobby neu denken
+**Status:** neu – Refinement nötig (Andreas, 2026-11-25)
+Kleiner Prototyp, an dem Gameplay, Steuerung, Bildaufbau und Einstieg für Teil 1 (und als Vorlage für Teil 2)
+neu gedacht werden. Zwei Szenen mit unterschiedlicher Zoomstufe von Sophie: draußen vor dem Gebäude (weit) und
+Lobby (näher). Ergebnis entscheidet, ob Teil 1 Szene für Szene so überarbeitet wird.
+- **Bildformat ohne Balken:** Hintergründe füllen gängige Querformate (Desktop 16:10/16:9 bis Handy ~2,2:1) durch
+  Skalierung auf „Füllen“ (Ränder werden je nach Gerät abgeschnitten, z. B. Phaser `Scale.ENVELOP`). Alles
+  Interaktive und Wichtige liegt in einer **sicheren Zone**, die bei keinem Format abgeschnitten wird; außen nur
+  Deko. Offen: welche Formate genau (Tablets 4:3 dazu? macht die sichere Zone deutlich kleiner).
+- **Steuerung touch-first, am Desktop weiter gut:** Ein Tipp = Aktion bleibt (bewährt). Ausprobieren, u. a.:
+  Gegenstand aus dem Inventar auf das Ziel ziehen statt „Benutze X mit …“ (geht mit Finger und Maus), Objekte am
+  Bild erkennbar statt nur per Hover-Namen, Betrachten per langem Druck o. Ä., Hilfe/Hotspots (B-34).
+  Erkenntnisse aus B-19: kein Doppeltipp, kein Schimmer, keine Kamera, die Teile der Szene versteckt.
+- **Einstieg zugänglicher:** Story der ersten Minuten überarbeiten – früh ein Lacher, klares Ziel, erstes
+  Erfolgserlebnis; das Fenster-Rätsel (größter Abbruchpunkt, B-13) neu einbetten. Die Kritik soll schnell
+  erkennbar sein, Tiefe für die, die weiterspielen.
+- **Mindestgrößen** für Texte und Touch-Ziele von Anfang an (vgl. B-33).
+- **Bilder:** neu erzeugt von Andreas (KI, wie Teil 1), Pia legt sichere Zone, Größen und Stil fest.
+Betroffen bzw. teilweise aufgehend: B-13, B-19, B-33, B-34. Rollen: Andreas (Story, Bilder), Nora (Einstieg,
+Texte), Gero (Skalierung, Steuerung), Pia (Bildaufbau, UI), Tessa (Test Desktop/Handy).
+Offen: Zielformate, Prototyp parallel zum Live-Spiel (z. B. `/staging/`) oder eigener Einstieg, Reihenfolge
+(erst Technik mit vorhandenen Bildern als Platzhalter, dann neue Bilder?).
