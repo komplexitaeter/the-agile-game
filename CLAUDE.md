@@ -119,6 +119,8 @@ haben sie nicht → `undefined` muss wie `false` funktionieren). Jedes `saveGame
   öffentlich sein darf; Backups und Kopien von `config.php` nie in diesem Ordner ablegen.
 - nginx-Site: `/etc/nginx/sites-available/the-agile-game.komplexitaeter.de` (HTTPS per Let's Encrypt, `.php` an FPM).
 - Deployment: manuell `git pull` in `~/the-agile-game`; kein Build, keine Migrationen. `config.php` liegt nur dort.
+  Sie muss für PHP-FPM (`www-data`) lesbar sein: Gruppe `www-data`, Rechte `640` (beim Kopieren nicht `cp -p` mit
+  einer `600`-Sicherung – das hat im November 2026 zwei Wochen Logging gekostet).
 - Claude hat keinen Zugriff auf Server oder Datenbanken. Änderungen an Servern, Config oder DB bereitet Claude als
   Befehle vor und gibt vorher Bescheid; ausgeführt werden sie vom Betreiber.
 - **Das Repo ist öffentlich** (wie alle komplexitaeter-Repos): Alles, was je committet wurde, ist öffentlich. Keine

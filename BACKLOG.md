@@ -18,8 +18,11 @@ Noch kein Sprint geplant.
 ausgeschlossen und aus dem Index entfernt. Die Werte auf dem Server weichen ohnehin von denen im Repo ab.
 **Achtung beim Deploy:** Der Commit löscht `config.php` aus Git. Ein `git pull` auf dem Server würde die Datei
 löschen bzw. bricht ab, weil sie dort lokal geändert ist. Vorher sichern, nach dem Pull zurückkopieren
-(Befehle bereitet Kai vor). Sicherung **außerhalb** von `~/the-agile-game` (sonst öffentlich abrufbar), Rechte
-`600`; Pull mit `--ff-only`; danach keine Editor-Kopien wie `config.php~`/`.bak` im Web-Ordner.
+(Befehle bereitet Kai vor). Sicherung **außerhalb** von `~/the-agile-game` (sonst öffentlich abrufbar); Pull mit `--ff-only`; danach keine
+Editor-Kopien wie `config.php~`/`.bak` im Web-Ordner.
+**Nachtrag 2026-11-25:** Die Sicherung bekam Rechte `600` und wurde mit `cp -p` zurückkopiert – damit konnte PHP-FPM
+(`www-data`) `config.php` nicht mehr lesen: Logger und Admin-Seiten lieferten 500, vermutlich **kein Logging vom
+10.11. bis 25.11.2026**. Behoben mit `chgrp www-data config.php && chmod 640 config.php`.
 
 ### B-02 Branch `release` einführen
 **Status:** erledigt (2026-11-10)
@@ -129,22 +132,18 @@ Liste von Nora, u. a. „nicht to schwer“, „wenn ich das wegnehmen“, „ei
 „Alle was ich“, „Experiment, dass“, „Eine guter Check-In“, „die letzte Säulen“, „Das steht ‚Ken S.‘“.
 
 ### B-19 Handy: Prototyp für gutes Spielgefühl im Querformat
-**Status:** neu
-Heute: hochkant nur ein schmaler Streifen ohne Hinweis; quer winzig im Browser (iOS: kein Vollbild, die
-Vollbild-API gibt es auf dem iPhone nur für Videos), Bedienung teils per Hover, Touch-Ziele und Texte zu klein
-(6–11 px, Start-Buttons ~20 px). Laut Log kaum Handy-Spieler (35, davon 2 bis Outro) – deshalb auch keine
-LinkedIn-Werbung mehr (Andreas).
-Vorschlag: zeitlich begrenzter Prototyp (1–2 Tage) an 2–3 Szenen (z. B. Building, Lobby), Pia und Gero, auf einem
-Branch; Andreas testet auf dem iPhone. Inhalt:
-- Hinweis „Bitte quer drehen“ im Hochformat.
-- Tippen statt Hover: erster Tipp zeigt Namen und hebt hervor, zweiter Tipp führt aus; Knopf „Hotspots zeigen“.
-- Klickflächen mindestens fingergroß, Texte/Inventar/Buttons mit Mindestgröße auf dem Bildschirm.
-- Tasche/Inventar in den seitlichen Rändern (iPhone quer ist breiter als 1792×1024).
-- Testweise: Kamera näher an Sophie auf kleinen Bildschirmen (größter Hebel, größter Umbau).
-- Web-App-Modus für den Home-Bildschirm (Manifest, Meta-Tags) zum Ausprobieren – Andreas' Einschätzung: nutzt
-  praktisch niemand.
-Test auf dem Live-Server unter `/staging/` (eigener Checkout, HTTPS wie Live). Danach entscheidet Andreas über den
-Ausbau.
+**Status:** erledigt (2026-11-25) – Prototyp getestet, wird so nicht übernommen
+Prototyp von Gero und Pia (Branch `feature/B-19-mobile-prototype`, bleibt als Referenz, nicht mergen), von Andreas
+auf dem iPhone unter `/staging/` getestet. Ergebnis (Andreas): insgesamt nicht überzeugend, Handy „etwas besser“.
+- Doppeltipp (erst Name, dann Aktion): teils störend, bei „Benutze“ unverständlich → verworfen.
+- Schimmer beim Betreten (`?shine=1`) → verworfen.
+- Nähere Kamera (`?zoom=1`): hilft nur draußen (Sophie sehr klein), dafür sieht man die Szene nie ganz, z. B. das
+  Fenster nicht → bräuchte überarbeitete Hintergründe, zu viel Aufwand → verworfen.
+- Home-Bildschirm-Modus: kein Installationshinweis, nutzt laut Andreas niemand → verworfen.
+- Hotspots-Knopf: hilft wohl, aber nur mit bewusster Auswahl der Objekte → B-34.
+- Bleibt: Hochformat-Hinweis und Mindestgrößen für Texte → B-33.
+Fazit (Kai): Die Bedienung (genaues Zeigen, Entdecken, Kombinieren) ist im Kern für den Desktop gedacht. Handy als
+Ziel vorerst zurückgestellt; Fokus auf Desktop-Spieler (B-13, B-16).
 
 ### B-20 Lesbarkeit der Sprechtexte
 **Status:** neu
@@ -205,3 +204,15 @@ Nach B-06 und B-09. Hauptrisiko Tween-Änderungen ab 3.60; geschätzt 1–2 Tage
 **Status:** neu (nebenbei)
 Toter Verbleisten-Code und `removeInventoryAsset`, Duplikate (Mobile-Erkennung, Lesezeit, Lautschrift-Stil,
 Cola-Handler), viele `console.log`. Am besten zusammen mit einem anderen Eintrag.
+
+### B-33 Handy: Hochformat-Hinweis und Mindestgrößen
+**Status:** neu
+Aus dem Prototyp B-19 übernehmen, was wenig kostet: Hinweis „Bitte quer drehen“ im Hochformat (Pias Gestaltung) und
+Mindestgrößen für Texte auf Touch-Geräten (Monolog, Objektnamen, Inventar-Titel). Code liegt auf
+`feature/B-19-mobile-prototype` (`#rotate-hint` in `index.html`, `GameData.touch`). Desktop bleibt unverändert.
+
+### B-34 Hotspots-Knopf (Desktop und Touch)
+**Status:** neu (Idee)
+Knopf, der kurz alle aktiven Objekte hervorhebt (Prototyp in B-19, Augen-Symbol von Pia). Offen (Andreas): welche
+Objekte er zeigen darf – manche sind bewusst überlagert/versteckt, und das ändert sich im Spielverlauf. Braucht eine
+Auswahl je Objekt (z. B. Flag in `GameData`, ggf. abhängig von Story-Flags). Könnte auch beim Lobby-Hänger helfen (B-13).
