@@ -22,7 +22,7 @@ löschen bzw. bricht ab, weil sie dort lokal geändert ist. Vorher sichern, nach
 Editor-Kopien wie `config.php~`/`.bak` im Web-Ordner.
 **Nachtrag 2026-11-25:** Die Sicherung bekam Rechte `600` und wurde mit `cp -p` zurückkopiert – damit konnte PHP-FPM
 (`www-data`) `config.php` nicht mehr lesen: Logger und Admin-Seiten lieferten 500, vermutlich **kein Logging vom
-10.11. bis 25.11.2026**. Behoben mit `chgrp www-data config.php && chmod 640 config.php`.
+10.11. bis 25.11.2026**. Behoben mit `chgrp www-data config.php && chmod 640 config.php`; Logger läuft wieder (Andreas, 2026-11-25).
 
 ### B-02 Branch `release` einführen
 **Status:** erledigt (2026-11-10)
